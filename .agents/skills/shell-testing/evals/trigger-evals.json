@@ -1,0 +1,66 @@
+[
+  {
+    "query": "Write Bats tests that explicitly run our POSIX sh executable under dash.",
+    "should_trigger": true
+  },
+  {
+    "query": "Test a Bash 3.2 library's effect on caller options and traps.",
+    "should_trigger": true
+  },
+  {
+    "query": "Add minimum/current Bash 4.4+ failure-path tests for our job.",
+    "should_trigger": true
+  },
+  {
+    "query": "Test a POSIX.1-2017 script under named dash and BusyBox ash versions.",
+    "should_trigger": true
+  },
+  {
+    "query": "Build a POSIX.1-2024 pipefail capability and behavior test matrix.",
+    "should_trigger": true
+  },
+  {
+    "query": "Write native Zsh 5.9 autoload tests, including option-state isolation.",
+    "should_trigger": true
+  },
+  {
+    "query": "Use ShellSpec to source a library in its target shell rather than Bash.",
+    "should_trigger": true
+  },
+  {
+    "query": "Test a shell CLI with spaces, newlines, leading dashes, empty input and BSD/GNU utility differences.",
+    "should_trigger": true
+  },
+  {
+    "query": "Explain whether Bats itself is implemented in Bash; no tests need writing.",
+    "should_trigger": false
+  },
+  {
+    "query": "Select the Bash dialect and minimum version for a new script only.",
+    "should_trigger": false
+  },
+  {
+    "query": "Explain POSIX 2017 versus 2024 pipeline language rules.",
+    "should_trigger": false
+  },
+  {
+    "query": "Choose native Zsh option semantics without designing or running tests.",
+    "should_trigger": false
+  },
+  {
+    "query": "Refactor shell argument parsing while preserving its current test suite.",
+    "should_trigger": false
+  },
+  {
+    "query": "Harden a production cleanup trap before adding tests later.",
+    "should_trigger": false
+  },
+  {
+    "query": "Configure ShellCheck and formatter warnings for unchanged scripts.",
+    "should_trigger": false
+  },
+  {
+    "query": "Install a runtime hook for the packaged shell quality gate.",
+    "should_trigger": false
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-resource-management-01",
+      "project": "artagon-python",
+      "intent": "Implement both a class-based `__enter__`/`__exit__` resource manager (for a leased temporary workspace directory + lockfile) and an `@asynccontextmanager` database transaction helper (`BEGIN` -> `yield` -> `COMMIT` on clean exit, `ROLLBACK` + re-raise on exception, unconditional connection release).",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Implements `__exit__` returning `False` (or `None`) so body exceptions propagate after cleanup, unless explicitly documenting a narrow suppression case\n- Wraps `yield` inside `@asynccontextmanager` with `try / except BaseException / else / finally` so `CancelledError` and exceptions trigger `ROLLBACK` and `finally` always releases the connection\n- Ensures partial failures inside `__enter__` clean up any already-acquired sub-resource rather than leaking it\n- Annotates return types cleanly (`Iterator[...]` / `AsyncIterator[...]`, `TracebackType | None`)",
+      "judge": {},
+      "tags": [
+        "python-resource-management",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-resource-management"
+    },
+    {
+      "id": "python-resource-management-02",
+      "project": "artagon-python",
+      "intent": "A batch merger opens an arbitrary dynamic list of N input files (`paths: Sequence[Path]`) and an async fan-out opens K `httpx.AsyncClient` sessions configured at runtime. Replace nested manual `try/finally` close loops with `ExitStack` and `AsyncExitStack`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses `contextlib.ExitStack` (`stack.enter_context(...)`) to manage the dynamic list of N synchronous file handles\n- Uses `contextlib.AsyncExitStack` (`await stack.enter_async_context(...)`) for dynamic async client lifecycles\n- Explains that `ExitStack` unwinds already-entered resources in LIFO order even when a subsequent `open()` fails mid-setup\n- Demonstrates `stack.callback(...)` / `stack.push_async_callback(...)` when wrapping cleanup functions that are not context managers",
+      "judge": {},
+      "tags": [
+        "python-resource-management",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-resource-management"
+    },
+    {
+      "id": "python-resource-management-03",
+      "project": "artagon-python",
+      "intent": "Build an async `StreamingResult` accumulator wrapper for streaming LLM token chunks that tracks time-to-first-byte (TTFB) and total duration, accumulates chunks in `O(n)` (`''.join`), and guarantees the underlying HTTP stream closes even if the caller breaks out of `async for` early.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Accumulates streamed chunks in a `list[str]` and materializes text with `''.join(chunks)` (`O(n)`) rather than repeated string `+=`\n- Records monotonic `time.perf_counter()` timestamps for TTFB (first chunk) and total stream completion\n- Closes the underlying network stream inside `try...finally` / `__aexit__` so early `break` or exceptions never leak open sockets\n- Uses `time.perf_counter()` (not wall-clock `datetime.now()`) for elapsed latency measurement",
+      "judge": {},
+      "tags": [
+        "python-resource-management",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-resource-management"
+    }
+  ]
+}

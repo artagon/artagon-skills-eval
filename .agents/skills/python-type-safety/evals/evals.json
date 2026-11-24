@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-type-safety",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a generic `Result[T, E]` container, a bounded `Repository[ModelT, ID]` protocol (`ModelT` bounded to Pydantic `BaseModel`), and `@runtime_checkable` `Closeable` / `Serializable` structural protocols in modern Python (comparing Python 3.12+ PEP 695 syntax vs Python 3.10–3.11 `TypeVar`/`TypeAlias`).",
+      "expected_output": "Shows clean PEP 695 generic syntax (`class Result[T, E]: ...`, `class Repository[ModelT: BaseModel, ID](Protocol): ...`, `type JsonValue = ...`) alongside the Python 3.10–3.11 `TypeVar('ModelT', bound=BaseModel)` / `TypeAlias` equivalents, uses `@runtime_checkable` on `Protocol` classes (noting `isinstance` checks method presence, not full parameter types at runtime), and keeps public signatures 100% annotated without `Any`.",
+      "files": [],
+      "expectations": [
+        "Defines generic `Result[T, E]` (with `Ok`/`Err` union or narrowed accessors) and bounded `ModelT` (`ModelT: BaseModel` / `TypeVar('ModelT', bound=BaseModel)`)",
+        "Uses `typing.Protocol` for structural subtyping (`Repository`, `Closeable`, `Serializable`) and explains what `@runtime_checkable` checks vs does not check at runtime",
+        "Contrasts Python 3.12+ PEP 695 (`type Alias = ...`, `class Box[T]:`) with Python 3.10–3.11 `TypeAlias` and `Generic[T]`",
+        "Uses `T | None` union syntax and `collections.abc` (`Sequence`, `Mapping`, `Callable`) for parameter covariance"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Eliminate `Any` and `cast()` abuse in a JSON webhook handler `def handle_event(raw: Any) -> Any:` using `TypeGuard` / `TypeIs` narrowing, `TypedDict` / discriminated unions (`Literal['invoice.paid', 'invoice.failed']`), and exhaustiveness checking (`assert_never`).",
+      "expected_output": "Types untrusted parsed JSON input as `object` (or `JsonValue`), narrows event variants via Pydantic discriminated unions (`Field(discriminator='type')`) or `TypedDict` + `TypeIs`/`TypeGuard`, handles every `Literal` event tag in `match`/`if` branches, and calls `typing.assert_never(event)` in the default branch so adding a new event variant fails `mypy --strict` at compile time.",
+      "files": [],
+      "expectations": [
+        "Replaces `raw: Any` at untrusted JSON boundaries with `object` (or recursive `JsonValue`) narrowed via runtime validation (`TypeIs` / `TypeGuard` or Pydantic discriminated union)",
+        "Models event payloads as a discriminated union keyed on `Literal['invoice.paid', 'invoice.failed']`",
+        "Uses `typing.assert_never(...)` so unhandled union members fail static type checking immediately",
+        "Avoids unguarded `typing.cast(...)` in favor of true type-narrowing predicates"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Roll out `mypy --strict` incrementally across a 40-module legacy Python codebase where turning on `strict = true` globally produces 600 errors on day one.",
+      "expected_output": "Enables `strict = true` globally in `[tool.mypy]` so all new modules are strictly checked by default, quarantines existing unmigrated legacy modules in explicit `[[tool.mypy.overrides]]` (`module = ['myapp.legacy_billing', ...]`, `disallow_untyped_defs = false`), enables `warn_unused_ignores = true` + `--enable-error-code ignore-without-code`, and burns down module overrides one PR at a time.",
+      "files": [],
+      "expectations": [
+        "Sets `strict = true` as the repo-wide default so newly created files cannot add fresh untyped debt",
+        "Quarantines legacy modules explicitly via `[[tool.mypy.overrides]]` per module rather than keeping global `strict = false`",
+        "Requires specific error codes on `# type: ignore[code]` (`warn_unused_ignores = true`) instead of blanket `# type: ignore`",
+        "Recommends annotating leaf domain models and shared public signatures first before high-fan-in callers"
+      ]
+    }
+  ]
+}

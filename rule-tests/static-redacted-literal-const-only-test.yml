@@ -1,0 +1,19 @@
+id: static-redacted-literal-const-only
+valid:
+  - |
+    msg = static_redacted_literal("Validation failed")
+  - |
+    msg = primitives.static_redacted_literal("Static error message")
+  - |
+    msg = static_redacted_literal(
+        "Multi-line static literal"
+    )
+invalid:
+  - |
+    msg = static_redacted_literal(raw_err)
+  - |
+    msg = static_redacted_literal(f"Failed for {secret}")
+  - |
+    msg = static_redacted_literal(str(exc))
+  - |
+    msg = primitives.static_redacted_literal("prefix " + user_input)

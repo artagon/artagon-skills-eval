@@ -1,0 +1,39 @@
+{
+  "skill_name": "shell-linting",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Configure static checks for Bash 3.2, POSIX.1-2017/2024 and native Zsh 5.9 without writing files.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Selects explicit supported dialects and per-target configuration.",
+        "Does not use ShellCheck -s bash to certify native Zsh.",
+        "States shfmt Zsh support begins at 3.13.0 and remains incomplete.",
+        "Does not claim static tooling enforces minimum interpreter versions or the POSIX edition."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our warning-only ShellCheck job says quoting is covered; review it and Shellharden safely.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Identifies SC2086 as info and includes info severity when quoting coverage is intended.",
+        "Starts with check/diff modes and reviews transformations.",
+        "Does not auto-apply ShellCheck diff or Shellharden replacement without authorization."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Replace shellharden $(git ls-files '*.sh') in CI, covering spaces, newlines and zero files.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Preserves filenames as argv boundaries using NUL-delimited discovery or an equivalent safe array.",
+        "Defines zero-file behavior without assuming xargs portability.",
+        "Keeps extensionless and sourced targets in the declared file inventory."
+      ]
+    }
+  ]
+}

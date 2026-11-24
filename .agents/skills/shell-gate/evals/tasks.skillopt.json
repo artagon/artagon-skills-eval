@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-shell",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "shell-gate-01",
+      "project": "artagon-shell",
+      "intent": "Use the packaged gate for a Bash 3.2 script and a native Zsh 5.9 file, in read-only mode.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Separates the Bash host requirement from the script target contract.\n- Checks actual documented supported profiles and reports unsupported tools or targets.\n- Does not silently analyze native Zsh as Bash or call an unsupported lane clean.\n- Does not write source, configuration or install hooks.",
+      "judge": {},
+      "tags": [
+        "shell-gate",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-gate"
+    },
+    {
+      "id": "shell-gate-02",
+      "project": "artagon-shell",
+      "intent": "Our POSIX.1-2017/2024 CI gate passes warning-only ShellCheck; what does that establish?",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- States the configured severity omits SC2086 unless info is selected.\n- Distinguishes syntax/static results from runtime and platform utility compatibility.\n- Does not claim a current POSIX analyzer certifies an older standards edition.",
+      "judge": {},
+      "tags": [
+        "shell-gate",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-gate"
+    },
+    {
+      "id": "shell-gate-03",
+      "project": "artagon-shell",
+      "intent": "Add project-local shell command screening for an approved runtime hook.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Inspects current client documentation and existing project configuration before proposing the hook.\n- Treats command-pattern screening as advisory rather than an OS isolation boundary.\n- Preserves tool errors and unscannable input as failures.\n- Does not mutate global configuration or execute destructive examples.",
+      "judge": {},
+      "tags": [
+        "shell-gate",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-gate"
+    }
+  ]
+}

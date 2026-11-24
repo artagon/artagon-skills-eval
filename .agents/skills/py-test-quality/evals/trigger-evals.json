@@ -1,0 +1,18 @@
+[
+  {"query": "measure pytest branch coverage and run mutmut mutation testing to catch surviving boundary mutants", "should_trigger": true},
+  {"query": "our Python module has 90% line coverage but weak assertions, use mutmut show to strengthen our test suite", "should_trigger": true},
+  {"query": "configure [tool.coverage.run] branch=true and fail_under=80 in pyproject.toml before refactoring", "should_trigger": true},
+  {"query": "build an 80% branch-coverage and 75% mutation-score safety net on src/pricing.py before simplifying it", "should_trigger": true},
+  {"query": "triage surviving mutmut mutants between real off-by-one test gaps and cosmetic logger.debug lines", "should_trigger": true},
+  {"query": "find assertion-free tests that inflate pytest coverage without actually checking return values", "should_trigger": true},
+  {"query": "find uncovered branches with pytest --cov-branch --cov-report=term-missing and write missing edge-case tests", "should_trigger": true},
+  {"query": "set up scoped mutation testing with mutmut in CI alongside pytest-cov", "should_trigger": true},
+  {"query": "review tests/test_checkout.py for wrong unittest.mock.patch import paths and missing AsyncMock", "should_trigger": false},
+  {"query": "freeze time with freezegun in a unit test for token expiration", "should_trigger": false},
+  {"query": "configure Vitest v8 coverage thresholds in TypeScript", "should_trigger": false},
+  {"query": "find dead functions in src/ with vulture and whitelist.py", "should_trigger": false},
+  {"query": "measure cyclomatic complexity with radon cc and lizard", "should_trigger": false},
+  {"query": "build a dspy.Evaluate benchmark suite with SemanticF1", "should_trigger": false},
+  {"query": "scan Python code for Bandit security vulnerabilities", "should_trigger": false},
+  {"query": "write Bats shell tests for scripts/art-acpx.sh", "should_trigger": false}
+]

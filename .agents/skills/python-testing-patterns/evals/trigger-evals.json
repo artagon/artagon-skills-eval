@@ -1,0 +1,18 @@
+[
+  {"query": "write pytest unit tests using freezegun freeze_time, @pytest.mark.parametrize with pytest.param IDs, and pytest.raises(match=...)", "should_trigger": true},
+  {"query": "test retry count behavior in pytest with unittest.mock side_effect lists and assert call_count == 1 on ValueError", "should_trigger": true},
+  {"query": "configure pytest fixture scopes (session vs function yield teardown) and --strict-markers slow/integration markers in pyproject.toml", "should_trigger": true},
+  {"query": "structure clean Arrange-Act-Assert pytest unit tests with test_<unit>_<scenario>_<expected> naming", "should_trigger": true},
+  {"query": "build reusable factory fixtures in conftest.py that accept keyword overrides without sharing mutable state", "should_trigger": true},
+  {"query": "mock external HTTP calls cleanly in pytest with autospec=True without mocking internal helper methods", "should_trigger": true},
+  {"query": "test CLI stdout/stderr and temporary directory file writes in pytest using capsys and tmp_path", "should_trigger": true},
+  {"query": "split fast unit tests from slow database integration tests using registered pytest markers", "should_trigger": true},
+  {"query": "run mutmut mutation testing to measure surviving boundary mutants in src/", "should_trigger": false},
+  {"query": "do an evidence-gated PR code review on existing tests/test_checkout.py with file:line citations", "should_trigger": false},
+  {"query": "set up Vitest v8 coverage and @faker-js/faker fixtures in TypeScript", "should_trigger": false},
+  {"query": "write NestJS .spec.ts unit tests with @golevelup/ts-jest createMock<T>()", "should_trigger": false},
+  {"query": "write Bats behavior tests for Bash scripts", "should_trigger": false},
+  {"query": "build a dspy.Evaluate benchmark suite with SemanticF1", "should_trigger": false},
+  {"query": "scan Python code for Bandit security issues", "should_trigger": false},
+  {"query": "profile Python CPU hotspots with py-spy and cProfile", "should_trigger": false}
+]

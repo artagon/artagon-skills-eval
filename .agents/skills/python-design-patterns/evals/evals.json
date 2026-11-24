@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-design-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A teammate wrote a 140-line `AbstractFormatterFactory`, `FormatterRegistrySingleton`, and 4 subclasses just to dispatch `'json'`, `'csv'`, and `'markdown'` report strings, plus a `BaseNotifier -> EmailNotifier -> RetryableEmailNotifier -> AuditedRetryableEmailNotifier` inheritance chain. Simplify both using Pythonic design patterns.",
+      "expected_output": "Applies KISS by replacing the Java-style `AbstractFormatterFactory` + singleton registry with first-class functions and a typed dispatch dictionary `FORMATTERS: dict[OutputFormat, Callable[[Report], str]]`, and replaces the brittle 4-level inheritance hierarchy with composition (`NotificationService` receiving injected `NotificationChannel` and `AuditLogger` collaborators via `typing.Protocol`).",
+      "files": [],
+      "expectations": [
+        "Replaces the over-engineered factory/singleton class hierarchy with a simple typed dictionary mapping `OutputFormat` to `Callable[[Report], str]` functions (KISS)",
+        "Replaces deep `EmailNotifier` subclassing with composition + `typing.Protocol` structural interfaces",
+        "Avoids module-global mutable singletons in favor of explicit constructor dependency injection",
+        "Shows how adding a new channel or retry wrapper composes orthogonally without combinatorial subclasses"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review an `OrderService.__init__` that takes 9 constructor dependencies (`order_repo`, `user_repo`, `inventory_repo`, `tax_client`, `stripe_client`, `pdf_renderer`, `s3_uploader`, `email_sender`, `slack_notifier`) and also imports `fastapi.HTTPException` directly inside `OrderService`.",
+      "expected_output": "Diagnoses the 9-parameter constructor as a Single Responsibility Principle (SRP) violation signal (splitting `OrderService` into cohesive `OrderPlacementService`, `InvoiceFulfillmentService`, and `OrderNotificationService` collaborators) and fixes the upward layering violation (`API Handler -> Service -> Repository`) by raising domain exceptions in `Service` that the FastAPI handler maps to `HTTPException`.",
+      "files": [],
+      "expectations": [
+        "Treats 7+ constructor dependencies (9 here) as an SRP smell requiring cohesive responsibility decomposition rather than hiding all 9 inside a `ServiceContext` grab-bag",
+        "Enforces strict downward dependency flow (`API Handler -> Service -> Repository`) by removing `fastapi.HTTPException` imports from the service layer",
+        "Defines narrow `Protocol` interfaces for external ports (`PaymentGateway`, `DocumentStore`) so unit tests pass lightweight fakes without heavy mocking",
+        "Maps domain errors to HTTP status codes solely in the API/transport boundary"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Two modules in our Python app have 12-line date-range normalization helpers that look 70% similar, and a developer wants to build a generic `TemporalWindowEngine` framework now 'in case future modules need cron windows'. Apply the Rule of Three and advise.",
+      "expected_output": "Applies the Rule of Three + YAGNI: advises keeping the two concrete 12-line functions separate (or sharing only genuinely identical pure domain rules where divergence would cause a bug) until a third real use case clarifies the right abstraction boundary, rejecting speculative `TemporalWindowEngine` framework building.",
+      "files": [],
+      "expectations": [
+        "Applies the Rule of Three and YAGNI to reject building a speculative `TemporalWindowEngine` for unrequested cron features",
+        "Distinguishes accidental structural similarity across two 12-line helpers from shared single-source-of-truth business invariants where diverging copies cause bugs",
+        "Warns against boolean-flag-ridden 'universal' abstractions born from premature generalization",
+        "Gives concrete criteria for when a third concrete caller justifies extracting a focused helper"
+      ]
+    }
+  ]
+}

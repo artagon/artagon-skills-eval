@@ -1,0 +1,41 @@
+{
+  "skill_name": "py-refactor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Plan and orchestrate a comprehensive multi-phase refactoring campaign for a 25k-LOC legacy Python 3.10 service that has Bandit findings, 42% test coverage, dead modules, grade-E `radon` functions, and `setup.py` packaging.",
+      "expected_output": "An impact-ordered orchestration plan capturing baseline metrics in `reports/` first, then executing phases strictly in safety order: (1) `py-security` (remediate vulnerabilities first), (2) `py-test-quality` (raise branch coverage >= 80% and mutation score >= 75% BEFORE structural refactoring), (3) `py-code-health` (delete dead/duplicate code so we don't refactor unused code), (4) `py-complexity` (decompose complex functions under the test safety net), (5) `py-modernize` + `py-quality-setup` + `py-git-hooks` (lock gains in CI/pre-commit).",
+      "files": [],
+      "expectations": [
+        "Captures baseline security, coverage, dead-code, and complexity metrics into `reports/` before modifying production code",
+        "Orders phases strictly as Security -> Test Quality -> Code Health -> Complexity -> Modernization / Quality Gates",
+        "Explains why `py-test-quality` (>= 80% coverage / >= 75% mutation score) MUST run before `py-code-health` and `py-complexity` structural changes",
+        "Requires atomic per-phase commits with green test/linter gates between phases and final before/after metric comparison"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A teammate wants to kick off a full `py-refactor` campaign right now during an active P1 checkout outage, and also asks whether to run the full 5-phase campaign on a brand-new module that has zero tests and a single SQL injection bug.",
+      "expected_output": "Applies `py-refactor`'s explicit scope and safety boundaries: refuses full multi-phase refactoring during an active production incident (stabilize the P1 incident with minimal surgical hotfix first), notes that a single isolated vulnerability belongs directly to `py-security` rather than full orchestration, and requires establishing a `py-test-quality` safety net on zero-test modules before any complexity or dead-code refactoring.",
+      "files": [],
+      "expectations": [
+        "Advises against running a broad refactoring campaign during an active P1 production outage",
+        "Routes a narrow single-vulnerability fix directly to `py-security` rather than over-orchestrating all five phases",
+        "Refuses structural/complexity refactoring on zero-test modules until `py-test-quality` establishes characterization/unit tests",
+        "Specifies clear entry criteria and rollback checkpoints per phase"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We finished Phases 1–4 of a Python refactoring initiative (`py-security`, `py-test-quality`, `py-code-health`, `py-complexity`). Show how to verify measurable improvement against baseline and lock the repository against regression.",
+      "expected_output": "Re-runs the exact baseline commands (`ruff check --select S` / `bandit`, `pytest --cov --cov-branch`, `mutmut results`, `vulture`, `radon cc` / `radon mi` / `wily diff`) to produce a before/after delta report in `reports/`, then applies `py-modernize`, `py-quality-setup`, and `py-git-hooks` so pre-commit and CI enforce zero backsliding.",
+      "files": [],
+      "expectations": [
+        "Re-runs security, branch coverage, mutation score, dead-code, and `radon`/`wily` complexity metrics and compares them against the saved baseline in `reports/`",
+        "Executes `py-modernize` (`uv`, Python 3.13 syntax) only after dead code and high-complexity blocks have already been cleaned up",
+        "Installs `py-quality-setup` (`ruff`, `mypy`, `basedpyright`) and `py-git-hooks` (`.pre-commit-config.yaml` / `lint-gate.py`) to prevent regression",
+        "Verifies the full test suite and typecheckers pass cleanly before closing the refactoring campaign"
+      ]
+    }
+  ]
+}

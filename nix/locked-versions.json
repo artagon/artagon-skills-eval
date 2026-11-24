@@ -1,0 +1,42 @@
+{
+  "nixpkgs_rev": "c56a87d8e41ce69bd2af57eb35dcc117a9dfca33",
+  "nixpkgs_narHash": "sha256-/cpdPHaySDIyCgZI6EWngiM6jK3YLUNzv1b7lTzy6Bk=",
+  "python": "3.12.15",
+  "packages": {
+    "click": "8.3.1",
+    "detect-secrets": "1.5.0",
+    "duckdb": "1.5.2",
+    "expression": "6.0.1",
+    "hatchling": "1.29.0",
+    "hypothesis": "6.151.10",
+    "jinja2": "3.1.6",
+    "jmespath": "1.1.0",
+    "jsonschema": "4.26.0",
+    "msgspec": "0.20.0",
+    "opentelemetry-proto": "1.34.0",
+    "packaging": "26.1",
+    "pluggy": "1.6.0",
+    "protobuf": "7.34.1",
+    "pyarrow": "23.0.0",
+    "pydantic": "2.12.5",
+    "pydantic-settings": "2.12.0",
+    "pytest": "9.0.3",
+    "pyyaml": "6.0.3",
+    "rfc8785": "0.1.4",
+    "rpds-py": "0.30.0",
+    "skills-ref": "0.1.1",
+    "strictyaml": "1.7.3",
+    "structlog": "25.5.0",
+    "tomlkit": "0.14.0",
+    "typer": "0.24.0",
+    "typing-extensions": "4.16.0"
+  },
+  "tools": {
+    "ast-grep": "0.42.1",
+    "basedpyright": "1.39.3",
+    "mypy": "1.20.1",
+    "radon": "6.0.1",
+    "ruff": "0.15.14",
+    "uv": "0.11.21"
+  }
+}

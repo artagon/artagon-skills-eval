@@ -1,0 +1,41 @@
+{
+  "skill_name": "review-python",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run a comprehensive `review-python` backend review on my feature branch (`app/api/orders.py`, `app/db/models.py`, `migrations/versions/009_orders.py`, and `tests/test_orders.py`), including a brand-new `app/integrations/shipping_preview.py` experimental module.",
+      "expected_output": "Executes Hard Gates G1–G5 in strict order: (G1) scopes `.py` files via `git diff --name-only $(git merge-base HEAD main)..HEAD`, (G2) runs configured `ruff check` and `mypy` BEFORE manual checks (never manually flagging rules passing linters own), (G3) detects FastAPI + SQLAlchemy/Alembic + Postgres + pytest and loads `review-verification-protocol`, `python-code-review`, `fastapi-code-review`, `sqlalchemy-code-review`, `postgres-code-review`, and `pytest-code-review`, (G4) verifies full enclosing code and usages, and (G5) emits ONE single-pass `[FILE:LINE]` report downgrading net-new `shipping_preview.py` notes to `Informational` and blocking Verdict ONLY on `Critical`/`Major` defects.",
+      "files": [],
+      "expectations": [
+        "Runs Gate G1 (`git diff --name-only $(git merge-base HEAD main)..HEAD`) and Gate G2 (`ruff check` + `mypy`) BEFORE manual style/type inspection",
+        "Explicitly avoids manually flagging formatting, import-order, or type rules that a passing project `ruff`/`mypy` gate already owns",
+        "Conditionally loads the matching specialist skills (`review-verification-protocol`, `python-code-review`, `fastapi-code-review`, `sqlalchemy-code-review`, `postgres-code-review`, `pytest-code-review`) based on detected stack imports/paths",
+        "Downgrades findings in net-new standalone modules (`shipping_preview.py`) to `Informational` (unless severe security/data-loss bug) and bases the Merge Verdict strictly on `Critical`/`Major` findings with `[FILE:LINE]` anchors"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I pushed a follow-up commit fixing the 2 Major findings from your previous `review-python` pass on `feat/checkout-v2`. Run a re-review of the branch.",
+      "expected_output": "Applies `review-python`'s re-review discipline: verifies whether the 2 previously reported `Major` findings were accurately resolved and checks ONLY lines newly introduced or modified by the fix commit for regressions, refusing to invent brand-new nitpicks on unchanged lines that already passed Round 1.",
+      "files": [],
+      "expectations": [
+        "Verifies resolution status of each prior `Critical`/`Major` finding from Round 1 with `[FILE:LINE]` proof",
+        "Checks only newly changed lines in the fix commit for fresh regressions plus `ruff check` / `mypy` status",
+        "Explicitly avoids moving the goalposts by surfacing new style/minor complaints on untouched code from Round 1",
+        "Updates the single-pass Verdict (`APPROVE` once zero unresolved `Critical`/`Major` findings remain)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Run `review-python` on a pure FastAPI + Pydantic-AI agent PR (`app/agents/support_agent.py` and `app/api/chat.py`) that has no SQLAlchemy, Alembic, or raw Postgres changes.",
+      "expected_output": "Scopes changed `.py` files via `git merge-base`, runs `ruff` + `mypy` (G2), loads `review-verification-protocol`, `python-code-review`, and `fastapi-code-review` (plus Pydantic-AI agent tool/dependency checks while skipping `sqlalchemy-code-review` and `postgres-code-review` since no DB files are in scope), verifies full function/caller context (G4), and outputs a single structured report.",
+      "files": [],
+      "expectations": [
+        "Runs G1 diff scoping and G2 `ruff`/`mypy` checks first",
+        "Loads `review-verification-protocol`, `python-code-review`, and `fastapi-code-review` while skipping irrelevant SQLAlchemy/Postgres specialist skills when absent from the diff",
+        "Reads full enclosing functions and checks middleware/DI callers before claiming missing validation or error handling",
+        "Emits a single consolidated report with `[FILE:LINE]` anchors and severity-calibrated Verdict"
+      ]
+    }
+  ]
+}

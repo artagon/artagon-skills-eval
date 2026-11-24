@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-error-handling",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a structured domain exception hierarchy and boundary validation layer in Python for an external billing API client (`ApiError`, `AuthenticationError`, `RateLimitError(retry_after: float | None)`, `ResourceNotFoundError`), preserving root-cause tracebacks when wrapping `httpx` errors.",
+      "expected_output": "Defines a rooted `BillingError` / `ApiError` exception hierarchy carrying structured attributes (`status_code`, `error_code`, `retry_after`, `context` dict — never embedding secrets in messages), validates inputs early at boundary entry points (listing valid enum values on `ValueError`), and chains underlying `httpx.HTTPError` exceptions via `raise RateLimitError(..., retry_after=...) from exc`.",
+      "files": [],
+      "expectations": [
+        "Creates a rooted custom exception hierarchy (`BillingError` -> `AuthenticationError`, `RateLimitError`, `ResourceNotFoundError`) with typed attributes like `retry_after`",
+        "Preserves original traceback causes using `raise DomainError(...) from exc` whenever translating lower-level `httpx` exceptions",
+        "Validates boundary inputs early (using `ValueError` with actionable messages listing valid options, `TypeError` for wrong types, or Pydantic `@field_validator`)",
+        "Distinguishes retryable errors (`RateLimitError` / 5xx) from non-retryable client errors (`AuthenticationError` / `ResourceNotFoundError`)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Implement a generic `process_batch[T, R](items: Sequence[T], handler: Callable[[T], R], on_progress: ProgressCallback | None = None) -> BatchResult[R]` helper in Python where per-item failures are recorded with item index and exception details instead of aborting the batch, while `KeyboardInterrupt` / `SystemExit` / `asyncio.CancelledError` still propagate immediately.",
+      "expected_output": "Defines generic `@dataclass(frozen=True) class FailedItem[T]` and `BatchResult[R]` (`succeeded`, `failed`, `has_failures`, `success_rate`), catches `Exception` (NOT `BaseException`, so `KeyboardInterrupt`, `SystemExit`, and `CancelledError` propagate), invokes optional `ProgressCallback(completed, total)`, and logs/aggregates failures cleanly.",
+      "files": [],
+      "expectations": [
+        "Defines a typed generic `BatchResult` container separating `succeeded` outputs from `failed` items with index, input reference, and exception info",
+        "Catches `Exception` per item rather than `BaseException` so `KeyboardInterrupt` and `SystemExit` are never swallowed",
+        "Supports an optional `ProgressCallback` invoked safely as items complete",
+        "Provides convenience helpers/properties (such as `raise_if_all_failed()` or `has_failures`) for callers"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Audit a CLI parser `parse_output_format(raw: str)` that raises `Exception('bad format')` on `'yaml'`, and a service method that catches `except ValueError: raise ServiceError('invalid')` (hiding which field failed) or returns `None` when a required user record is missing.",
+      "expected_output": "Replaces generic `Exception('bad format')` with `ValueError(f\"Unsupported output format {raw!r}; valid options: {', '.join( sorted( fmt.value for fmt in OutputFormat ) )}\")`, preserves context via `raise ServiceError(...) from err`, and raises an explicit `UserNotFoundError(user_id)` for missing required entities instead of ambiguous `None` returns.",
+      "files": [],
+      "expectations": [
+        "Uses standard `ValueError` (not bare `Exception`) and includes the invalid input plus valid enum choices in the error message",
+        "Chains `raise ServiceError(...) from err` and keeps field context in the error message/attributes",
+        "Distinguishes `find_user(...) -> User | None` (optional lookup) from `get_user(...) -> User` raising `UserNotFoundError(user_id)` when existence is required",
+        "Avoids catching broad `Exception` where a narrow exception (`KeyError`, `ValueError`) is expected"
+      ]
+    }
+  ]
+}

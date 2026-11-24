@@ -1,0 +1,25 @@
+id: no-dict-str-any-in-domain
+language: Python
+severity: error
+message: "Domain modules must not use dict[str, Any] or Mapping[str, Any]; use FrozenModel, PersistentMap, or JsonValue."
+note: "Domain types must remain strictly typed and deeply immutable without Any escape hatches."
+files:
+  - "packages/*/src/**/domain/**/*.py"
+rule:
+  any:
+    - pattern:
+        context: "x: dict[str, Any]"
+        selector: generic_type
+    - pattern:
+        context: "x: Dict[str, Any]"
+        selector: generic_type
+    - pattern:
+        context: "x: Mapping[str, Any]"
+        selector: generic_type
+    - pattern:
+        context: "x: MutableMapping[str, Any]"
+        selector: generic_type
+    - pattern: dict[str, Any]
+    - pattern: Dict[str, Any]
+    - pattern: Mapping[str, Any]
+    - pattern: MutableMapping[str, Any]

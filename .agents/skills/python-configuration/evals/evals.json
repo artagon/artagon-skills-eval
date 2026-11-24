@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-configuration",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a fail-fast `pydantic-settings` `BaseSettings` configuration module in Python for a web service that needs `Environment` (`dev`, `staging`, `prod`), sensible local defaults for `db_host`/`db_port`, a required `SecretStr` signing secret with NO default, and comma-separated `CORS_ORIGINS` parsing.",
+      "expected_output": "A `BaseSettings` subclass with `SettingsConfigDict(env_file='.env', extra='ignore', env_nested_delimiter='__')`, an `Environment` `StrEnum`/`Enum`, non-secret dev defaults (`db_host: str = 'localhost'`, `db_port: int = 5432`), required `signing_secret: SecretStr` (no default so missing secrets fail fast at startup, masked in `repr`/logs), a `@field_validator('cors_origins', mode='before')` splitting comma-separated strings, and a startup loader printing clear `ValidationError` diagnostics before `sys.exit(1)`.",
+      "files": [],
+      "expectations": [
+        "Subclasses `pydantic_settings.BaseSettings` using `SettingsConfigDict` rather than scattered `os.getenv(...)` calls across modules",
+        "Provides sensible local defaults ONLY for non-secret settings (`localhost`, `5432`) while keeping secrets (`SecretStr`) required with no hardcoded fallback",
+        "Parses comma-separated `CORS_ORIGINS` env strings cleanly via `@field_validator(..., mode='before')`",
+        "Validates configuration eagerly at startup and exits non-zero (`sys.exit(1)`) with readable field errors rather than crashing mid-request"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Extend our `BaseSettings` hierarchy to support nested `DatabaseSettings` and `RedisSettings` loaded via `DB__POOL_SIZE=20` and Docker Swarm/Kubernetes mounted secret files in `/run/secrets`, plus enforce that in `prod` `read_replica_url` must differ from `primary_db_url`.",
+      "expected_output": "Configures nested `BaseModel` sub-settings with `env_nested_delimiter='__'`, enables `secrets_dir='/run/secrets'` (when present) in `SettingsConfigDict`, uses `@computed_field` for derived DSNs if needed, and enforces cross-field invariants via `@model_validator(mode='after')` rejecting `read_replica_url == primary_db_url` when `environment == Environment.PROD`.",
+      "files": [],
+      "expectations": [
+        "Uses nested Pydantic models with `env_nested_delimiter='__'` so `DB__POOL_SIZE` populates `settings.db.pool_size`",
+        "Configures `secrets_dir='/run/secrets'` to read mounted container secret files natively",
+        "Enforces cross-field production invariants inside `@model_validator(mode='after')`",
+        "Exposes a `@lru_cache` `get_settings()` factory that tests can override cleanly via DI or `monkeypatch.setenv` + `cache_clear()`"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Audit a Python service that calls `os.environ.get('TIMEOUT', '30')` in 14 different files, logs `print(settings.model_dump())` on boot (exposing database credentials), and checks `if os.getenv('ENV') == 'production':` vs `'prod'` inconsistently.",
+      "expected_output": "Centralizes all 14 scattered `os.environ.get` lookups into one typed `Settings` object (`timeout_seconds: float = 30.0`), types `environment: Environment` as an explicit `StrEnum` (eliminating `'prod'` vs `'production'` string typos), and wraps credentials in `SecretStr` / `PostgresDsn` redaction so startup config summaries never print secret values.",
+      "files": [],
+      "expectations": [
+        "Consolidates scattered `os.environ` / `os.getenv` string lookups into one typed `BaseSettings` schema",
+        "Replaces raw `'prod'` / `'production'` string comparisons with a single `Environment` `StrEnum` (and helper properties like `is_prod`)",
+        "Uses `SecretStr` (or explicit redaction) so startup config logging never leaks secret values to stdout",
+        "Demonstrates isolated unit testing of `Settings` overrides without mutating global process state permanently"
+      ]
+    }
+  ]
+}

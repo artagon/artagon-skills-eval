@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "uv-package-manager-01",
+      "project": "artagon-python",
+      "intent": "Initialize a new Python 3.12 project with `uv`, pin the Python interpreter for teammates, add `fastapi` and `httpx` as runtime dependencies plus `pytest` and `ruff` as dev dependencies, and show the exact commands CI should run so `uv.lock` cannot drift.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Pins the Python runtime via `uv python install 3.12` and `uv python pin 3.12` (`.python-version`)\n- Uses `uv add fastapi httpx` for runtime dependencies and `uv add --dev pytest ruff` for development dependencies\n- Commits `uv.lock` alongside `pyproject.toml` and runs tools via `uv run ...` without manual virtualenv activation\n- Uses `uv sync --locked` (or `--frozen` with `uv lock --check`) in CI so out-of-sync `pyproject.toml` / `uv.lock` changes are caught",
+      "judge": {},
+      "tags": [
+        "uv-package-manager",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "uv-package-manager"
+    },
+    {
+      "id": "uv-package-manager-02",
+      "project": "artagon-python",
+      "intent": "Configure `[tool.uv.sources]` in `pyproject.toml` so our service pulls `internal-auth` from an editable sibling workspace directory `../internal-auth` and `dspy` pinned to a specific Git commit SHA, plus upgrade ONLY `cryptography` in `uv.lock` without bumping every transitive dependency.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Keeps PEP 621 `[project] dependencies` standard while declaring path/git overrides under `[tool.uv.sources]`\n- Uses `editable = true` path source for `../internal-auth` and an immutable `rev = '...'` commit SHA (rather than a floating branch) for the Git dependency\n- Upgrades only `cryptography` via `uv lock --upgrade-package cryptography` followed by `uv sync` rather than full `uv lock --upgrade`\n- Verifies the resolved version in `uv.lock` / `uv tree`",
+      "judge": {},
+      "tags": [
+        "uv-package-manager",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "uv-package-manager"
+    },
+    {
+      "id": "uv-package-manager-03",
+      "project": "artagon-python",
+      "intent": "Import an existing `requirements.txt` + `requirements-dev.txt` project into `uv`'s native `pyproject.toml` + `uv.lock` workflow, and also show how to export a hash-pinned `requirements.txt` for a legacy Docker scanner that does not speak `uv.lock` yet.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Migrates runtime and dev requirements into `pyproject.toml` + `uv.lock` using `uv add -r requirements.txt` and `uv add --dev -r requirements-dev.txt`\n- Exports a hash-locked `requirements.txt` for downstream scanners using `uv export` (which includes hashes by default) or `uv pip compile --generate-hashes`\n- Distinguishes native project commands (`uv add`, `uv lock`, `uv sync`, `uv run`) from low-level `uv pip` compatibility commands\n- Runs `uv run pytest` to verify the locked environment works cleanly",
+      "judge": {},
+      "tags": [
+        "uv-package-manager",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "uv-package-manager"
+    }
+  ]
+}

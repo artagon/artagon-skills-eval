@@ -1,0 +1,18 @@
+[
+  {"query": "initialize a Python 3.12 project with uv init, uv python pin, uv add, and uv sync --locked", "should_trigger": true},
+  {"query": "configure [tool.uv.sources] in pyproject.toml for an editable local path package and a pinned Git rev", "should_trigger": true},
+  {"query": "upgrade a single transitive CVE package in uv.lock using uv lock --upgrade-package without bumping everything else", "should_trigger": true},
+  {"query": "import requirements.txt into uv with `uv add -r` and export hash-pinned requirements for a container scanner", "should_trigger": true},
+  {"query": "manage multiple Python interpreter versions and isolated CLI tools using `uv python install` and `uvx` / `uv tool`", "should_trigger": true},
+  {"query": "inspect why a transitive package was pulled into uv.lock using `uv tree`", "should_trigger": true},
+  {"query": "run a standalone single-file Python script with inline PEP 723 dependencies using `uv run --script`", "should_trigger": true},
+  {"query": "speed up Docker multi-stage Python builds with `uv sync --frozen --no-install-project` layer caching", "should_trigger": true},
+  {"query": "publish an sdist and wheel to TestPyPI and PyPI using twine check and OIDC Trusted Publishing", "should_trigger": false},
+  {"query": "configure mypy --strict, basedpyright executionEnvironments, and ruff lint rules", "should_trigger": false},
+  {"query": "review SQLAlchemy 2.0 session lifecycle and N+1 lazy relationship queries", "should_trigger": false},
+  {"query": "scan Python code for SQL injection and weak MD5 hashes using bandit", "should_trigger": false},
+  {"query": "measure pytest branch coverage and run mutmut mutation testing", "should_trigger": false},
+  {"query": "install APM agent skill dependencies with `apm install --frozen`", "should_trigger": false},
+  {"query": "profile Python CPU hotspots using cProfile and py-spy", "should_trigger": false},
+  {"query": "optimize a DSPy ChainOfThought module with MIPROv2", "should_trigger": false}
+]

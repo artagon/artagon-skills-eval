@@ -1,0 +1,18 @@
+[
+  {"query": "scan our Python codebase with bandit and ruff --select S to fix SQL injection and command injection bugs", "should_trigger": true},
+  {"query": "replace hashlib.md5 password hashing and random token generation with argon2-cffi and secrets in Python", "should_trigger": true},
+  {"query": "audit Python subprocess shell=True, yaml.load, and pickle.loads calls for OWASP vulnerabilities", "should_trigger": true},
+  {"query": "remediate hardcoded credentials (S105/S106) in our Python modules and add pip-audit to CI", "should_trigger": true},
+  {"query": "safely parameterize dynamic PostgreSQL table names and WHERE values in psycopg without triggering S608", "should_trigger": true},
+  {"query": "fix path traversal and SSRF risks in our Python file-download and webhook fetcher utilities", "should_trigger": true},
+  {"query": "configure ruff flake8-bandit S rules in pyproject.toml while allowing assert statements in tests/", "should_trigger": true},
+  {"query": "triage Bandit medium-and-high severity findings across src/ and replace insecure cryptography", "should_trigger": true},
+  {"query": "measure cyclomatic complexity with radon cc and lizard", "should_trigger": false},
+  {"query": "find unused imports and dead functions with vulture", "should_trigger": false},
+  {"query": "run mutmut mutation testing to check pytest assertion strength", "should_trigger": false},
+  {"query": "migrate setup.py and requirements.txt to uv and Python 3.13 syntax", "should_trigger": false},
+  {"query": "harden Deno/Pyodide sandbox settings for dspy.RLM", "should_trigger": false},
+  {"query": "configure Tailscale Serve HTTPS for desktop-mcp", "should_trigger": false},
+  {"query": "profile Python CPU hotspots with cProfile and py-spy", "should_trigger": false},
+  {"query": "format docstrings to Google style and sort imports with ruff", "should_trigger": false}
+]

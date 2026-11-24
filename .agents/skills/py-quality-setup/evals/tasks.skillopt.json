@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "py-quality-setup-01",
+      "project": "artagon-python",
+      "intent": "Bootstrap the canonical Python 3.13 quality toolchain (`ruff`, `mypy`, and `basedpyright`) in `pyproject.toml` for a single-package repository, including dev dependency groups and Claude Code `.claude/settings.local.json` permissions.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Adds `ruff`, `mypy`, and `basedpyright` under PEP 735 `[dependency-groups] dev` in `pyproject.toml`\n- Configures `[tool.ruff]`, `[tool.mypy]` (`strict = true` with pragmatic `tests.*` overrides), and `[tool.basedpyright]` targeting Python 3.13\n- Merges `permissions.allow` entries into `.claude/settings.local.json` as a union without overwriting existing user-approved permissions\n- Verifies all three tools run cleanly via `uv run ruff check`, `uv run mypy`, and `uv run basedpyright`",
+      "judge": {},
+      "tags": [
+        "py-quality-setup",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-quality-setup"
+    },
+    {
+      "id": "py-quality-setup-02",
+      "project": "artagon-python",
+      "intent": "We have a multi-package Python 3.13 monorepo (`packages/core`, `packages/api`, `packages/worker`) where `basedpyright` needs per-package `executionEnvironments` in `pyrightconfig.json`, but someone also left `[tool.basedpyright]` in `pyproject.toml`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Configures `pyrightconfig.json` with `pythonVersion: '3.13'` and `executionEnvironments` mapping each `packages/*` root\n- Explicitly removes `[tool.basedpyright]` from `pyproject.toml` when `pyrightconfig.json` is introduced so settings never conflict or get ignored\n- Configures `[tool.mypy]` (`mypy_path` / `explicit_package_bases = true`) so `mypy` resolves cross-package imports across the monorepo\n- Runs both `basedpyright` and `mypy` from the repo root to verify zero import-resolution errors",
+      "judge": {},
+      "tags": [
+        "py-quality-setup",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-quality-setup"
+    },
+    {
+      "id": "py-quality-setup-03",
+      "project": "artagon-python",
+      "intent": "Explain why our Python 3.13 setup runs BOTH `mypy` and `basedpyright` alongside `ruff`, and configure relaxed test-directory rules (`assert` statements, mock attributes, untyped pytest fixtures) without weakening `src/` strictness.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Articulates why `mypy` (plugins/nominal checks) and `basedpyright` (narrowing/IDE type engine) complement each other alongside `ruff`\n- Adds `[tool.ruff.lint.per-file-ignores]` allowing `S101` (`assert`) in `tests/**/*.py` without disabling `S` rules in `src/`\n- Adds `[[tool.mypy.overrides]]` and `basedpyright` `executionEnvironments` scoped solely to `tests` while keeping `src/` strict\n- Preserves deterministic CLI verification commands for local dev and CI",
+      "judge": {},
+      "tags": [
+        "py-quality-setup",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-quality-setup"
+    }
+  ]
+}

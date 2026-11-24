@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/trace/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trial_id",
+    "campaign_id",
+    "arm_id",
+    "task_id",
+    "harness",
+    "auth_mode",
+    "execution_mode",
+    "status",
+    "verified_success",
+    "redaction_applied",
+    "started_wall_ns",
+    "ended_wall_ns",
+    "duration_ms",
+    "layers_present",
+    "metrics",
+    "spans",
+    "tool_calls",
+    "mcp_calls",
+    "file_diffs"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-trace/v1"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "arm_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "block_id": {"type": ["string", "null"]},
+    "split": {"type": ["string", "null"], "enum": ["train", "val", "test", null]},
+    "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+    "model": {"type": ["string", "null"]},
+    "observed_model": {"type": ["string", "null"]},
+    "auth_mode": {"enum": ["subscription", "api_key"]},
+    "execution_mode": {"enum": ["headless", "ntm", "herdr", "cao"]},
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "timeout",
+        "quota_censored",
+        "billing_violation",
+        "isolation_failed",
+        "cassette_miss_failed",
+        "multiplexer_failed"
+      ]
+    },
+    "exit_code": {"type": ["integer", "null"]},
+    "verified_success": {"type": ["boolean", "null"]},
+    "judge_score": {"type": ["number", "null"]},
+    "judge_blindness": {
+      "type": ["string", "null"],
+      "enum": ["single_disjoint", "recused_panel", null]
+    },
+    "judge_recused_members": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "final_output_text": {"type": ["string", "null"], "maxLength": 262144},
+    "trace_assertion_results": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "workspace_rel_path": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)(?!.*\\\\)(?!.*\\/$).+$"
+    },
+    "redaction_applied": {"type": "boolean"},
+    "redacted_count": {"type": "integer", "minimum": 0},
+    "started_wall_ns": {"type": "integer", "minimum": 0},
+    "ended_wall_ns": {"type": "integer", "minimum": 0},
+    "duration_ms": {"type": "number", "minimum": 0},
+    "layers_present": {
+      "type": "array",
+      "items": {"enum": ["hook", "otel", "transcript", "supervisor"]}
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool_call_count",
+        "mcp_call_count",
+        "mcp_cassette_miss_count",
+        "file_diff_count",
+        "hook_event_count",
+        "otel_span_count"
+      ],
+      "properties": {
+        "input_tokens": {"type": ["integer", "null"]},
+        "output_tokens": {"type": ["integer", "null"]},
+        "cache_read_tokens": {"type": ["integer", "null"]},
+        "reasoning_tokens": {"type": ["integer", "null"]},
+        "cost_usd": {"type": ["number", "null"]},
+        "usage_complete": {"type": "boolean"},
+        "cost_complete": {"type": "boolean"},
+        "ttft_ms": {"type": ["number", "null"]},
+        "tool_call_count": {"type": "integer", "minimum": 0},
+        "mcp_call_count": {"type": "integer", "minimum": 0},
+        "mcp_cassette_miss_count": {"type": "integer", "minimum": 0},
+        "file_diff_count": {"type": "integer", "minimum": 0},
+        "hook_event_count": {"type": "integer", "minimum": 0},
+        "otel_span_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "spans": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "tool_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trial_id", "call_index", "tool_name", "source_layer", "status"],
+        "properties": {
+          "trial_id": {"type": "string", "minLength": 1},
+          "call_index": {"type": "integer", "minimum": 0},
+          "tool_use_id": {"type": ["string", "null"]},
+          "tool_name": {"type": "string", "minLength": 1},
+          "source_layer": {"enum": ["hook", "otel", "transcript", "fused"]},
+          "start_wall_ns": {"type": ["integer", "null"]},
+          "end_wall_ns": {"type": ["integer", "null"]},
+          "duration_ms": {"type": ["number", "null"]},
+          "status": {"enum": ["ok", "error", "unknown"]},
+          "arguments_json": {"type": ["string", "null"]},
+          "result_summary": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "mcp_calls": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "file_diffs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["trial_id", "rel_path", "change_kind"],
+        "properties": {
+          "trial_id": {"type": "string", "minLength": 1},
+          "rel_path": {"type": "string", "minLength": 1},
+          "change_kind": {"enum": ["added", "modified", "deleted"]},
+          "before_sha256": {"type": ["string", "null"]},
+          "after_sha256": {"type": ["string", "null"]},
+          "before_size": {"type": ["integer", "null"]},
+          "after_size": {"type": ["integer", "null"]}
+        }
+      }
+    }
+  }
+}

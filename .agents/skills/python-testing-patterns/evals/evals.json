@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-testing-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write clean `pytest` unit tests for a `TokenIssuer` class whose tokens expire after 15 minutes (`datetime.now(UTC)`), covering valid issuance, exact 15-minute expiry boundary, and invalid TTL configuration (`<= 0`).",
+      "expected_output": "Follows AAA (`Arrange`, `Act`, `Assert`) and descriptive `test_<unit>_<scenario>_<expected>` naming, uses `freezegun.freeze_time` (`with freeze_time('2026-05-01T12:00:00Z') as frozen:` + `frozen.move_to(...)` / `tick(...)`) instead of `time.sleep`, uses `@pytest.mark.parametrize` with `pytest.param(..., id=...)` for `<= 0` TTL edge cases, and asserts `with pytest.raises(ValueError, match=...)`.",
+      "files": [],
+      "expectations": [
+        "Uses descriptive `test_<unit>_<scenario>_<expected>` function names and clear Arrange-Act-Assert structure with one behavior per test",
+        "Controls clock progression deterministically via `freezegun.freeze_time` (`move_to` / `tick`) rather than real sleeps or monkeypatching `datetime` unsafely",
+        "Uses `@pytest.mark.parametrize` with readable `pytest.param(..., id=...)` labels for boundary/invalid TTL inputs",
+        "Asserts invalid TTL failures with `pytest.raises(ValueError, match=...)` checking both exception type and message"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write `pytest` unit tests verifying our `fetch_invoice` retry wrapper: (1) succeeds on attempt 3 after two `TimeoutError` failures (`side_effect`), and (2) fails immediately on attempt 1 without retrying when `ValueError` is raised.",
+      "expected_output": "Uses `unittest.mock.patch` (patching the transport call where imported, with `autospec=True`) configured via `side_effect=[TimeoutError('t1'), TimeoutError('t2'), expected_invoice]` asserting `mock_get.call_count == 3`, plus a second test setting `side_effect=ValueError('bad id')` with `pytest.raises(ValueError)` and asserting `mock_get.call_count == 1` (zero wasted retries).",
+      "files": [],
+      "expectations": [
+        "Configures `side_effect=[TimeoutError(...), TimeoutError(...), expected]` to simulate transient recovery and asserts `call_count == 3`",
+        "Writes a dedicated negative test proving `ValueError` raises immediately with `call_count == 1` (verifying non-retryable errors are not retried)",
+        "Patches/injects no-op sleep wait during unit tests so backoff delays run in milliseconds",
+        "Uses `autospec=True` / `spec_set` on mocks so signature drift is caught automatically"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Organize `pytest` fixture scopes (`session` DB engine vs `function` rolled-back DB transaction) and custom pytest markers (`slow`, `integration`) in `pyproject.toml` so local developers can run fast unit tests in <2 seconds while CI runs everything with `--strict-markers`.",
+      "expected_output": "Defines a `scope='session'` expensive read-only setup fixture paired with a `scope='function'` transactional `yield` fixture that rolls back after every test, registers `markers = ['slow: ...', 'integration: ...']` plus `addopts = '--strict-markers'` in `[tool.pytest.ini_options]`, and shows `pytest -m 'not slow and not integration'` vs full CI invocation.",
+      "files": [],
+      "expectations": [
+        "Pairs `scope='session'` expensive container/engine creation with a `scope='function'` `yield` fixture that rolls back state after every test",
+        "Registers custom markers (`slow`, `integration`) and `--strict-markers` in `[tool.pytest.ini_options]` so misspelled `@pytest.mark.*` decorators fail immediately",
+        "Shows selective execution via `pytest -m 'not slow and not integration'` for fast developer feedback",
+        "Ensures `yield` fixture teardown runs safely inside `try/finally` or context managers"
+      ]
+    }
+  ]
+}

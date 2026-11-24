@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "py-refactor-01",
+      "project": "artagon-python",
+      "intent": "Plan and orchestrate a comprehensive multi-phase refactoring campaign for a 25k-LOC legacy Python 3.10 service that has Bandit findings, 42% test coverage, dead modules, grade-E `radon` functions, and `setup.py` packaging.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Captures baseline security, coverage, dead-code, and complexity metrics into `reports/` before modifying production code\n- Orders phases strictly as Security -> Test Quality -> Code Health -> Complexity -> Modernization / Quality Gates\n- Explains why `py-test-quality` (>= 80% coverage / >= 75% mutation score) MUST run before `py-code-health` and `py-complexity` structural changes\n- Requires atomic per-phase commits with green test/linter gates between phases and final before/after metric comparison",
+      "judge": {},
+      "tags": [
+        "py-refactor",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-refactor"
+    },
+    {
+      "id": "py-refactor-02",
+      "project": "artagon-python",
+      "intent": "A teammate wants to kick off a full `py-refactor` campaign right now during an active P1 checkout outage, and also asks whether to run the full 5-phase campaign on a brand-new module that has zero tests and a single SQL injection bug.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Advises against running a broad refactoring campaign during an active P1 production outage\n- Routes a narrow single-vulnerability fix directly to `py-security` rather than over-orchestrating all five phases\n- Refuses structural/complexity refactoring on zero-test modules until `py-test-quality` establishes characterization/unit tests\n- Specifies clear entry criteria and rollback checkpoints per phase",
+      "judge": {},
+      "tags": [
+        "py-refactor",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-refactor"
+    },
+    {
+      "id": "py-refactor-03",
+      "project": "artagon-python",
+      "intent": "We finished Phases 1–4 of a Python refactoring initiative (`py-security`, `py-test-quality`, `py-code-health`, `py-complexity`). Show how to verify measurable improvement against baseline and lock the repository against regression.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Re-runs security, branch coverage, mutation score, dead-code, and `radon`/`wily` complexity metrics and compares them against the saved baseline in `reports/`\n- Executes `py-modernize` (`uv`, Python 3.13 syntax) only after dead code and high-complexity blocks have already been cleaned up\n- Installs `py-quality-setup` (`ruff`, `mypy`, `basedpyright`) and `py-git-hooks` (`.pre-commit-config.yaml` / `lint-gate.py`) to prevent regression\n- Verifies the full test suite and typecheckers pass cleanly before closing the refactoring campaign",
+      "judge": {},
+      "tags": [
+        "py-refactor",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-refactor"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {"query": "Make this /bin/sh script portable to dash and BusyBox ash under POSIX.1-2017.", "should_trigger": true},
+  {"query": "Which commands changed between the 2017 and 2024 POSIX shell profiles?", "should_trigger": true},
+  {"query": "Can our POSIX 2017 script keep set -o pipefail on every deployed sh?", "should_trigger": true},
+  {"query": "Audit readonly, local and namespace::functions in a portable sh library.", "should_trigger": true},
+  {"query": "Review GNU versus macOS sed and stat dependencies in this portable shell tool.", "should_trigger": true},
+  {"query": "Does green ShellCheck -s sh prove support on our old BusyBox image?", "should_trigger": true},
+  {"query": "Give a portability verdict for a sourced POSIX shell library with unknown caller options.", "should_trigger": true},
+  {"query": "$shell-posix report the declared standards edition, dash/ash versions and utility matrix.", "should_trigger": true},
+  {"query": "Keep this executable in Bash 3.2 and replace mapfile with a Bash-compatible loop.", "should_trigger": false},
+  {"query": "Use native Zsh array flags and glob qualifiers for this ZLE widget.", "should_trigger": false},
+  {"query": "Investigate Zsh --emulate sh startup files; do not claim POSIX conformance.", "should_trigger": false},
+  {"query": "Add JSON ShellCheck output to CI; all POSIX targets are already fixed.", "should_trigger": false},
+  {"query": "Write Bats PATH stubs for a CLI whose sh portability contract is already approved.", "should_trigger": false},
+  {"query": "Install the packaged shell quality gate for an existing project.", "should_trigger": false},
+  {"query": "Debug a Bash 4.4 inherit_errexit command substitution.", "should_trigger": false},
+  {"query": "Review safe temporary-file cleanup in an already-profiled POSIX program; no portability assessment.", "should_trigger": false}
+]

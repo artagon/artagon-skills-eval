@@ -1,0 +1,23 @@
+id: no-sys-path-mutation
+valid:
+  - |
+    import sys
+    version = sys.version_info
+  - |
+    paths = list(sys.path)
+  - |
+    items: list[str] = []
+    items.insert(0, "ok")
+invalid:
+  - |
+    import sys
+    sys.path.insert(0, "/some/dir")
+  - |
+    import sys
+    sys.path.append("/some/dir")
+  - |
+    import sys
+    sys.meta_path.insert(0, object())
+  - |
+    import sys
+    sys.meta_path.append(object())

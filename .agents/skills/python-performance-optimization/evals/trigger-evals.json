@@ -1,0 +1,18 @@
+[
+  {"query": "profile our slow Python batch job with cProfile, line_profiler, and py-spy flamegraphs before optimizing it", "should_trigger": true},
+  {"query": "fix an 8GB Python OOM on large file processing by replacing readlines() lists with streaming generators and slots=True", "should_trigger": true},
+  {"query": "speed up an O(n^2) Python loop caused by `in list` checks, `+=` string concat, and `list.pop(0)`", "should_trigger": true},
+  {"query": "attach py-spy record --pid to a live production Python worker to capture an SVG CPU flamegraph", "should_trigger": true},
+  {"query": "benchmark lru_cache memoization and set lookups with timeit and tracemalloc in Python", "should_trigger": true},
+  {"query": "find memory leaks and peak allocation lines in Python using tracemalloc and memory_profiler", "should_trigger": true},
+  {"query": "use kernprof -l -v to pinpoint line-by-line bottlenecks in a CPU-heavy Python parser", "should_trigger": true},
+  {"query": "decide between collections.deque, bisect, lru_cache, and vectorized NumPy/Polars for a slow Python transform", "should_trigger": true},
+  {"query": "measure cyclomatic complexity and maintainability index with radon cc and wily", "should_trigger": false},
+  {"query": "set up OpenTelemetry distributed tracing and structlog correlation IDs", "should_trigger": false},
+  {"query": "review PostgreSQL composite index column order and EXPLAIN ANALYZE plans", "should_trigger": false},
+  {"query": "profile a Rust crate with cargo flamegraph and criterion benchmarks", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml", "should_trigger": false},
+  {"query": "run mutmut mutation testing on our pytest suite", "should_trigger": false},
+  {"query": "add tenacity exponential backoff retries on HTTP 503 errors", "should_trigger": false},
+  {"query": "optimize a DSPy prompt with MIPROv2", "should_trigger": false}
+]

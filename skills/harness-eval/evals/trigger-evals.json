@@ -1,0 +1,82 @@
+[
+  {
+    "query": "preview the ABBA schedule for examples/four-cli-canary.json with harness-eval.py without running live trials",
+    "should_trigger": true
+  },
+  {
+    "query": "run nix-check and auth status for our multi-CLI harness evaluation environment",
+    "should_trigger": true
+  },
+  {
+    "query": "freeze this harness-eval protocol manifest and run the campaign across claude and codex",
+    "should_trigger": true
+  },
+  {
+    "query": "why did harness-eval.py exit with code 4 EXIT_BILLING_GUARD on my subscription arm?",
+    "should_trigger": true
+  },
+  {
+    "query": "re-run ITT lift and Holm-Bonferroni statistical analysis on /tmp/campaign-01 with harness-eval",
+    "should_trigger": true
+  },
+  {
+    "query": "check campaign progress and quota censoring status for an active harness-eval run",
+    "should_trigger": true
+  },
+  {
+    "query": "run preflight with isolation canaries on our frozen harness-eval manifest",
+    "should_trigger": true
+  },
+  {
+    "query": "execute a paired ABBA evaluation campaign comparing baseline vs skill-enabled arms with harness-eval.py",
+    "should_trigger": true
+  },
+  {
+    "query": "troubleshoot EXIT_ISOLATION_CANARY exit code 5 during harness-eval preflight",
+    "should_trigger": true
+  },
+  {
+    "query": "verify subscription keyring store separation before launching a four-CLI harness-eval campaign",
+    "should_trigger": true
+  },
+  {
+    "query": "author a new harness-eval-protocol/v1 JSON manifest and RFC 8785 MCP cassette from scratch",
+    "should_trigger": false
+  },
+  {
+    "query": "design a vendor-blind judge rubric and deterministic verifier_cmd for a new evaluation protocol",
+    "should_trigger": false
+  },
+  {
+    "query": "run a read-only DuckDB SQL query over tool_calls and mcp_calls in /tmp/campaign-01",
+    "should_trigger": false
+  },
+  {
+    "query": "export trial OTel spans from a completed harness-eval campaign to Arize Phoenix and MLflow 3",
+    "should_trigger": false
+  },
+  {
+    "query": "launch a three-agent NTM coding swarm to review pull request diffs",
+    "should_trigger": false
+  },
+  {
+    "query": "search the repository for namespace::function callers using ripwire",
+    "should_trigger": false
+  },
+  {
+    "query": "install Herdr marketplace plugins and configure keybindings in config.toml",
+    "should_trigger": false
+  },
+  {
+    "query": "write a Bats unit test suite for a POSIX shell library under scripts/lib",
+    "should_trigger": false
+  },
+  {
+    "query": "connect Claude Desktop to AgentGateway MCP over Tailscale Serve",
+    "should_trigger": false
+  },
+  {
+    "query": "rewrite Python isinstance checks across src/ using ast-grep structural rules",
+    "should_trigger": false
+  }
+]

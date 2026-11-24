@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/hook-event/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trial_id",
+    "harness",
+    "event_name",
+    "recv_wall_ns",
+    "recv_mono_ns",
+    "pid",
+    "ppid",
+    "transport",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-hook-event/v1"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+    "event_name": {"type": "string", "minLength": 1},
+    "recv_wall_ns": {"type": "integer", "minimum": 0},
+    "recv_mono_ns": {"type": "integer", "minimum": 0},
+    "pid": {"type": "integer", "minimum": 1},
+    "ppid": {"type": "integer", "minimum": 0},
+    "transport": {"enum": ["unix_socket", "hmac_append"]},
+    "truncated": {"type": "boolean", "default": false},
+    "hmac_sha256": {"type": ["string", "null"]},
+    "tool_name": {"type": ["string", "null"]},
+    "tool_use_id": {"type": ["string", "null"]},
+    "turn_id": {"type": ["string", "null"]},
+    "payload": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean", "null", "array", "object"]
+      }
+    }
+  }
+}

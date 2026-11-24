@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-shell",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "shell-posix-01",
+      "project": "artagon-shell",
+      "intent": "On paper, assess this POSIX.1-2017 library for dash and BusyBox ash: namespace::load() { local rows; set -o pipefail; source ./config; readonly cache_dir=/tmp/cache; }. The caller sources it. Do not execute or edit anything.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Identifies the function name, local and source as nonportable for the 2017 contract.\n- States that pipefail is standardized in POSIX.1-2024 rather than POSIX.1-2017.\n- Recognizes readonly name=value as a standard POSIX form.\n- Does not silently disable required pipeline failure detection when an implementation lacks pipefail.\n- Requires named dash and BusyBox versions and sourced-caller tests rather than treating /bin/sh as a version.",
+      "judge": {},
+      "tags": [
+        "shell-posix",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-posix"
+    },
+    {
+      "id": "shell-posix-02",
+      "project": "artagon-shell",
+      "intent": "Our sh script claims POSIX.1-2024 and uses find -print0, xargs -0, sed -E, readlink -f and pipefail. Does green ShellCheck -s sh establish compatibility with an old BusyBox image? Answer on paper only, with utility and interpreter checks separated.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- States that find -print0, xargs -0, sed -E and pipefail are in the 2024 standard.\n- States that readlink -f is not standardized by POSIX.1-2024.\n- Requests the actual BusyBox version, build or applet capabilities and shell invocation.\n- Does not claim that a current ShellCheck sh profile selects the POSIX 2017 edition or proves deployed behavior.\n- Reports old BusyBox execution and utility support as unverified.",
+      "judge": {},
+      "tags": [
+        "shell-posix",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-posix"
+    },
+    {
+      "id": "shell-posix-03",
+      "project": "artagon-shell",
+      "intent": "Plan verification for a POSIX.1-2017 executable on dash, BusyBox ash, FreeBSD sh and macOS utilities. Existing Bats tests source it into Bash and use GNU sed -i/stat -c. Do not run commands or install tools.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Explains that Bats is a Bash runner and sourcing the target into Bash is not dash or ash evidence.\n- Uses explicit target interpreter invocations or a same-shell runner for the intended role.\n- Separates GNU, FreeBSD, macOS and BusyBox utility behavior instead of inferring it from shell syntax.\n- Marks unavailable interpreter or utility cells as missing coverage rather than successful skips.\n- Does not install tools, run commands or claim POSIX conformance from the plan.",
+      "judge": {},
+      "tags": [
+        "shell-posix",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-posix"
+    }
+  ]
+}

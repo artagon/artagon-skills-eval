@@ -1,0 +1,41 @@
+{
+  "skill_name": "fastapi-code-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review `app/api/routes/users.py` where line 18 defines `@router.post('/users')` (`async def create_user(payload: dict, db = Depends(get_db)):`), calls `requests.post(AUDIT_URL, json=payload)` on line 24, and returns a raw SQLAlchemy `User` ORM object on line 27.",
+      "expected_output": "An evidence-gated FastAPI review (loading `artagon-python:review-verification-protocol` and checking full route signatures/bodies) citing exact `file:line` anchors: missing `response_model` and `status_code=status.HTTP_201_CREATED` on `app/api/routes/users.py:18`, unvalidated `payload: dict` instead of a Pydantic request `BaseModel`, event-loop-blocking `requests.post` inside `async def` at `app/api/routes/users.py:24`, and leaking the ORM model without a response DTO at `app/api/routes/users.py:27`.",
+      "files": [],
+      "expectations": [
+        "Applies FastAPI verification gates (`file:line` route decorator check, full handler body inspection, and dependency/signature check) before reporting findings",
+        "Flags missing `response_model=...` and `status_code=status.HTTP_201_CREATED` on `@router.post('/users')` at `app/api/routes/users.py:18`",
+        "Flags synchronous `requests.post` blocking the event loop inside `async def` at `app/api/routes/users.py:24` and recommends `httpx.AsyncClient` or `BackgroundTasks`/async client",
+        "Flags untyped `payload: dict` and returning a raw SQLAlchemy ORM instance without a Pydantic `response_model` DTO (`ConfigDict(from_attributes=True)`)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "During a FastAPI review of `app/api/routes/health.py`, a junior reviewer flagged three 'bugs': (1) `async def healthcheck(): return {'status': 'ok'}` has no `await` inside, (2) `@router.get('/me', response_model=UserOut)` returns a `dict` instead of `UserOut(...)`, and (3) `db: AsyncSession = Depends(get_session)` is 'unused' in an auth-protected stub route. Evaluate each claim against FastAPI review gates.",
+      "expected_output": "Filters out the valid FastAPI idioms rather than echoing false positives: explains that `async def` without `await` for lightweight FastAPI handlers and returning a `dict` when `response_model=UserOut` is declared are valid FastAPI idioms (FastAPI validates and serializes the dict against `UserOut`), and inspects `get_session` / router-level `dependencies=[Depends(...)]` before making any unused/missing-auth claim.",
+      "files": [],
+      "expectations": [
+        "Dismisses the false positive on `async def` without `await` as a valid FastAPI route idiom when no blocking sync I/O is called",
+        "Dismisses the false positive on returning a `dict` when `response_model=UserOut` is explicitly set on the route decorator",
+        "Checks `Depends(...)` side effects and router/app-level dependencies before claiming missing auth or unused dependency parameters",
+        "Refuses to emit speculative findings that lack `[FILE:LINE]` evidence after reading the full route and dependency definitions"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Audit a FastAPI dependency `def get_http_client(): client = httpx.AsyncClient(); return client` injected via `Depends(get_http_client)` across 12 routes, plus an exception handler returning `500` stack traces to clients.",
+      "expected_output": "A FastAPI DI and error-handling review identifying the unclosed `httpx.AsyncClient` resource leak (fixing it via a `yield` dependency or FastAPI `lifespan` `@asynccontextmanager` shared client on `app.state`), and replacing leaked 500 stack traces with `HTTPException` / structured `@app.exception_handler` responses that log tracebacks server-side only.",
+      "files": [],
+      "expectations": [
+        "Identifies that returning `httpx.AsyncClient()` without `yield` teardown or `lifespan` management leaks connections and skips connection pooling",
+        "Shows proper FastAPI `lifespan` `@asynccontextmanager` or `async def` `yield` dependency cleanup (`async with httpx.AsyncClient() as client: yield client`)",
+        "Flags returning raw internal stack traces in 500 responses and replaces them with safe `HTTPException` / `@app.exception_handler` payloads",
+        "Anchors findings to concrete route/dependency locations and FastAPI lifecycle guarantees"
+      ]
+    }
+  ]
+}

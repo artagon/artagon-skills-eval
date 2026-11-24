@@ -1,0 +1,18 @@
+[
+  {"query": "design bounded TypeVars, Generic[T, E] Result types, and @runtime_checkable Protocols in Python", "should_trigger": true},
+  {"query": "replace Any and unsafe cast() calls in Python using TypeIs, TypeGuard, discriminated unions, and assert_never", "should_trigger": true},
+  {"query": "adopt mypy --strict incrementally across a legacy Python repo using per-module [[tool.mypy.overrides]]", "should_trigger": true},
+  {"query": "compare PEP 695 `type Alias = ...` and `def fn[T]()` in Python 3.12+ against TypeAlias and TypeVar", "should_trigger": true},
+  {"query": "type a decorator in Python with ParamSpec and Concatenate so wrapped function signatures are preserved", "should_trigger": true},
+  {"query": "choose between Sequence/Mapping and list/dict in Python function parameter annotations due to variance", "should_trigger": true},
+  {"query": "write @overload signatures in Python where the return type depends on a Literal flag parameter", "should_trigger": true},
+  {"query": "enforce exhaustive union handling at static typecheck time in Python using typing.assert_never", "should_trigger": true},
+  {"query": "eliminate explicit any in TypeScript and verify zero errors with tsc --noEmit", "should_trigger": false},
+  {"query": "build a compile-time TypeScript Path<T> template literal type", "should_trigger": false},
+  {"query": "design a DSPy Signature subclass with InputField and OutputField", "should_trigger": false},
+  {"query": "scan Python code for Bandit security issues like SQL injection and weak hashes", "should_trigger": false},
+  {"query": "configure Celery task_acks_late and Redis Dead Letter Queues", "should_trigger": false},
+  {"query": "profile Python CPU hotspots using cProfile and py-spy", "should_trigger": false},
+  {"query": "publish a wheel and sdist to PyPI with twine", "should_trigger": false},
+  {"query": "install .pre-commit-config.yaml hooks and symlink lint-gate.py", "should_trigger": false}
+]

@@ -1,0 +1,103 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-harness-eval",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "harness-eval-trace-01",
+      "project": "artagon-harness-eval",
+      "intent": "Show how to run a read-only SQL query comparing ITT pass rate, tool failure count, and MCP cassette misses per arm for /tmp/campaign-01.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- The assistant uses `python3 scripts/harness-eval.py --output json trace-query --campaign /tmp/campaign-01 --sql ...`\n- The SQL is a single read-only `SELECT` or `WITH ... SELECT` statement over registered tables (`trials`, `tool_calls`, `mcp_calls`) without DDL, DML, `ATTACH`, `COPY`, or `read_parquet`\n- The assistant preserves campaign artifacts unmodified (`mutations=\"none\"`)",
+      "judge": {},
+      "tags": [
+        "harness-eval-trace",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "harness-eval-trace"
+    },
+    {
+      "id": "harness-eval-trace-02",
+      "project": "artagon-harness-eval",
+      "intent": "Can I run trace-query with `COPY (SELECT * FROM read_parquet('/etc/hosts')) TO '/tmp/out.csv'` to join external files with our campaign DuckDB store?",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- The assistant explains that `trace-query` opens DuckDB in `READ_ONLY` mode with `enable_external_access=false` (and SQLite `?mode=ro` authorizer) and rejects `COPY` and `read_parquet(...)` with exit code `2` (`EXIT_SCHEMA_USAGE`)\n- The assistant advises querying only the five registered views (`trials`, `spans`, `tool_calls`, `mcp_calls`, `file_diffs`) with a single `SELECT` or `WITH` query",
+      "judge": {},
+      "tags": [
+        "harness-eval-trace",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "harness-eval-trace"
+    },
+    {
+      "id": "harness-eval-trace-03",
+      "project": "artagon-harness-eval",
+      "intent": "Export the spans from /tmp/campaign-01 to our local Arize Phoenix collector on port 6006, and explain what happens if someone points --endpoint at a remote collector host.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- The assistant uses `python3 scripts/harness-eval.py --output json trace-export --campaign /tmp/campaign-01 --format phoenix` with `--endpoint http://127.0.0.1:6006/v1/traces` (and optional `--out` path)\n- The assistant explains that `--endpoint` allows only loopback hosts (`127.0.0.1`, `localhost`, `::1`) by default and fails closed with exit code `2` on remote hosts unless `--allow-remote-export` is explicitly authorized\n- The assistant does not transmit traces to a non-loopback remote endpoint without explicit user approval",
+      "judge": {},
+      "tags": [
+        "harness-eval-trace",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "harness-eval-trace"
+    },
+    {
+      "id": "harness-eval-trace-04",
+      "project": "artagon-harness-eval",
+      "intent": "A trial modified a file via a Bash shell command (`echo ok > out.txt`) instead of calling a dedicated Write tool, so PreToolUse only saw Bash. Which trace table records the actual file change?",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- The assistant identifies Layer 4 supervisor pre/post workspace SHA-256 snapshots in the `file_diffs` table as the ground truth that catches `Bash` file mutations invisible to file-tool hooks\n- The assistant provides a read-only `SELECT` query over `file_diffs` (for example filtering by `trial_id`, `rel_path`, and `change_kind`) via `trace-query`",
+      "judge": {},
+      "tags": [
+        "harness-eval-trace",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "harness-eval-trace"
+    }
+  ]
+}

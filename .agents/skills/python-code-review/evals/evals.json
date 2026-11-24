@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-code-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review `src/sync/client.py` where line 12 defines `def fetch_items(filters: dict = {}):`, line 21 runs `time.sleep(2)` inside `async def poll_remote():`, and line 29 catches `except KeyError as err: raise SyncError('missing key')` without exception chaining.",
+      "expected_output": "Walks through `python-code-review`'s 5 ordered reporting gates (explicit `.py` scope, screening valid patterns, reading full enclosing functions, loading `review-verification-protocol`, and `[FILE:LINE]` anchored output) and reports: mutable default `filters: dict = {}` at `src/sync/client.py:12` (`dict[str, Any] | None = None`), event-loop blocking `time.sleep(2)` inside `async def` at `src/sync/client.py:21` (`await asyncio.sleep(2)`), and lost traceback context at `src/sync/client.py:29` (`raise SyncError('missing key') from err`).",
+      "files": [],
+      "expectations": [
+        "Follows the 5 reporting gates and anchors every finding with exact `[FILE:LINE]` coordinates",
+        "Flags the mutable default argument `filters: dict = {}` at `src/sync/client.py:12` and replaces it with `None` sentinel initialization and parameterized `dict` types",
+        "Flags synchronous `time.sleep(2)` inside `async def poll_remote` at `src/sync/client.py:21` and replaces it with `await asyncio.sleep(2)`",
+        "Flags `raise SyncError(...)` inside `except KeyError as err:` without `from err` at `src/sync/client.py:29` because it discards `__cause__` traceback context"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Check whether these four snippets in `src/adapters/legacy.py` should be flagged as bugs during a `python-code-review`: (1) an empty `src/adapters/__init__.py`, (2) `typing.Any` on a thin wrapper around an untyped C extension, (3) `cast(UserDict, raw)` immediately after an `isinstance(raw, dict)` + key check, and (4) `# noqa: BLE001` with a comment explaining top-level plugin isolation.",
+      "expected_output": "Applies Gate 2 (`Valid Patterns — Do NOT Flag`) and `review-verification-protocol`: confirms all four are valid, intentional Python patterns when verified in context (empty `__init__.py` package marker, `Any` at untyped third-party boundary, `cast()` after runtime validation guard, and documented `# noqa: BLE001` plugin-boundary isolation) and suppresses false-positive noise.",
+      "files": [],
+      "expectations": [
+        "Screens each candidate against Gate 2 Valid Patterns and Context-Sensitive Rules before emitting findings",
+        "Recognizes empty `__init__.py`, `Any` at an untyped C-extension boundary, `cast()` immediately after a runtime guard, and a justified `# noqa` comment as valid patterns not to flag",
+        "Verifies enclosing function context rather than applying blind regex rules",
+        "Produces a clean zero-false-positive review report explaining what was verified"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review `src/reports/loader.py` where line 15 opens `data = json.load(open(path))` without closing the file, line 28 uses `Optional[Union[str, int]]`, and line 40 catches `except Exception: return None` inside `load_financial_ledger(path: Path)`.",
+      "expected_output": "Anchored `[FILE:LINE]` review reporting: unclosed file handle in `open(path)` at `src/reports/loader.py:15` (`with path.open(encoding='utf-8') as f:`), silent `except Exception: return None` masking corrupt financial ledger files vs missing files at `src/reports/loader.py:40` (Major correctness risk), and minor modernization note for `str | int | None` at `src/reports/loader.py:28` (only if targeting Python 3.10+ and not already enforced by ruff).",
+      "files": [],
+      "expectations": [
+        "Flags the unclosed `open(path)` handle + missing `encoding='utf-8'` at `src/reports/loader.py:15` and replaces it with a `with` block",
+        "Flags `except Exception: return None` at `src/reports/loader.py:40` for silently masking `JSONDecodeError`/`PermissionError` on financial data",
+        "Calibrates severity accurately (correctness/resource bugs above style suggestions like `str | int | None`)",
+        "Cites `[FILE:LINE]` and concrete replacement code for every finding"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+harness: agy
+binary_name: agy
+campaign_v1_supported: true
+skillopt_supported: true
+
+auth:
+  vendor_family: google
+  default_model: gemini-4-carbon-high
+  banned_model_regex: "(?i)argon"
+  harness_home_env: null
+  subscription_files:
+    - .gemini/oauth_creds.json
+    - .gemini/google_accounts.json
+    - .gemini/gemini-credentials.json
+    - .gemini/antigravity-cli/oauth_creds.json
+    - .gemini/antigravity-cli/google_accounts.json
+    - .gemini/antigravity-cli/gemini-credentials.json
+  subscription_env_vars: []
+  api_key_env_var: GEMINI_API_KEY
+  provider_base_url_env: null
+  scrubbed_env_vars:
+    - GOOGLE_API_KEY
+    - GOOGLE_GENAI_USE_VERTEXAI
+  metered_env_prefixes: []
+
+system_prompt:
+  default:
+    flags: []
+  append:
+    flags: []
+    write_rel_path: .gemini/GEMINI.md
+    target_root: home
+  replace:
+    flags: []
+    write_rel_path: ".gemini/config/agents/{agent_slug}/agent.md"
+    target_root: home
+    custom_agent_template: agy_agent_md
+    agent_flag: --agent
+
+hooks:
+  home_env_var: null
+  default_home_rel: .gemini/config
+  user_hook_rel: hooks.json
+  workspace_hook_rel: .agents/hooks.json
+  format: json
+  dialect: namespaced_lifecycle
+  namespace_key: harness-eval-trace
+  events:
+    - PreInvocation
+    - PostInvocation
+    - PreToolUse
+    - PostToolUse
+    - Stop
+  matcher_events:
+    - PreToolUse
+    - PostToolUse
+  stdout_ack_events:
+    PreToolUse: "{\"decision\":\"allow\"}\n"
+    Stop: "{\"decision\":\"allow\"}\n"
+  timeout_field: timeout
+  timeout_seconds: 5
+
+otel:
+  delivery: none
+  protocol: none
+
+transcript:
+  session_rel_dir: .gemini/antigravity-cli/brain
+  format: brain_jsonl
+  jmespath_queries:
+    frame_kind: "event || type"
+    brain_tool_calls: "tool_calls[].{tool_use_id: id, tool_name: name || tool_name, arguments: args || arguments}"
+    final_response: "response || message.content || content"
+
+reflect_no_tools:
+  supported: true
+  base_flags:
+    - --output-format
+    - stream-json
+    - --disable-slash-commands
+  required_probe_flags:
+    - --output-format
+    - --disable-slash-commands
+    - --agent
+  read_only_requires_sandbox: false
+
+headless:
+  subcommand: []
+  prompt_flag: "-p"
+  prompt_position: flag
+  add_dir_flag: --add-dir
+  base_flags:
+    - --mode
+    - auto
+    - --dangerously-skip-permissions
+    - --output-format
+    - stream-json
+  tier2_common_flags: []
+  model_flag: --model
+  effort_flag: --effort
+  skip_effort_when_model_matches: "(?i)-(?:low|medium|high|xhigh|max)$"
+  required_probe_flags:
+    - --mode
+    - --dangerously-skip-permissions
+    - --output-format
+    - --add-dir
+    - --model
+
+version_overlays:
+  - specifier: ">=1.5.0"
+    overrides:
+      transcript:
+        format: brain_jsonl

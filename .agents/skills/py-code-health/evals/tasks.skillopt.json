@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "py-code-health-01",
+      "project": "artagon-python",
+      "intent": "Run a dead-code cleanup workflow on our Python repository using `vulture`, making sure we do not accidentally delete Django/ORM model fields, public API functions, dynamic `getattr` handlers, or a helper whose call site was accidentally dropped during a refactor.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Runs `vulture . --min-confidence 80` (and `--sort-by-size` or `--exclude=tests/,venv/,.venv/`) to detect unused functions, classes, variables, and imports\n- Distinguishes confidence tiers (60–70% vs 80–89% vs 90–100%) and suppresses legitimate dynamic `getattr`, ORM/framework, or public-API symbols with a `whitelist.py` file (`vulture . whitelist.py`)\n- Validates whether an apparently unused constant, type, or function is actually a partial-refactor bug missing its call site before deleting it\n- Verifies all tests pass and code coverage is maintained after removing confirmed dead code",
+      "judge": {},
+      "tags": [
+        "py-code-health",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-code-health"
+    },
+    {
+      "id": "py-code-health-02",
+      "project": "artagon-python",
+      "intent": "Detect duplicate code blocks across `src/exporters/` (`export_users_csv`, `export_orders_csv`, and `export_invoices_csv` share 45 nearly identical lines) and consolidate them cleanly with full type safety.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Runs `pylint --disable=all --enable=duplicate-code --duplicate-code-min-lines=6 --recursive=y .` to detect duplicate blocks exceeding 6 lines\n- Consolidates the similar functions into a single parametrized generic function (`TypeVar`) or configuration-driven dictionary (`FILE_CONFIGS` pattern)\n- Extracts shared validation or formatting steps into reusable helper functions where appropriate\n- Re-runs `pylint --disable=all --enable=duplicate-code` and the test suite to confirm duplication is eliminated without regressions",
+      "judge": {},
+      "tags": [
+        "py-code-health",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-code-health"
+    },
+    {
+      "id": "py-code-health-03",
+      "project": "artagon-python",
+      "intent": "Clean up `src/legacy_utils.py`, which has unused helper functions (`_parse_v0`), 90 lines of `# old v1 implementation` commented-out functions, and copy-pasted email/age validation across `create_user` and `update_user`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses `vulture` (`--min-confidence 80`) and checks call sites (including dynamic `getattr` usage) to confirm `_parse_v0` is genuinely unused before deleting it\n- Deletes commented-out `# old v1 implementation` blocks and explains that Git history preserves old implementations without cluttering active source\n- Extracts duplicated validation logic in `create_user` and `update_user` into shared helper functions\n- Verifies `vulture . --min-confidence 80`, `pylint --disable=all --enable=duplicate-code`, and `pytest` pass after cleanup",
+      "judge": {},
+      "tags": [
+        "py-code-health",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-code-health"
+    }
+  ]
+}

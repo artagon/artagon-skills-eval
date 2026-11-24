@@ -1,0 +1,41 @@
+{
+  "skill_name": "sqlalchemy-code-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review `app/repositories/orders.py` where line 16 instantiates a module-global `session = Session(engine)` shared across requests, line 24 uses legacy `session.query(Order).filter_by(tenant_id=tid).all()`, and line 27 loops `[len(order.items) for order in orders]` on a default lazy-loaded `Order.items` relationship.",
+      "expected_output": "Applies SQLAlchemy Gates 1 & 2 (citing exact `file:line` for session creation/scope AND both the loop + ORM `relationship()` definition): flags thread/task-unsafe module-global `Session(engine)` at `app/repositories/orders.py:16` (replace with per-request `with Session(engine) as session:` / `async with async_sessionmaker()`), upgrades legacy 1.x `session.query(...)` at line 24 to SQLAlchemy 2.0 `session.scalars(select(Order).where(...)).all()`, and fixes the N+1 query at line 27 with `.options(selectinload(Order.items))` (or `func.count` SQL aggregation).",
+      "files": [],
+      "expectations": [
+        "Cites `file:line` for session scope (Gate 1) and flags the module-global `Session(engine)` shared across concurrent requests, replacing it with request-scoped `with` / `async with` session management",
+        "Cites both the iteration loop (`orders.py:27`) and the lazy `Order.items` relationship (Gate 2) to prove the N+1 query, fixing it with `selectinload(Order.items)` / `joinedload` (or SQL `COUNT`)",
+        "Replaces legacy 1.x `session.query(Order)` with SQLAlchemy 2.0 `select(Order)` + `session.scalars(...)`",
+        "Notes `AsyncAttrs` / `lazy='raise'` safeguards when using `AsyncSession` to prevent implicit sync lazy-load `MissingGreenlet` crashes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review Alembic migration `migrations/versions/20261115_backfill_tiers.py` which imports `from app.models.user import User` inside `upgrade()` to loop over 500,000 rows one by one (`session.add(user)`), adds `op.add_column('users', sa.Column('tier', sa.String(), nullable=False))` with no `server_default` on an existing populated table, and writes `def downgrade(): pass`.",
+      "expected_output": "Applies SQLAlchemy Gate 3 (citing repo-relative migration path + `op.*` snippets): flags importing live application ORM models (`app.models.user.User`) inside Alembic migrations because future model column changes break historical migrations (use `op.execute(sa.text(...))` or ad-hoc `sa.table`/`sa.column`), flags row-by-row Python ORM loops over 500k rows instead of set-based SQL / batched updates, flags `nullable=False` without `server_default` or multi-step nullable->backfill->SET NOT NULL failing on populated tables, and replaces `def downgrade(): pass` with a reversible `op.drop_column('users', 'tier')` (or explicit irreversible guard).",
+      "files": [],
+      "expectations": [
+        "Cites the Alembic revision path and `op.*` snippets (Gate 3) before reporting migration findings",
+        "Flags importing live `app.models.user.User` ORM classes inside an Alembic revision and replaces it with `op.execute(sa.text(...))` or lightweight migration-local `sa.table(...)`",
+        "Flags adding `nullable=False` with no default on a populated table and row-by-row 500k Python loops, recommending nullable -> batched/set-based SQL backfill -> `alter_column(..., nullable=False)`",
+        "Flags no-op `def downgrade(): pass` and provides a concrete `op.drop_column` reversal"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Audit `app/services/importer.py` where `async with async_session() as session:` inserts 25,000 `MetricPoint` ORM objects via `for p in points: session.add(MetricPoint(**p)); await session.commit()` inside the loop.",
+      "expected_output": "Flags committing on every single iteration (`25,000` round-trips + transaction flushes + `expire_on_commit=True` overhead) and replaces it with SQLAlchemy 2.0 bulk core/ORM `await session.execute(insert(MetricPoint), points)` (chunked in e.g. 1,000–5,000 row batches) with `expire_on_commit=False` on `async_sessionmaker` and a single atomic transaction (or explicit batch commits).",
+      "files": [],
+      "expectations": [
+        "Identifies `await session.commit()` inside the 25,000-row loop as a severe round-trip and partial-commit atomicity defect",
+        "Replaces per-row `session.add` + `commit` with SQLAlchemy 2.0 bulk `session.execute(insert(MetricPoint), batch)`",
+        "Configures `expire_on_commit=False` on `async_sessionmaker` so attributes remain accessible after `commit()` without `MissingGreenlet` errors",
+        "Chunks very large parameter lists safely to respect PostgreSQL/driver bind-parameter limits"
+      ]
+    }
+  ]
+}

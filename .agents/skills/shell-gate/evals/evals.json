@@ -1,0 +1,40 @@
+{
+  "skill_name": "shell-gate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use the packaged gate for a Bash 3.2 script and a native Zsh 5.9 file, in read-only mode.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Separates the Bash host requirement from the script target contract.",
+        "Checks actual documented supported profiles and reports unsupported tools or targets.",
+        "Does not silently analyze native Zsh as Bash or call an unsupported lane clean.",
+        "Does not write source, configuration or install hooks."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our POSIX.1-2017/2024 CI gate passes warning-only ShellCheck; what does that establish?",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "States the configured severity omits SC2086 unless info is selected.",
+        "Distinguishes syntax/static results from runtime and platform utility compatibility.",
+        "Does not claim a current POSIX analyzer certifies an older standards edition."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Add project-local shell command screening for an approved runtime hook.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Inspects current client documentation and existing project configuration before proposing the hook.",
+        "Treats command-pattern screening as advisory rather than an OS isolation boundary.",
+        "Preserves tool errors and unscannable input as failures.",
+        "Does not mutate global configuration or execute destructive examples."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+harness: codex
+binary_name: codex
+campaign_v1_supported: true
+skillopt_supported: true
+
+auth:
+  vendor_family: openai
+  default_model: gpt-5-codex
+  harness_home_env: CODEX_HOME
+  subscription_files:
+    - auth.json
+  subscription_env_vars: []
+  api_key_env_var: OPENAI_API_KEY
+  provider_base_url_env: OPENAI_BASE_URL
+  scrubbed_env_vars:
+    - OPENAI_API_KEY
+    - CODEX_API_KEY
+    - OPENAI_BASE_URL
+    - OPENAI_ORG_ID
+    - AZURE_OPENAI_API_KEY
+  metered_env_prefixes: []
+
+system_prompt:
+  default:
+    flags: []
+  append:
+    flags: []
+    write_rel_path: AGENTS.md
+    target_root: harness_home
+  replace:
+    flags: []
+    write_rel_path: system_prompt.md
+    target_root: harness_home
+    config_toml_key: model_instructions_file
+
+hooks:
+  home_env_var: CODEX_HOME
+  default_home_rel: .codex
+  user_hook_rel: hooks.json
+  workspace_hook_rel: .codex/hooks.json
+  format: json
+  dialect: nested_matcher_groups
+  events:
+    - SessionStart
+    - UserPromptSubmit
+    - PreModelRequest
+    - PostModelRequest
+    - PreToolUse
+    - PermissionRequest
+    - PostToolUse
+    - PreCompact
+    - PostCompact
+    - SubagentStart
+    - SubagentStop
+    - Stop
+    - Interrupt
+    - SessionEnd
+  empty_matcher_events:
+    - PreToolUse
+    - PermissionRequest
+    - PostToolUse
+  special_matchers:
+    SessionStart: "startup|resume|clear"
+  timeout_field: timeout
+  timeout_seconds: 5
+
+otel:
+  delivery: config_toml_http
+  protocol: http/json
+
+transcript:
+  session_rel_dir: sessions
+  format: jsonl
+  jmespath_queries:
+    model: "model || payload.model"
+    event_type: "type || payload.type"
+    tool_call_id: "payload.call_id || payload.id || call_id || id"
+    tool_name: "payload.name || name"
+    tool_args: "payload.arguments || arguments"
+    final_response: "item.text || payload.message || payload.text"
+    assistant_text_blocks: "payload.content[?type=='output_text' || type=='text'].text[] || content[?type=='output_text' || type=='text'].text[]"
+    usage: "payload.usage || usage"
+    cost_usd: "payload.usage.cost_usd || payload.cost_usd || payload.total_cost_usd || usage.cost_usd || cost_usd"
+
+reflect_no_tools:
+  supported: true
+  base_flags:
+    - --json
+    - --skip-git-repo-check
+    - --ephemeral
+    - --disable
+    - shell_tool
+  required_probe_flags:
+    - --json
+    - --skip-git-repo-check
+    - --ephemeral
+    - --disable
+  read_only_requires_sandbox: false
+
+headless:
+  subcommand:
+    - exec
+  prompt_flag: null
+  prompt_position: trailing
+  cwd_flag: "-C"
+  base_flags:
+    - --json
+    - --skip-git-repo-check
+  tier2_common_flags:
+    - --dangerously-bypass-approvals-and-sandbox
+    - --dangerously-bypass-hook-trust
+  model_flag: "-m"
+  effort_flag: null
+  required_probe_flags:
+    - --json
+    - --skip-git-repo-check
+    - --dangerously-bypass-approvals-and-sandbox
+
+version_overlays:
+  - specifier: "<0.10.0"
+    overrides:
+      headless:
+        tier2_common_flags:
+          - --dangerously-bypass-approvals-and-sandbox

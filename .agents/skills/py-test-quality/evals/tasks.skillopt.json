@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "py-test-quality-01",
+      "project": "artagon-python",
+      "intent": "Our `src/billing/discounts.py` module reports 92% line coverage in pytest, yet a `>` vs `>=` off-by-one bug shipped to production. Set up branch coverage and `mutmut` mutation testing to expose and kill the surviving boundary mutants.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Enables `--cov-branch` (`branch = true` in `[tool.coverage.run]`) rather than relying on line coverage alone\n- Runs `mutmut run --paths-to-mutate=...`, `mutmut results`, and `mutmut show <id>` to inspect surviving mutants\n- Explains why weak tests (e.g., testing only `amount = 50` and `amount = 200` or asserting `is not None`) let `>` -> `>=` boundary mutants survive\n- Writes exact boundary-value parametrized tests that kill the off-by-one mutants and targets >= 75% mutation score",
+      "judge": {},
+      "tags": [
+        "py-test-quality",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-test-quality"
+    },
+    {
+      "id": "py-test-quality-02",
+      "project": "artagon-python",
+      "intent": "Before refactoring a messy `src/inventory/allocator.py` module that currently sits at 31% branch coverage, build a test-quality safety net and configure `[tool.coverage.run]` / `[tool.coverage.report]` exclusions properly.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Insists on raising branch coverage (>= 80%) and killing trivial mutants BEFORE altering `allocator.py` production code\n- Configures `[tool.coverage.run]` (`branch = true`) and `[tool.coverage.report]` (`fail_under = 80`, `show_missing = true`, sensible `exclude_lines`) in `pyproject.toml`\n- Targets uncovered error branches, empty collections, and boundary inputs identified by `--cov-report=term-missing`\n- Audits tests for assertion-free 'smoke' calls that inflate coverage without verifying outputs",
+      "judge": {},
+      "tags": [
+        "py-test-quality",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-test-quality"
+    },
+    {
+      "id": "py-test-quality-03",
+      "project": "artagon-python",
+      "intent": "During a `mutmut` run on `src/orders/validator.py`, 4 surviving mutants are logging-message tweaks (`logger.debug(...)`) while 6 are negated guard conditions and altered return constants. How should we triage equivalent/logging mutants vs real test gaps and run this efficiently in CI?",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Prioritizes killing logic, guard-condition, and return-value mutants by tightening test assertions\n- Distinguishes cosmetic `logger.debug` string mutants (handled via `# pragma: no mutate` or `mutmut` filtering) from real behavioral test gaps instead of writing brittle log-text tests everywhere\n- Scopes `mutmut` runs (`--paths-to-mutate`) for practical CI runtime while running `--cov-branch --cov-fail-under=80` on every PR\n- Computes mutation score (`killed / total actionable mutants`) against the >= 75% quality bar",
+      "judge": {},
+      "tags": [
+        "py-test-quality",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-test-quality"
+    }
+  ]
+}

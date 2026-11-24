@@ -1,0 +1,18 @@
+[
+  {"query": "/review-python on my current feature branch against main", "should_trigger": true},
+  {"query": "run a full multi-layer backend review-python pass across our FastAPI, SQLAlchemy, Postgres, and pytest PR", "should_trigger": true},
+  {"query": "execute review-python with ruff/mypy preflight and specialist sub-reviews on this backend branch", "should_trigger": true},
+  {"query": "re-run review-python on feat/billing-sync to verify my fixes for the two Major findings from round 1", "should_trigger": true},
+  {"query": "use review-python with parallel specialist checks on our Python + FastAPI + Alembic pull request", "should_trigger": true},
+  {"query": "run the explicit G1-G5 review-python workflow on git diff main...HEAD and give a merge verdict", "should_trigger": true},
+  {"query": "perform a complete review-python audit of our Pydantic-AI + FastAPI + pytest branch before merge", "should_trigger": true},
+  {"query": "invoke review-python to review all modified Python backend layers in one consolidated pass", "should_trigger": true},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml for Python 3.13", "should_trigger": false},
+  {"query": "migrate setup.py and requirements.txt to uv and PEP 621", "should_trigger": false},
+  {"query": "run mutmut mutation testing to kill surviving boundary mutants", "should_trigger": false},
+  {"query": "profile CPU hotspots in our Python batch worker using py-spy", "should_trigger": false},
+  {"query": "publish our Python package to TestPyPI and PyPI using twine", "should_trigger": false},
+  {"query": "run an ACPX multi-provider review session via scripts/art-acpx.sh", "should_trigger": false},
+  {"query": "review a TypeScript PR using Clean Code step files", "should_trigger": false},
+  {"query": "optimize a DSPy RAG pipeline with MIPROv2", "should_trigger": false}
+]

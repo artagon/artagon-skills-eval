@@ -1,0 +1,41 @@
+{
+  "skill_name": "py-code-health",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run a dead-code cleanup workflow on our Python repository using `vulture`, making sure we do not accidentally delete Django/ORM model fields, public API functions, dynamic `getattr` handlers, or a helper whose call site was accidentally dropped during a refactor.",
+      "expected_output": "Runs `vulture . --min-confidence 80` (with `--sort-by-size` and `--exclude=tests/,venv/,.venv/`), interprets confidence tiers (90–100% vs 80–89% vs 60–70%), maintains a `whitelist.py` (`vulture . whitelist.py`) for framework/ORM/public-API/`getattr` dynamic symbols, and validates whether an unused symbol should actually be referenced by nearby call sites before deleting it.",
+      "files": [],
+      "expectations": [
+        "Runs `vulture . --min-confidence 80` (and `--sort-by-size` or `--exclude=tests/,venv/,.venv/`) to detect unused functions, classes, variables, and imports",
+        "Distinguishes confidence tiers (60–70% vs 80–89% vs 90–100%) and suppresses legitimate dynamic `getattr`, ORM/framework, or public-API symbols with a `whitelist.py` file (`vulture . whitelist.py`)",
+        "Validates whether an apparently unused constant, type, or function is actually a partial-refactor bug missing its call site before deleting it",
+        "Verifies all tests pass and code coverage is maintained after removing confirmed dead code"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Detect duplicate code blocks across `src/exporters/` (`export_users_csv`, `export_orders_csv`, and `export_invoices_csv` share 45 nearly identical lines) and consolidate them cleanly with full type safety.",
+      "expected_output": "Detects clones using `pylint --disable=all --enable=duplicate-code --duplicate-code-min-lines=6 --recursive=y .` (or `--output-format=json`), consolidates the duplicated logic into a single parametrized function (`TypeVar` or configuration dictionary), and re-runs `pylint` duplicate-code checks and `pytest`.",
+      "files": [],
+      "expectations": [
+        "Runs `pylint --disable=all --enable=duplicate-code --duplicate-code-min-lines=6 --recursive=y .` to detect duplicate blocks exceeding 6 lines",
+        "Consolidates the similar functions into a single parametrized generic function (`TypeVar`) or configuration-driven dictionary (`FILE_CONFIGS` pattern)",
+        "Extracts shared validation or formatting steps into reusable helper functions where appropriate",
+        "Re-runs `pylint --disable=all --enable=duplicate-code` and the test suite to confirm duplication is eliminated without regressions"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Clean up `src/legacy_utils.py`, which has unused helper functions (`_parse_v0`), 90 lines of `# old v1 implementation` commented-out functions, and copy-pasted email/age validation across `create_user` and `update_user`.",
+      "expected_output": "Scans with `vulture . --min-confidence 80` and `pylint --disable=all --enable=duplicate-code --recursive=y .`, verifies `_parse_v0` has no active or dynamic callers before removing it, deletes commented-out `# old v1 implementation` blocks because Git history preserves prior versions, extracts shared `validate_email`/`validate_age` helpers, and runs `pytest`.",
+      "files": [],
+      "expectations": [
+        "Uses `vulture` (`--min-confidence 80`) and checks call sites (including dynamic `getattr` usage) to confirm `_parse_v0` is genuinely unused before deleting it",
+        "Deletes commented-out `# old v1 implementation` blocks and explains that Git history preserves old implementations without cluttering active source",
+        "Extracts duplicated validation logic in `create_user` and `update_user` into shared helper functions",
+        "Verifies `vulture . --min-confidence 80`, `pylint --disable=all --enable=duplicate-code`, and `pytest` pass after cleanup"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+id: no-silent-except
+language: Python
+severity: error
+message: "Do not silently swallow exceptions with bare/broad `except: pass` or `suppress(Exception)`; return a typed EvalResult Error."
+note: "Silent exception swallowing masks failures and breaks the non-silent diagnostics guarantee."
+files:
+  - "packages/*/src/**/*.py"
+rule:
+  any:
+    - pattern: suppress(Exception)
+    - pattern: contextlib.suppress(Exception)
+    - pattern: suppress(BaseException)
+    - pattern: contextlib.suppress(BaseException)
+    - kind: except_clause
+      all:
+        - has:
+            kind: block
+            has:
+              kind: pass_statement
+              stopBy: end
+            stopBy: end
+        - not:
+            has:
+              kind: return_statement
+              stopBy: end
+        - not:
+            has:
+              kind: raise_statement
+              stopBy: end

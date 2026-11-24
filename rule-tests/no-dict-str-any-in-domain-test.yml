@@ -1,0 +1,23 @@
+id: no-dict-str-any-in-domain
+valid:
+  - |
+    from artagon_eval_core.domain.types import PersistentMap, JsonValue
+    payload: PersistentMap[str, JsonValue]
+  - |
+    from collections.abc import Mapping
+    env: Mapping[str, str]
+  - |
+    counts: dict[str, int] = {}
+invalid:
+  - |
+    from typing import Any
+    payload: dict[str, Any] = {}
+  - |
+    from collections.abc import Mapping
+    from typing import Any
+    def parse(raw: Mapping[str, Any]) -> None:
+        pass
+  - |
+    from collections.abc import MutableMapping
+    from typing import Any
+    bag: MutableMapping[str, Any]

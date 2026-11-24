@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-type-safety-01",
+      "project": "artagon-python",
+      "intent": "Design a generic `Result[T, E]` container, a bounded `Repository[ModelT, ID]` protocol (`ModelT` bounded to Pydantic `BaseModel`), and `@runtime_checkable` `Closeable` / `Serializable` structural protocols in modern Python (comparing Python 3.12+ PEP 695 syntax vs Python 3.10–3.11 `TypeVar`/`TypeAlias`).",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Defines generic `Result[T, E]` (with `Ok`/`Err` union or narrowed accessors) and bounded `ModelT` (`ModelT: BaseModel` / `TypeVar('ModelT', bound=BaseModel)`)\n- Uses `typing.Protocol` for structural subtyping (`Repository`, `Closeable`, `Serializable`) and explains what `@runtime_checkable` checks vs does not check at runtime\n- Contrasts Python 3.12+ PEP 695 (`type Alias = ...`, `class Box[T]:`) with Python 3.10–3.11 `TypeAlias` and `Generic[T]`\n- Uses `T | None` union syntax and `collections.abc` (`Sequence`, `Mapping`, `Callable`) for parameter covariance",
+      "judge": {},
+      "tags": [
+        "python-type-safety",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-type-safety"
+    },
+    {
+      "id": "python-type-safety-02",
+      "project": "artagon-python",
+      "intent": "Eliminate `Any` and `cast()` abuse in a JSON webhook handler `def handle_event(raw: Any) -> Any:` using `TypeGuard` / `TypeIs` narrowing, `TypedDict` / discriminated unions (`Literal['invoice.paid', 'invoice.failed']`), and exhaustiveness checking (`assert_never`).",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Replaces `raw: Any` at untrusted JSON boundaries with `object` (or recursive `JsonValue`) narrowed via runtime validation (`TypeIs` / `TypeGuard` or Pydantic discriminated union)\n- Models event payloads as a discriminated union keyed on `Literal['invoice.paid', 'invoice.failed']`\n- Uses `typing.assert_never(...)` so unhandled union members fail static type checking immediately\n- Avoids unguarded `typing.cast(...)` in favor of true type-narrowing predicates",
+      "judge": {},
+      "tags": [
+        "python-type-safety",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-type-safety"
+    },
+    {
+      "id": "python-type-safety-03",
+      "project": "artagon-python",
+      "intent": "Roll out `mypy --strict` incrementally across a 40-module legacy Python codebase where turning on `strict = true` globally produces 600 errors on day one.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Sets `strict = true` as the repo-wide default so newly created files cannot add fresh untyped debt\n- Quarantines legacy modules explicitly via `[[tool.mypy.overrides]]` per module rather than keeping global `strict = false`\n- Requires specific error codes on `# type: ignore[code]` (`warn_unused_ignores = true`) instead of blanket `# type: ignore`\n- Recommends annotating leaf domain models and shared public signatures first before high-fan-in callers",
+      "judge": {},
+      "tags": [
+        "python-type-safety",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-type-safety"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+name: spec-driven-evidence
+version: 1
+description: Spec-driven workflow with source-backed evidence, review, and verification artifacts.
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Define the change, motivation, scope, and success criteria.
+    template: proposal.md
+  - id: specs
+    generates: specs/**/*.md
+    description: Specify observable behavior changes.
+    template: specs.md
+    requires:
+      - proposal
+  - id: design
+    generates: design.md
+    description: Record the technical approach and decisions.
+    template: design.md
+    requires:
+      - specs
+  - id: tasks
+    generates: tasks.md
+    description: Break implementation into checkable tasks.
+    template: tasks.md
+    requires:
+      - specs
+      - design
+  - id: evidence
+    generates: evidence/README.md
+    description: Index source material and observed proof for this change.
+    template: evidence.md
+    requires:
+      - tasks
+  - id: review
+    generates: review.md
+    description: Record review findings and dispositions.
+    template: review.md
+    requires:
+      - evidence
+  - id: verification
+    generates: verification.md
+    description: Record implementation checks and remaining gaps.
+    template: verification.md
+    requires:
+      - review
+apply:
+  requires:
+    - tasks
+  tracks: tasks.md

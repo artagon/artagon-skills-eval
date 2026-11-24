@@ -1,0 +1,18 @@
+[
+  {"query": "set up a PEP 621 src/ Python package with py.typed, [project.scripts] CLI entry points, and setuptools-scm", "should_trigger": true},
+  {"query": "build sdist and wheel distributions with `python -m build`, check with `twine check`, and publish to TestPyPI and PyPI", "should_trigger": true},
+  {"query": "configure GitHub Actions OIDC Trusted Publishing with pypa/gh-action-pypi-publish for our Python library", "should_trigger": true},
+  {"query": "ship .sql and .json data files inside a Python wheel and load them safely with importlib.resources.files", "should_trigger": true},
+  {"query": "define [project.optional-dependencies] extras (`mypkg[redis,s3]`) without breaking bare `pip install mypkg` imports", "should_trigger": true},
+  {"query": "why did our built wheel accidentally include top-level tests/ or omit py.typed, and how do we fix pyproject.toml?", "should_trigger": true},
+  {"query": "smoke-test a freshly built .whl in an isolated clean virtualenv before uploading to PyPI", "should_trigger": true},
+  {"query": "configure hatchling or setuptools build-system metadata and classifiers for an open-source PyPI release", "should_trigger": true},
+  {"query": "pin local dev dependencies with `uv lock` and `uv sync` for an internal un-published FastAPI web app", "should_trigger": false},
+  {"query": "pack an Artagon agent skill plugin with apm.yml and generate-apm-exports.py", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright rules in pyproject.toml", "should_trigger": false},
+  {"query": "decide whether to split a 600-line service.py file into domain modules", "should_trigger": false},
+  {"query": "scan Python code for SQL injection and hardcoded secrets with bandit", "should_trigger": false},
+  {"query": "profile CPU bottlenecks in a hot Python loop with py-spy", "should_trigger": false},
+  {"query": "review SQLAlchemy 2.0 session lifecycle and N+1 queries", "should_trigger": false},
+  {"query": "optimize a DSPy program with MIPROv2", "should_trigger": false}
+]

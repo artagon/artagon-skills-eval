@@ -1,0 +1,18 @@
+[
+  {"query": "modernize our Python codebase to Python 3.13+ syntax, built-in generics, and datetime.now(UTC)", "should_trigger": true},
+  {"query": "migrate legacy setup.py, setup.cfg, and pip install workflows to pyproject.toml and uv", "should_trigger": true},
+  {"query": "run ruff --select UP and pyupgrade --py313-plus to replace Optional/List/Dict and collections.Iterable", "should_trigger": true},
+  {"query": "replace python -m venv and pip install -r requirements.txt with uv venv, uv pip compile, and uv pip sync", "should_trigger": true},
+  {"query": "replace deprecated datetime.utcnow(), datetime.utcfromtimestamp(), imp, and os.path calls across our Python project", "should_trigger": true},
+  {"query": "upgrade GitHub Actions workflows from python -m venv and pip install to astral-sh/setup-uv and uv pip install", "should_trigger": true},
+  {"query": "consolidate setup.py and setup.cfg into a single pyproject.toml with requires-python >= 3.13", "should_trigger": true},
+  {"query": "audit deprecated collections.Iterable and typing.Union imports before upgrading our runtime to Python 3.13", "should_trigger": true},
+  {"query": "find dead code with vulture --min-confidence 80 and duplicate blocks with pylint duplicate-code", "should_trigger": false},
+  {"query": "measure cyclomatic complexity with radon cc, xenon, and lizard", "should_trigger": false},
+  {"query": "run mutmut mutation testing to improve our pytest test suite", "should_trigger": false},
+  {"query": "scan Python code for hardcoded secrets and shell=True vulnerabilities with bandit", "should_trigger": false},
+  {"query": "refactor ES5 JavaScript callbacks to ES2022 #private fields and Promise.allSettled", "should_trigger": false},
+  {"query": "review SQLAlchemy 2.0 N+1 queries and Alembic migrations", "should_trigger": false},
+  {"query": "migrate DSPy 2.5 dspy.Assert code to DSPy 3.4 dspy.Refine", "should_trigger": false},
+  {"query": "install .pre-commit-config.yaml hooks and symlink lint-gate.py", "should_trigger": false}
+]

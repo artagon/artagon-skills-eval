@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/span/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trial_id",
+    "campaign_id",
+    "arm_id",
+    "task_id",
+    "harness",
+    "trace_id",
+    "span_id",
+    "span_kind",
+    "name",
+    "source_layer",
+    "start_wall_ns",
+    "end_wall_ns",
+    "duration_ms",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-span/v1"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "arm_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+    "trace_id": {"type": "string", "minLength": 1},
+    "span_id": {"type": "string", "minLength": 1},
+    "parent_span_id": {"type": ["string", "null"]},
+    "span_kind": {
+      "enum": ["invoke_agent", "chat", "execute_tool", "mcp_rpc", "hook_lifecycle", "subagent", "supervisor"]
+    },
+    "name": {"type": "string", "minLength": 1},
+    "source_layer": {"enum": ["hook", "otel", "transcript", "supervisor", "fused"]},
+    "start_wall_ns": {"type": "integer", "minimum": 0},
+    "end_wall_ns": {"type": "integer", "minimum": 0},
+    "duration_ms": {"type": "number", "minimum": 0},
+    "ttft_ms": {"type": ["number", "null"]},
+    "status": {"enum": ["ok", "error", "unset"]},
+    "model": {"type": ["string", "null"]},
+    "tool_name": {"type": ["string", "null"]},
+    "tool_use_id": {"type": ["string", "null"]},
+    "input_tokens": {"type": ["integer", "null"]},
+    "output_tokens": {"type": ["integer", "null"]},
+    "cache_read_tokens": {"type": ["integer", "null"]},
+    "reasoning_tokens": {"type": ["integer", "null"]},
+    "cost_usd": {"type": ["number", "null"]},
+    "attributes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean", "null", "array", "object"]
+      }
+    }
+  }
+}

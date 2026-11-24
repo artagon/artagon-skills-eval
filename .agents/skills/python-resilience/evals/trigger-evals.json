@@ -1,0 +1,18 @@
+[
+  {"query": "configure tenacity @retry with wait_exponential_jitter, transient exception whitelisting, and stop_after_delay in Python", "should_trigger": true},
+  {"query": "retry HTTP 429, 502, 503, and 504 responses in httpx while never retrying 400, 401, or ValueError", "should_trigger": true},
+  {"query": "build @with_timeout and @fail_safe graceful degradation decorators in Python without swallowing CancelledError", "should_trigger": true},
+  {"query": "add a circuit breaker and bulkhead around a flaky downstream payment-fraud API in Python", "should_trigger": true},
+  {"query": "prevent thundering-herd retry storms and honor Retry-After headers in our Python HTTP client", "should_trigger": true},
+  {"query": "log structured retry attempts with tenacity before_sleep and enforce combined attempt + wall-clock stop bounds", "should_trigger": true},
+  {"query": "degrade optional recommendation widgets safely to empty defaults when an upstream RPC times out in Python", "should_trigger": true},
+  {"query": "audit bare @retry decorators in our Python repo that accidentally retry programming bugs and 404s forever", "should_trigger": true},
+  {"query": "retry invalid LLM JSON formatting with OfferFeedback hints using dspy.Refine", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml for Python 3.13", "should_trigger": false},
+  {"query": "publish a wheel and sdist to PyPI using build and twine", "should_trigger": false},
+  {"query": "find dead Python code with vulture and duplicate blocks with pylint", "should_trigger": false},
+  {"query": "measure cyclomatic complexity with radon cc and lizard", "should_trigger": false},
+  {"query": "write Google-style docstrings and Keep a Changelog entries", "should_trigger": false},
+  {"query": "review PostgreSQL GIN indexes and composite index column order", "should_trigger": false},
+  {"query": "write TypeScript branded types and mapped conditional types", "should_trigger": false}
+]

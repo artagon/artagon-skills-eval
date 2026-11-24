@@ -1,0 +1,18 @@
+[
+  {"query": "standardize PEP 8 naming, absolute import grouping, and Google-style docstrings across our Python package", "should_trigger": true},
+  {"query": "rename cryptic camelCase variables and abbreviated file names (`usr_repo.py`, `httpClientMgr`) to idiomatic Python style", "should_trigger": true},
+  {"query": "write Google-style Args, Returns, Raises, and Example docstrings for our public Python SDK functions", "should_trigger": true},
+  {"query": "configure ruff formatting (line-length 120, E501 ignored, pydocstyle google, isort) and Keep a Changelog conventions", "should_trigger": true},
+  {"query": "clean up deep `from ...utils` relative imports and organize module constants, public APIs, and private helpers", "should_trigger": true},
+  {"query": "review inline comments in src/ to strip obvious noise comments and keep only non-obvious why explanations", "should_trigger": true},
+  {"query": "format CHANGELOG.md using Keep a Changelog and Semantic Versioning for our upcoming 1.4.0 Python release", "should_trigger": true},
+  {"query": "how should acronyms like HTTP, OAuth, and JSON be capitalized in Python PEP 8 class and function names?", "should_trigger": true},
+  {"query": "scan Python code for SQL injection and hardcoded passwords using bandit", "should_trigger": false},
+  {"query": "run mutmut mutation testing to check our pytest suite", "should_trigger": false},
+  {"query": "configure Celery workers with task_acks_late and Dead Letter Queues", "should_trigger": false},
+  {"query": "profile slow Python loops using cProfile and py-spy", "should_trigger": false},
+  {"query": "rewrite technical documentation in Artagon Simplified Technical English with lint-ste", "should_trigger": false},
+  {"query": "format Bash scripts to Google Shell Style using shfmt and ShellCheck", "should_trigger": false},
+  {"query": "review PostgreSQL GIN indexes and transaction isolation levels", "should_trigger": false},
+  {"query": "optimize a DSPy ChainOfThought module with MIPROv2", "should_trigger": false}
+]

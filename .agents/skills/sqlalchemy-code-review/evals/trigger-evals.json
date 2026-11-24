@@ -1,0 +1,18 @@
+[
+  {"query": "review our SQLAlchemy 2.0 repositories for N+1 lazy relationship loops, session scope leaks, and legacy .query() calls", "should_trigger": true},
+  {"query": "audit Alembic migration files in migrations/versions/ for ORM model imports, non-null column backfills, and downgrade reversibility", "should_trigger": true},
+  {"query": "check AsyncSession usage in app/db/ for MissingGreenlet lazy loads and missing expire_on_commit=False", "should_trigger": true},
+  {"query": "choose between selectinload and joinedload for 1-to-many vs many-to-1 relationships in a SQLAlchemy PR review", "should_trigger": true},
+  {"query": "review bulk insert performance in app/repositories/metrics.py using SQLAlchemy 2.0 insert() instead of per-row commit()", "should_trigger": true},
+  {"query": "verify that SQLAlchemy sessions are never shared across concurrent asyncio tasks or FastAPI BackgroundTasks", "should_trigger": true},
+  {"query": "audit cascade delete-orphan and relationship back_populates definitions on our SQLAlchemy 2.0 DeclarativeBase models", "should_trigger": true},
+  {"query": "perform an evidence-gated SQLAlchemy + Alembic code review on app/models/ and migrations/versions/", "should_trigger": true},
+  {"query": "review raw asyncpg SQL queries for PostgreSQL JSONB GIN operator indexing and pg_try_advisory_xact_lock", "should_trigger": false},
+  {"query": "review FastAPI route decorators for missing response_model and HTTP status codes", "should_trigger": false},
+  {"query": "unit test a Mongoose repository with mongodb-memory-server in NestJS", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml for Python 3.13", "should_trigger": false},
+  {"query": "run mutmut mutation testing on our pytest suite", "should_trigger": false},
+  {"query": "publish a wheel and sdist to PyPI with twine", "should_trigger": false},
+  {"query": "profile pure Python CPU loops with line_profiler and py-spy", "should_trigger": false},
+  {"query": "optimize a DSPy RAG pipeline with MIPROv2", "should_trigger": false}
+]

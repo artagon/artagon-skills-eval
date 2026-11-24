@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "artagon-eval-evoskill"
+version = "0.2.0"
+description = "Decoupled EvoSkill scoped loader and kernel-sandboxed optimizer adapter for artagon-skills-eval."
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Artagon" }]
+dependencies = [
+  "artagon-eval-core>=0.2.0,<0.3",
+]
+
+[project.entry-points."artagon_eval.optimizers"]
+evoskill = "artagon_eval_evoskill.plugin:create_optimizer_adapter"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/artagon_eval_evoskill"]

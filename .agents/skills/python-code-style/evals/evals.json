@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-code-style",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Standardize our team's Python code style config (`ruff` + `mypy`), naming conventions, and import ordering on a module `usr_mgr.py` that uses `class httpClientMgr:`, `maxRetries = 5`, relative `from ...common.hlp import fmt_dt`, and 155-char lines.",
+      "expected_output": "Configures `[tool.ruff]` (`line-length = 120`, `E501` ignored in `[tool.ruff.lint]` so `ruff format` owns wrapping, `select = ['E', 'F', 'I', 'N', 'UP', 'B']`) and `[tool.mypy]` (`strict = true`), renames `usr_mgr.py` -> `user_manager.py`, `httpClientMgr` -> `HTTPClientManager` (PEP 8 PascalCase preserving acronym caps), `maxRetries` -> `MAX_RETRIES: Final = 5` (`SCREAMING_SNAKE_CASE`), and replaces deep relative `from ...common.hlp` with grouped stdlib / third-party / absolute local imports.",
+      "files": [],
+      "expectations": [
+        "Configures `ruff` (`line-length = 120`, `I` isort import sorting, `E501` deferred to `ruff format`) and `mypy` (`strict = true`)",
+        "Replaces cryptic abbreviations and camelCase (`usr_mgr.py`, `httpClientMgr`, `maxRetries`, `fmt_dt`) with descriptive PEP 8 names (`user_manager.py`, `HTTPClientManager`, `MAX_RETRIES`, `format_datetime`)",
+        "Replaces deep parent relative imports (`from ...`) with 3-group sorted absolute imports (stdlib, third-party, local package)",
+        "Places module-level constants near the top in `SCREAMING_SNAKE_CASE`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write Google-style docstrings for a public `fetch_exchange_rate(base: str, quote: str, *, as_of: date | None = None) -> Decimal` function (which can raise `UnsupportedCurrencyError` or `RateProviderTimeoutError`) and show when comments/docstrings should be omitted.",
+      "expected_output": "A clean Google-style docstring with concise one-line imperative summary, `Args:`, `Returns:`, `Raises:`, and `Example:` sections (without duplicating types already in the signature if configured per PEP 484 + Google style), paired with guidance omitting redundant docstrings on trivial self-explanatory private helpers and deleting 'what' noise comments in favor of 'why' invariant comments.",
+      "files": [],
+      "expectations": [
+        "Formats the public function docstring in Google style with imperative summary line plus `Args:`, `Returns:`, `Raises:`, and `Example:` sections",
+        "Documents both `UnsupportedCurrencyError` and `RateProviderTimeoutError` accurately under `Raises:`",
+        "Advises against redundant noise comments restating obvious code (`# increment i`) and reserves inline comments for non-obvious 'why' invariants or workarounds",
+        "Configures `[tool.ruff.lint.pydocstyle] convention = 'google'` if enforcing docstring lint rules"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Establish a `CHANGELOG.md` convention for our Python library so releases stay human-readable alongside our PEP 8 module layout.",
+      "expected_output": "Structures `CHANGELOG.md` following Keep a Changelog + Semantic Versioning (`## [Unreleased]` followed by dated `## [X.Y.Z] - YYYY-MM-DD` sections grouped under `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`), writing user-facing impact bullets rather than dumping raw `git log` commit subjects.",
+      "files": [],
+      "expectations": [
+        "Uses Keep a Changelog structure with `[Unreleased]`, `YYYY-MM-DD` ISO release dates, and SemVer version headers",
+        "Organizes entries under standard headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`)",
+        "Writes user-impact prose rather than raw git commit SHA dumps",
+        "Pairs cleanly with consistent module top-to-bottom ordering (module docstring -> `__future__` -> imports -> `__all__`/constants -> public classes/functions -> private `_` helpers)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "skill_name": "postgres-code-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review `db/queries/events.py` and `migrations/004_events.sql` where `CREATE INDEX idx_events_created_tenant ON events (created_at, tenant_id);` backs `SELECT id, payload FROM events WHERE tenant_id = $1 AND metadata->>'type' = 'refund' ORDER BY created_at DESC LIMIT 50;`.",
+      "expected_output": "An evidence-gated PostgreSQL review citing both the SQL query and DDL: explains why `(created_at, tenant_id)` has suboptimal composite column order for equality predicate `tenant_id = $1` + `ORDER BY created_at DESC` (recommending `(tenant_id, created_at DESC)`), and evaluates indexing `metadata->>'type'` via an expression B-tree index on `(tenant_id, (metadata->>'type'), created_at DESC)` or JSONB `@>` containment (`metadata @> '{\"type\": \"refund\"}'`) with a GIN `jsonb_path_ops` index.",
+      "files": [],
+      "expectations": [
+        "Cites both the query predicate (`WHERE tenant_id = $1 ... ORDER BY created_at DESC`) and the `CREATE INDEX` DDL before making index claims",
+        "Identifies reversed composite index column order (`(created_at, tenant_id)` vs equality-first `(tenant_id, created_at DESC)`)",
+        "Explains that `metadata->>'type' = 'refund'` will not use a plain JSONB GIN index directly and recommends either a targeted expression B-tree index or `@>` containment with a GIN index",
+        "Verifies `$1` parameter binding rather than falsely claiming SQL injection on parameterized SQL"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit `app/db/pool.py` where `asyncpg.create_pool(dsn, min_size=20, max_size=100)` runs across 16 Gunicorn/Uvicorn workers against a PostgreSQL instance with `max_connections=200`, and `acquire()` is called without `async with` in batch jobs that hold transactions open while calling an external webhook.",
+      "expected_output": "Flags connection-pool multiplication (`16 workers * 100 max_size = 1,600 > max_connections=200`, recommending per-worker sizing or PgBouncer plus `async with pool.acquire()` context-manager release), and flags holding open PostgreSQL transactions/row locks across slow external HTTP webhook calls (causing lock contention, `idle in transaction` bloat, and pool exhaustion).",
+      "files": [],
+      "expectations": [
+        "Calculates multi-worker connection pool exhaustion (`16 * 100 = 1600` exceeding `max_connections=200`) and recommends bounded pool sizing or PgBouncer",
+        "Flags manual `pool.acquire()` without `async with` / `try...finally` release on exception paths",
+        "Flags performing external HTTP calls inside an open DB transaction (`idle in transaction` / row-lock retention) and recommends committing or releasing the connection before network I/O",
+        "Recommends `statement_timeout` and `idle_in_transaction_session_timeout` safeguards"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review two concurrent billing workers running `SELECT balance FROM wallets WHERE id = $1` followed by `UPDATE wallets SET balance = $2 WHERE id = $1` under PostgreSQL's default `READ COMMITTED` isolation, plus a cron job running across 4 replicas that must never run twice concurrently.",
+      "expected_output": "Identifies the lost-update race condition under default `READ COMMITTED` (fixing via atomic `UPDATE wallets SET balance = balance - $2 WHERE id = $1 AND balance >= $2 RETURNING balance`, `SELECT ... FOR UPDATE` in explicit lock order to avoid deadlocks, or `REPEATABLE READ`/`SERIALIZABLE` with retry), and uses `pg_try_advisory_lock` / transaction-scoped `pg_try_advisory_xact_lock` for single-leader cron coordination.",
+      "files": [],
+      "expectations": [
+        "Identifies the read-modify-write lost-update race under PostgreSQL's default `READ COMMITTED` isolation",
+        "Provides an atomic SQL `UPDATE ... SET balance = balance - $2 WHERE id = $1 AND balance >= $2` or `SELECT ... FOR UPDATE` fix (noting consistent lock ordering to prevent deadlocks)",
+        "Recommends `pg_try_advisory_lock` or `pg_try_advisory_xact_lock` for coordinating the singleton cron job across replicas",
+        "Verifies parameter binding before raising any injection concern"
+      ]
+    }
+  ]
+}

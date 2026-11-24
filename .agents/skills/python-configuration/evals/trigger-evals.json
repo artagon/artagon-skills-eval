@@ -1,0 +1,18 @@
+[
+  {"query": "set up pydantic-settings BaseSettings with SecretStr, env_nested_delimiter='__', and fail-fast startup validation", "should_trigger": true},
+  {"query": "parse comma-separated CORS_ORIGINS env vars and mounted /run/secrets files in Python BaseSettings", "should_trigger": true},
+  {"query": "add a @model_validator(mode='after') cross-field check to our Python Settings class for prod vs dev rules", "should_trigger": true},
+  {"query": "replace 20 scattered os.getenv calls across our Python app with a cached, testable get_settings() provider", "should_trigger": true},
+  {"query": "prevent Settings startup logging from printing database passwords and API secrets by using SecretStr", "should_trigger": true},
+  {"query": "configure Environment StrEnum and @computed_field DSN builders in pydantic-settings", "should_trigger": true},
+  {"query": "how should I override cached get_settings() cleanly inside pytest tests using FastAPI dependency_overrides or monkeypatch?", "should_trigger": true},
+  {"query": "require production secrets to fail fast on boot while keeping localhost defaults for local Python development", "should_trigger": true},
+  {"query": "configure ruff, mypy, and basedpyright sections in pyproject.toml", "should_trigger": false},
+  {"query": "load .env in a Bash script using scripts/lib/dotenv.sh dotenv::load", "should_trigger": false},
+  {"query": "edit ~/.config/ntm/config.toml and verify ntm config get", "should_trigger": false},
+  {"query": "design a DSPy Signature with InputField and OutputField metadata", "should_trigger": false},
+  {"query": "build a wheel and upload to PyPI with twine", "should_trigger": false},
+  {"query": "sync MCP stanzas across Claude and Codex configs", "should_trigger": false},
+  {"query": "profile Python memory allocations with memory_profiler", "should_trigger": false},
+  {"query": "write TypeScript Path<T> utility types for nested config objects", "should_trigger": false}
+]

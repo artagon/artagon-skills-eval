@@ -1,0 +1,82 @@
+[
+  {
+    "query": "draft a harness-eval-protocol/v1 manifest comparing baseline vs skill-enabled codex arms",
+    "should_trigger": true
+  },
+  {
+    "query": "author a deterministic harness-eval-cassette/v1 JSON fixture with RFC 8785 request hashes",
+    "should_trigger": true
+  },
+  {
+    "query": "which judge harness and model should I pick for vendor-blind judging across claude and codex arms?",
+    "should_trigger": true
+  },
+  {
+    "query": "set up a single-factor 4-tuple arm experiment in protocol.json holding mcp_servers and system_prompt constant",
+    "should_trigger": true
+  },
+  {
+    "query": "add a deterministic verifier_cmd and fixture_path to our harness-eval protocol tasks array",
+    "should_trigger": true
+  },
+  {
+    "query": "fix schema validation error additionalProperties false in our harness-eval-protocol/v1 YAML file",
+    "should_trigger": true
+  },
+  {
+    "query": "configure ${TRIAL_ROOT} and ${WS} placeholders inside an MCP replay cassette for harness-eval",
+    "should_trigger": true
+  },
+  {
+    "query": "what budget fields are required when authoring an api_key arm in harness-eval-protocol/v1?",
+    "should_trigger": true
+  },
+  {
+    "query": "pin gemini-4-carbon-high on an agy subscription arm in a new harness evaluation manifest",
+    "should_trigger": true
+  },
+  {
+    "query": "write a Stage-2 blind judge rubric and verify cross-vendor disjointness in our protocol manifest",
+    "should_trigger": true
+  },
+  {
+    "query": "execute a frozen harness-eval campaign into /tmp/campaign-run-02 and check status",
+    "should_trigger": false
+  },
+  {
+    "query": "run nix-check and auth status with harness-eval.py on this host",
+    "should_trigger": false
+  },
+  {
+    "query": "query the DuckDB trials and mcp_calls tables for cassette_miss counts with trace-query",
+    "should_trigger": false
+  },
+  {
+    "query": "export 4-layer campaign spans to MLflow 3 and local Arize Phoenix via trace-export",
+    "should_trigger": false
+  },
+  {
+    "query": "build a trigram search index with tgrep setup for this repository",
+    "should_trigger": false
+  },
+  {
+    "query": "coordinate two existing Claude and Codex CLI panes over HCOM",
+    "should_trigger": false
+  },
+  {
+    "query": "check Bash 3.2 compatibility and ShellCheck rules on scripts/art-acpx.sh",
+    "should_trigger": false
+  },
+  {
+    "query": "find files by fuzzy path match using the fff MCP server",
+    "should_trigger": false
+  },
+  {
+    "query": "diagnose why ck semantic search scores are flat after switching branches",
+    "should_trigger": false
+  },
+  {
+    "query": "lint technical documentation for Simplified Technical English compliance",
+    "should_trigger": false
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "skill_name": "harness-eval-author",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Draft a harness-eval-protocol/v1 manifest comparing a baseline codex arm against a codex arm with plugins/artagon-shell/skills/shell-defensive on a shell-fix fixture, without running live trials.",
+      "expected_output": "A single-factor paired ABBA protocol plan holding harness_config, mcp_servers, and system_prompt constant while varying only skills, using subscription auth and a deterministic verifier.",
+      "files": [],
+      "expectations": [
+        "The protocol sets `schema_version` to `harness-eval-protocol/v1` and holds `harness_config`, `mcp_servers`, and `system_prompt` constant across the two arms while varying only `skills`",
+        "Both arms default to `\"auth_mode\": \"subscription\"` with an explicit pinned `codex` model identifier",
+        "The task defines a deterministic exit-code verifier (`verifier_cmd` or `verifier_path`) rather than relying only on LLM-as-judge",
+        "The plan validates the authored manifest with `python3 scripts/harness-eval.py --output json preflight --manifest <MANIFEST>` without executing live trials"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We are evaluating claude (claude-sonnet-4-6) and copilot (routed to gpt-5.4) arms and want to enable Stage-2 LLM judging using claude-opus-4-6 on claude. Validate this judge design.",
+      "expected_output": "The assistant flags the vendor-blind judge conflict (Anthropic overlaps claude and OpenAI overlaps copilot/gpt-5.4) and selects a disjoint vendor family such as agy with gemini-4-carbon-high.",
+      "files": [],
+      "expectations": [
+        "The assistant explains that `judge.harness` and `judge.model` must be disjoint from every candidate arm's harness and model vendor family (exit code `2` on self-family overlap)",
+        "The assistant identifies that `claude` uses Anthropic and `copilot` routed to `gpt-5.4` includes OpenAI, making both Anthropic and OpenAI ineligible as the blind judge",
+        "The assistant recommends a disjoint cross-family judge such as `agy` pinned to `gemini-4-carbon-high`"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How should I configure an MCP documentation server and an api_key arm in a harness-eval-protocol/v1 manifest so preflight passes?",
+      "expected_output": "The assistant specifies cassette_replay with RFC 8785 canonicalized cassette_path placeholders by default, and requires api_key_ref plus finite max_cost_usd or max_tokens caps (and explicit operator approval for --allow-api-keys) for api_key arms.",
+      "files": [],
+      "expectations": [
+        "The assistant configures MCP servers with `\"mode\": \"cassette_replay\"` and a committed `harness-eval-cassette/v1` `cassette_path` using `${TRIAL_ROOT}` and `${WS}` placeholders unless live network variance is explicitly under test",
+        "The assistant explains that `\"auth_mode\": \"api_key\"` requires only when metered evaluation is explicitly requested, and must include `api_key_ref` plus finite `budget.max_cost_usd` or `budget.max_tokens` caps (otherwise exit code `2` or `4`)",
+        "The assistant reminds the operator not to embed raw secret values inside protocol JSON files"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write a DuckDB SQL query over an existing campaign's spans and mcp_calls tables and export the traces to Arize Phoenix.",
+      "expected_output": "The assistant routes post-run DuckDB SQL querying and OTel trace export to harness-eval-trace rather than harness-eval-author.",
+      "files": [],
+      "expectations": [
+        "The assistant identifies DuckDB trace SQL queries and Arize Phoenix export as the responsibility of `harness-eval-trace`, not `harness-eval-author`",
+        "The assistant does not rewrite protocol manifests when asked to query completed campaign trace tables"
+      ]
+    }
+  ]
+}

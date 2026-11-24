@@ -1,0 +1,18 @@
+[
+  {"query": "find and remove dead Python code safely with vulture --min-confidence 80 and whitelist.py", "should_trigger": true},
+  {"query": "scan src/ for duplicate Python code blocks using pylint --enable=duplicate-code --duplicate-code-min-lines=6 and consolidate them with TypeVar", "should_trigger": true},
+  {"query": "clean up commented-out legacy functions and unused helpers in our Python repo", "should_trigger": true},
+  {"query": "triage vulture 60% vs 90% confidence findings so we do not delete Django ORM fields or public API functions", "should_trigger": true},
+  {"query": "consolidate copy-pasted CSV/TSV/PSV parser functions into one configuration-driven Python function", "should_trigger": true},
+  {"query": "check whether an unused helper flagged by vulture is dead code or a missed call-site bug", "should_trigger": true},
+  {"query": "run vulture --sort-by-size --exclude=tests/,venv/,.venv/ to generate a dead_code_report.txt", "should_trigger": true},
+  {"query": "extract duplicated validation blocks across create_user and update_user detected by pylint duplicate-code", "should_trigger": true},
+  {"query": "measure cyclomatic complexity and maintainability index with radon cc and wily", "should_trigger": false},
+  {"query": "scan our Python app for SQL injection, shell=True, and weak hashes with bandit", "should_trigger": false},
+  {"query": "run mutmut mutation testing to kill surviving boundary mutants in tests/", "should_trigger": false},
+  {"query": "migrate pip and setup.py to uv and Python 3.13 syntax", "should_trigger": false},
+  {"query": "install git pre-commit hooks and Claude Stop lint-gate.py", "should_trigger": false},
+  {"query": "profile CPU bottlenecks in a hot Python loop with cProfile and py-spy", "should_trigger": false},
+  {"query": "search unused TypeScript exports and remove explicit any types with tsc --noEmit", "should_trigger": false},
+  {"query": "review PostgreSQL GIN indexes and transaction isolation levels", "should_trigger": false}
+]

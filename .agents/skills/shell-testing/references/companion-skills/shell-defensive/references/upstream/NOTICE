@@ -1,0 +1,81 @@
+Artagon AI Skills
+=================
+
+This repository bundles third-party software vendored as git submodules
+under `plugins/`. Each submodule retains its own LICENSE file. This
+NOTICE file summarizes attribution required by Apache License 2.0 §4(c)
+and analogous clauses.
+
+--------------------------------------------------------------------
+anthropic/skills
+--------------------------------------------------------------------
+
+Path:    plugins/artagon-multi-agent/bridges/anthropic-skills
+         (currently uninitialized — the scripts below are NOT vendored in
+         this repo; `tools/skillref` and `tools/skillkit` are the working
+         validators)
+Source:  https://github.com/anthropics/skills
+License: Apache License 2.0
+
+Copyright 2026 Anthropic, PBC.
+
+This project uses the `skill-creator` skill's METHODOLOGY (evaluation,
+description optimization) — no skill-creator scripts are invoked at
+these paths today. The working tooling:
+
+- `tools/skillref` — schema validator (actively used; `cd tools && uv run python -m skillref validate`)
+- `tools/skillkit` — manifest validation, lift gate, corpus audit (actively used)
+- `scripts/optimize-skill-descriptions-dspy-gepa.py` — description-optimization loop (actively used)
+
+The additional scripts `aggregate_benchmark.py`, `improve_description.py`,
+`package_skill.py`, `generate_report.py` and the subagent prompts under
+`agents/` (grader.md, comparator.md, analyzer.md) are available for use
+but are not currently invoked by this repository's lifecycle pipeline.
+Attribution is extended to the full `skill-creator` tree under its
+Apache 2.0 license regardless of which files this repo currently calls.
+
+See README.md § Skill Lifecycle Pipeline.
+
+--------------------------------------------------------------------
+codex-plugin-cc
+--------------------------------------------------------------------
+
+Path:    plugins/codex-plugin-cc/
+Source:  https://github.com/openai/codex
+Pinned:  v1.0.4 (807e03ac9d5aa23bc395fdec8c3767500a86b3cf)
+License: Apache License 2.0
+         See plugins/codex-plugin-cc/LICENSE
+
+Copyright OpenAI.
+
+--------------------------------------------------------------------
+gemini-plugin-cc
+--------------------------------------------------------------------
+
+Path:    plugins/gemini-plugin-cc/
+Source:  https://github.com/sakibsadmanshajib/gemini-plugin-cc
+Pinned:  v1.0.1 (91781b322aff6ab07f9e4cbaf23bd08d9bc3e75f)
+License: MIT
+         See plugins/gemini-plugin-cc/LICENSE
+
+Copyright (c) Sakib Sadman Shajib.
+
+--------------------------------------------------------------------
+cc-gemini-plugin
+--------------------------------------------------------------------
+
+Path:    plugins/cc-gemini-plugin/
+Source:  https://github.com/thepushkarp/cc-gemini-plugin
+Pinned:  96042d3c1985f1252180d8d7b7dab68b5753607f
+License: MIT (per plugins/cc-gemini-plugin/README.md § License — no
+         standalone LICENSE file is shipped by the upstream plugin;
+         the README's section is the license declaration)
+
+--------------------------------------------------------------------
+
+All other content in this repository is Copyright 2026 Artagon and
+licensed under Apache License 2.0 (see LICENSE at repo root).
+
+Submodule pins are updated by explicit PR review. The canonical pin
+for each submodule is the superproject's gitlink at the commit being
+read; `git submodule status` reports the pinned SHA at any time.

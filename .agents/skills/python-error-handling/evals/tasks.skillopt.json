@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-error-handling-01",
+      "project": "artagon-python",
+      "intent": "Design a structured domain exception hierarchy and boundary validation layer in Python for an external billing API client (`ApiError`, `AuthenticationError`, `RateLimitError(retry_after: float | None)`, `ResourceNotFoundError`), preserving root-cause tracebacks when wrapping `httpx` errors.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Creates a rooted custom exception hierarchy (`BillingError` -> `AuthenticationError`, `RateLimitError`, `ResourceNotFoundError`) with typed attributes like `retry_after`\n- Preserves original traceback causes using `raise DomainError(...) from exc` whenever translating lower-level `httpx` exceptions\n- Validates boundary inputs early (using `ValueError` with actionable messages listing valid options, `TypeError` for wrong types, or Pydantic `@field_validator`)\n- Distinguishes retryable errors (`RateLimitError` / 5xx) from non-retryable client errors (`AuthenticationError` / `ResourceNotFoundError`)",
+      "judge": {},
+      "tags": [
+        "python-error-handling",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-error-handling"
+    },
+    {
+      "id": "python-error-handling-02",
+      "project": "artagon-python",
+      "intent": "Implement a generic `process_batch[T, R](items: Sequence[T], handler: Callable[[T], R], on_progress: ProgressCallback | None = None) -> BatchResult[R]` helper in Python where per-item failures are recorded with item index and exception details instead of aborting the batch, while `KeyboardInterrupt` / `SystemExit` / `asyncio.CancelledError` still propagate immediately.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Defines a typed generic `BatchResult` container separating `succeeded` outputs from `failed` items with index, input reference, and exception info\n- Catches `Exception` per item rather than `BaseException` so `KeyboardInterrupt` and `SystemExit` are never swallowed\n- Supports an optional `ProgressCallback` invoked safely as items complete\n- Provides convenience helpers/properties (such as `raise_if_all_failed()` or `has_failures`) for callers",
+      "judge": {},
+      "tags": [
+        "python-error-handling",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-error-handling"
+    },
+    {
+      "id": "python-error-handling-03",
+      "project": "artagon-python",
+      "intent": "Audit a CLI parser `parse_output_format(raw: str)` that raises `Exception('bad format')` on `'yaml'`, and a service method that catches `except ValueError: raise ServiceError('invalid')` (hiding which field failed) or returns `None` when a required user record is missing.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses standard `ValueError` (not bare `Exception`) and includes the invalid input plus valid enum choices in the error message\n- Chains `raise ServiceError(...) from err` and keeps field context in the error message/attributes\n- Distinguishes `find_user(...) -> User | None` (optional lookup) from `get_user(...) -> User` raising `UserNotFoundError(user_id)` when existence is required\n- Avoids catching broad `Exception` where a narrow exception (`KeyError`, `ValueError`) is expected",
+      "judge": {},
+      "tags": [
+        "python-error-handling",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-error-handling"
+    }
+  ]
+}

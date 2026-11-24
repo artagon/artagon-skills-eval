@@ -1,0 +1,15 @@
+id: no-sys-path-mutation
+language: Python
+severity: error
+message: "Do not mutate sys.path or sys.meta_path; install packages via the uv workspace or scoped import loaders."
+note: "Standalone artagon-skills-eval eliminates all sys.path.insert and global sys.meta_path hacks."
+files:
+  - "packages/*/src/**/*.py"
+  - "packages/*/tests/**/*.py"
+  - "tests/**/*.py"
+rule:
+  any:
+    - pattern: sys.path.insert($$$)
+    - pattern: sys.path.append($$$)
+    - pattern: sys.meta_path.insert($$$)
+    - pattern: sys.meta_path.append($$$)

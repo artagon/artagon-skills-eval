@@ -1,0 +1,78 @@
+id: no-mutable-module-globals
+snapshots:
+  "_ACTIVE_STATE = {}\n":
+    labels:
+    - source: _ACTIVE_STATE = {}
+      style: primary
+      start: 0
+      end: 18
+    - source: |
+        _ACTIVE_STATE = {}
+      style: secondary
+      start: 0
+      end: 19
+    - source: _ACTIVE_STATE = {}
+      style: secondary
+      start: 0
+      end: 18
+    - source: "{}"
+      style: secondary
+      start: 16
+      end: 18
+  "_CACHE = dict()\n":
+    labels:
+    - source: _CACHE = dict()
+      style: primary
+      start: 0
+      end: 15
+    - source: |
+        _CACHE = dict()
+      style: secondary
+      start: 0
+      end: 16
+    - source: _CACHE = dict()
+      style: secondary
+      start: 0
+      end: 15
+    - source: dict()
+      style: secondary
+      start: 9
+      end: 15
+  "_HANDLERS: list[str] = []\n":
+    labels:
+    - source: "_HANDLERS: list[str] = []"
+      style: primary
+      start: 0
+      end: 25
+    - source: |
+        _HANDLERS: list[str] = []
+      style: secondary
+      start: 0
+      end: 26
+    - source: "_HANDLERS: list[str] = []"
+      style: secondary
+      start: 0
+      end: 25
+    - source: "[]"
+      style: secondary
+      start: 23
+      end: 25
+  "_SEEN = set()\n":
+    labels:
+    - source: _SEEN = set()
+      style: primary
+      start: 0
+      end: 13
+    - source: |
+        _SEEN = set()
+      style: secondary
+      start: 0
+      end: 14
+    - source: _SEEN = set()
+      style: secondary
+      start: 0
+      end: 13
+    - source: set()
+      style: secondary
+      start: 8
+      end: 13

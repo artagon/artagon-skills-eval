@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "artagon-eval-core"
+version = "0.2.0"
+description = "Functional core, frozen typestate models, typed effect ports, SecretVault redaction, Pluggy contracts, and ADR-0012 hot-path shims."
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Artagon" }]
+dependencies = [
+  "click>=8.1.0",
+  "detect-secrets>=1.5.0",
+  "duckdb>=1.2.0",
+  "expression[pydantic]>=6.0.1,<7",
+  "jinja2>=3.1.4",
+  "jmespath>=1.0.1",
+  "jsonschema>=4.23.0",
+  "msgspec>=0.19.0",
+  "opentelemetry-proto>=1.30.0",
+  "packaging>=24.2",
+  "pluggy>=1.5.0",
+  "protobuf>=5.29.0",
+  "pyarrow>=18.0.0",
+  "pydantic>=2.11.0,<3",
+  "pydantic-settings>=2.7.0",
+  "pyyaml>=6.0.2",
+  "rfc8785>=0.1.4",
+  "rpds-py>=0.22.0",
+  "structlog>=25.5.0",
+  "tomlkit>=0.14.0",
+  "typer>=0.15.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/artagon_eval_core"]

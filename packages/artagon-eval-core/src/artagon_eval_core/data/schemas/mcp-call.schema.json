@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/mcp-call/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trial_id",
+    "server_name",
+    "seq",
+    "recv_wall_ns",
+    "recv_mono_ns",
+    "duration_ms",
+    "method",
+    "match_tier",
+    "cassette_miss",
+    "is_error"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-mcp-call/v1"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "server_name": {"type": "string", "minLength": 1},
+    "seq": {"type": "integer", "minimum": 0},
+    "jsonrpc_id": {"type": ["string", "integer", "null"]},
+    "recv_wall_ns": {"type": "integer", "minimum": 0},
+    "recv_mono_ns": {"type": "integer", "minimum": 0},
+    "duration_ms": {"type": "number", "minimum": 0},
+    "method": {"type": "string", "minLength": 1},
+    "tool_name": {"type": ["string", "null"]},
+    "exact_jcs_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "normalized_jcs_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "match_tier": {
+      "enum": ["protocol", "exact", "normalized", "match_keys", "default_response", "miss"]
+    },
+    "cassette_miss": {"type": "boolean"},
+    "is_error": {"type": "boolean"},
+    "request_params": {
+      "type": ["object", "array", "null"]
+    },
+    "response_summary": {
+      "type": ["object", "null"]
+    }
+  }
+}

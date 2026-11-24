@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-background-jobs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a reliable Celery + Redis background job workflow in Python for generating large PDF invoices and charging customer cards, ensuring worker crashes do not silently drop tasks, slow tasks do not starve fast ones, and customer cards are never double-charged on redelivery.",
+      "expected_output": "Configures Celery for safe at-least-once execution (`task_acks_late=True`, `task_reject_on_worker_lost=True`, `worker_prefetch_multiplier=1`, `task_soft_time_limit` + `task_time_limit`), persists a `Job` status record (`PENDING` -> `RUNNING` -> `SUCCEEDED`/`FAILED`) returning `202 Accepted` + `job_id`/`poll_url`, enforces an idempotency key + DB check-before-write before charging, and retries ONLY transient transport errors (`autoretry_for=(TimeoutError, ConnectionError)`) — never permanent `PaymentDeclinedError`.",
+      "files": [],
+      "expectations": [
+        "Sets `task_acks_late=True` and `worker_prefetch_multiplier=1` alongside `task_soft_time_limit` / `task_time_limit`",
+        "Enforces idempotency (idempotency key + atomic DB state check/unique constraint) so redelivered tasks under at-least-once delivery cannot double-charge",
+        "Restricts `autoretry_for` + `retry_backoff=True` strictly to transient infrastructure errors and immediately fails permanent domain errors like `PaymentDeclinedError`",
+        "Persists `Job` lifecycle state (`PENDING`, `RUNNING`, `SUCCEEDED`, `FAILED`) and returns `202 Accepted` with `job_id` and status polling URL"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Build a multi-step Celery canvas pipeline that parses an uploaded CSV into N chunks, processes all N chunks in parallel, aggregates a summary report once all chunks finish, and routes exhausted poison-pill tasks to a Dead Letter Queue.",
+      "expected_output": "Composes Celery primitives (`chain`, `group`, and `chord`: `chain(split_csv.s(job_id), chord(group(process_chunk.s(...) for ...), finalize_report.s(job_id)))`) passing lightweight IDs/storage URIs rather than huge in-memory payloads through the broker, and configures a failure callback / `on_failure` handler or broker DLQ routing once `max_retries` is exhausted.",
+      "files": [],
+      "expectations": [
+        "Uses Celery `chord` (`group` of parallel chunk tasks followed by a `finalize_report` callback) chained after CSV splitting",
+        "Passes lightweight record IDs or object-store keys as task arguments rather than serializing large binary/CSV blobs into Redis/RabbitMQ",
+        "Routes tasks that exhaust `max_retries` into a Dead Letter Queue (or `on_failure` dead-letter table) with error context for operator replay",
+        "Handles `SoftTimeLimitExceeded` inside tasks to flush partial progress and mark job status cleanly before hard kill"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Compare Celery vs Dramatiq vs RQ (Redis Queue) for a medium-sized Python team already running Redis, and show how to shut down workers gracefully during Kubernetes rolling deploys.",
+      "expected_output": "Compares Celery (full canvas workflows, Beat scheduler, multi-broker, steepest config surface), Dramatiq (clean actor API, built-in retries/dead-letter middleware, RabbitMQ/Redis), and RQ (simplest Redis-only setup for straightforward low-to-medium queues), plus `SIGTERM` graceful drain handling (`terminationGracePeriodSeconds` > `task_time_limit` so in-flight jobs finish before `SIGKILL`).",
+      "files": [],
+      "expectations": [
+        "Contrasts Celery, Dramatiq, and RQ across broker support, workflow primitives, operational complexity, and built-in retry/DLQ ergonomics",
+        "Aligns Kubernetes `terminationGracePeriodSeconds` with worker `SIGTERM` warm shutdown and `task_time_limit` so active tasks finish cleanly",
+        "Recommends separate queues (`high_priority`, `default`, `bulk`) so slow batch exports cannot block urgent transactional emails",
+        "Emphasizes JSON-only task serialization (`task_serializer='json'`, never `pickle`)"
+      ]
+    }
+  ]
+}

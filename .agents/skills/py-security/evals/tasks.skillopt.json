@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "py-security-01",
+      "project": "artagon-python",
+      "intent": "Remediate the security vulnerabilities in this Python helper: `cursor.execute(f\"SELECT * FROM {table} WHERE email = '{email}'\")`, `token = ''.join(random.choices(string.ascii_letters, k=32))`, and `pw_hash = hashlib.md5(password.encode()).hexdigest()`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Runs or cites `ruff check --select S` and `bandit -r . -ll` (`S608`, `S311`, `S324`) for automated verification\n- Parameterizes `email` via `%s` bind parameters AND validates `table` against a strict allowlist with `psycopg2.sql.Identifier` rather than f-strings\n- Replaces `random` token generation with `secrets.token_urlsafe` or `secrets.token_hex`\n- Replaces `hashlib.md5` password hashing with `argon2.PasswordHasher` (or `bcrypt`), distinguishing password KDFs from `sha256`/`blake2b` checksums",
+      "judge": {},
+      "tags": [
+        "py-security",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-security"
+    },
+    {
+      "id": "py-security-02",
+      "project": "artagon-python",
+      "intent": "Audit and fix a Python deployment utility that runs `os.system(f'tar -czf {archive_name} {source_dir}')`, loads config via `yaml.load(raw_yaml)`, deserializes cached sessions with `pickle.loads(redis_bytes)`, and reads a hardcoded `DB_PASSWORD = '<REDACTED_EXAMPLE>'` literal.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Replaces `os.system(...)` shell interpolation with `subprocess.run([...], check=True)` using an explicit argument list (`shell=False`)\n- Replaces `yaml.load(...)` with `yaml.safe_load(...)` to block arbitrary Python object instantiation\n- Replaces `pickle.loads(...)` on external/session bytes with safe JSON/Pydantic deserialization\n- Removes hardcoded credential literals in favor of environment/secret-store injection and warns to rotate any previously committed secret",
+      "judge": {},
+      "tags": [
+        "py-security",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-security"
+    },
+    {
+      "id": "py-security-03",
+      "project": "artagon-python",
+      "intent": "Configure automated security gates for a Python service covering both static code issues (`ruff` `S` rules / `bandit`) and vulnerable third-party dependencies (`pip-audit`), without blocking `assert` statements inside `tests/`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Enables Bandit `S` rules in `[tool.ruff.lint]` and scopes `S101` (`assert`) exemptions strictly to `tests/**/*.py`\n- Runs `bandit -r src/ -ll` targeting production source directories\n- Includes dependency vulnerability scanning via `pip-audit` against locked requirements\n- Warns against blanket `# noqa: S...` or `# nosec` suppressions without documented justification",
+      "judge": {},
+      "tags": [
+        "py-security",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-security"
+    }
+  ]
+}

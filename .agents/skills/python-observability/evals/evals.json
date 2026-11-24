@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-observability",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Set up structured JSON logging (`structlog`) and end-to-end `X-Correlation-ID` propagation in an async Python/FastAPI service so every inbound log line and outbound `httpx` call carries the correlation ID automatically, and fix log-level misuse where wrong user passwords trigger PagerDuty `ERROR` alerts.",
+      "expected_output": "Configures `structlog` with `merge_contextvars`, ISO-8601 `TimeStamper(fmt='iso', utc=True)`, `add_log_level`, `format_exc_info`, and `JSONRenderer()`, binds `X-Correlation-ID` via `ContextVar` / `structlog.contextvars.bind_contextvars` in ASGI middleware (clearing first per request) and forwards it on outbound `httpx` headers, and calibrates semantic log levels (`INFO` for expected invalid user credentials/4xx, `WARNING` for degraded retries, `ERROR` only for server-side failures needing investigation).",
+      "files": [],
+      "expectations": [
+        "Configures `structlog` JSON output with `merge_contextvars`, UTC ISO timestamps, log level, and structured exception formatting",
+        "Clears and binds `correlation_id` per request via `contextvars` / `structlog.contextvars` and injects `X-Correlation-ID` into response and outbound `httpx` request headers",
+        "Reclassifies expected client auth failures (wrong user password) from `ERROR` to `INFO` (with structured `event='auth_failed'`) so `ERROR` stays high-signal",
+        "Ensures sensitive fields (passwords, tokens, `Authorization` headers) are never logged"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Instrument a Python checkout service with Prometheus metrics covering the Four Golden Signals (`prometheus_client`), and fix an existing metric `Counter('http_requests_total', '...', ['method', 'url', 'user_id'])` that blew up Prometheus memory.",
+      "expected_output": "Diagnoses unbounded label cardinality on `user_id` and raw `url` (containing path IDs like `/orders/98172`) as the memory-explosion root cause, replaces them with bounded route templates (`/orders/{order_id}`) and low-cardinality labels (`method`, `route_template`, `status_class`, `user_tier`), and defines Four Golden Signals (`Histogram` for latency with explicit buckets, `Counter` for traffic & errors, `Gauge` for in-flight saturation).",
+      "files": [],
+      "expectations": [
+        "Identifies high-cardinality labels (`user_id` and unparameterized `url` paths) as the Prometheus time-series explosion bug",
+        "Replaces raw URLs and `user_id` with bounded route templates and bounded enums like `user_tier` or `status_class`",
+        "Defines Prometheus `Histogram` (latency), `Counter` (traffic + errors), and `Gauge` (in-flight requests / pool saturation) covering the Four Golden Signals",
+        "Includes a reusable `@contextmanager` / decorator `timed_operation` recording duration and exception status cleanly"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Add OpenTelemetry distributed tracing (`TracerProvider` + OTLP `BatchSpanProcessor`) to a Python service so custom business spans (`reserve_inventory`) record attributes and exceptions and correlate trace/span IDs with `structlog` JSON logs.",
+      "expected_output": "Configures OpenTelemetry `Resource` (`service.name`, `service.version`, `deployment.environment`), `TracerProvider`, and `BatchSpanProcessor(OTLPSpanExporter())` (not synchronous `SimpleSpanProcessor` in production), creates spans via `with tracer.start_as_current_span('reserve_inventory') as span:` calling `span.record_exception(exc)` + `Status(StatusCode.ERROR)` on failure, and injects `trace_id`/`span_id` into `structlog` processor output.",
+      "files": [],
+      "expectations": [
+        "Configures `TracerProvider` with service `Resource` attributes and asynchronous `BatchSpanProcessor` + `OTLPSpanExporter`",
+        "Creates child spans with `tracer.start_as_current_span(...)`, setting bounded business attributes (`order.item_count`, never PII) and recording exceptions + `StatusCode.ERROR`",
+        "Injects active OpenTelemetry `trace_id` and `span_id` into `structlog` log events for log-to-trace correlation",
+        "Flushes pending spans cleanly (`provider.shutdown()`) during service shutdown"
+      ]
+    }
+  ]
+}

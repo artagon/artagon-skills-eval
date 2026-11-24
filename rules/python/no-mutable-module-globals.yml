@@ -1,0 +1,26 @@
+id: no-mutable-module-globals
+language: Python
+severity: error
+message: "Do not declare mutable module-level dict, list, or set globals in source modules; use Final tuple/frozenset/MappingProxyType or ctx.obj."
+note: "Mutable module-level state breaks isolation and re-entrancy across CLI invocations and tests."
+files:
+  - "packages/*/src/**/*.py"
+rule:
+  kind: assignment
+  inside:
+    kind: expression_statement
+    inside:
+      kind: module
+  not:
+    has:
+      field: left
+      pattern: __all__
+  has:
+    field: right
+    any:
+      - kind: dictionary
+      - kind: list
+      - kind: set
+      - pattern: dict($$$)
+      - pattern: list($$$)
+      - pattern: set($$$)

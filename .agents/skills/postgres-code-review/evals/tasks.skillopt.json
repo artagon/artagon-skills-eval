@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "postgres-code-review-01",
+      "project": "artagon-python",
+      "intent": "Review `db/queries/events.py` and `migrations/004_events.sql` where `CREATE INDEX idx_events_created_tenant ON events (created_at, tenant_id);` backs `SELECT id, payload FROM events WHERE tenant_id = $1 AND metadata->>'type' = 'refund' ORDER BY created_at DESC LIMIT 50;`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Cites both the query predicate (`WHERE tenant_id = $1 ... ORDER BY created_at DESC`) and the `CREATE INDEX` DDL before making index claims\n- Identifies reversed composite index column order (`(created_at, tenant_id)` vs equality-first `(tenant_id, created_at DESC)`)\n- Explains that `metadata->>'type' = 'refund'` will not use a plain JSONB GIN index directly and recommends either a targeted expression B-tree index or `@>` containment with a GIN index\n- Verifies `$1` parameter binding rather than falsely claiming SQL injection on parameterized SQL",
+      "judge": {},
+      "tags": [
+        "postgres-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "postgres-code-review"
+    },
+    {
+      "id": "postgres-code-review-02",
+      "project": "artagon-python",
+      "intent": "Audit `app/db/pool.py` where `asyncpg.create_pool(dsn, min_size=20, max_size=100)` runs across 16 Gunicorn/Uvicorn workers against a PostgreSQL instance with `max_connections=200`, and `acquire()` is called without `async with` in batch jobs that hold transactions open while calling an external webhook.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Calculates multi-worker connection pool exhaustion (`16 * 100 = 1600` exceeding `max_connections=200`) and recommends bounded pool sizing or PgBouncer\n- Flags manual `pool.acquire()` without `async with` / `try...finally` release on exception paths\n- Flags performing external HTTP calls inside an open DB transaction (`idle in transaction` / row-lock retention) and recommends committing or releasing the connection before network I/O\n- Recommends `statement_timeout` and `idle_in_transaction_session_timeout` safeguards",
+      "judge": {},
+      "tags": [
+        "postgres-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "postgres-code-review"
+    },
+    {
+      "id": "postgres-code-review-03",
+      "project": "artagon-python",
+      "intent": "Review two concurrent billing workers running `SELECT balance FROM wallets WHERE id = $1` followed by `UPDATE wallets SET balance = $2 WHERE id = $1` under PostgreSQL's default `READ COMMITTED` isolation, plus a cron job running across 4 replicas that must never run twice concurrently.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Identifies the read-modify-write lost-update race under PostgreSQL's default `READ COMMITTED` isolation\n- Provides an atomic SQL `UPDATE ... SET balance = balance - $2 WHERE id = $1 AND balance >= $2` or `SELECT ... FOR UPDATE` fix (noting consistent lock ordering to prevent deadlocks)\n- Recommends `pg_try_advisory_lock` or `pg_try_advisory_xact_lock` for coordinating the singleton cron job across replicas\n- Verifies parameter binding before raising any injection concern",
+      "judge": {},
+      "tags": [
+        "postgres-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "postgres-code-review"
+    }
+  ]
+}

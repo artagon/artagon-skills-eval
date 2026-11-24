@@ -1,0 +1,35 @@
+id: no-silent-except
+valid:
+  - |
+    try:
+        work()
+    except ValueError as exc:
+        raise RuntimeError("failed") from exc
+  - |
+    try:
+        work()
+    except OSError:
+        return None
+  - |
+    from contextlib import suppress
+    with suppress(FileNotFoundError):
+        unlink()
+invalid:
+  - |
+    try:
+        work()
+    except Exception:
+        pass
+  - |
+    try:
+        work()
+    except:
+        pass
+  - |
+    from contextlib import suppress
+    with suppress(Exception):
+        work()
+  - |
+    import contextlib
+    with contextlib.suppress(BaseException):
+        work()

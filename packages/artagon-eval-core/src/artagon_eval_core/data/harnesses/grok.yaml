@@ -1,0 +1,84 @@
+harness: grok
+binary_name: grok
+campaign_v1_supported: false
+skillopt_supported: false
+
+auth:
+  vendor_family: xai
+  default_model: grok-code-fast-1
+  harness_home_env: GROK_HOME
+  subscription_files:
+    - user-settings.json
+  subscription_env_vars: []
+  api_key_env_var: GROK_API_KEY
+  provider_base_url_env: XAI_BASE_URL
+  scrubbed_env_vars:
+    - GROK_API_KEY
+    - XAI_API_KEY
+  metered_env_prefixes: []
+
+system_prompt:
+  default:
+    flags: []
+  append:
+    flags: []
+    write_rel_path: GROK.md
+    target_root: workspace
+  replace:
+    flags: []
+    write_rel_path: GROK.md
+    target_root: workspace
+
+hooks:
+  home_env_var: GROK_HOME
+  default_home_rel: .grok
+  user_hook_rel: settings.json
+  workspace_hook_rel: .grok/settings.json
+  format: json
+  dialect: nested_matcher_groups
+  events:
+    - SessionStart
+    - PreToolUse
+    - PostToolUse
+    - Stop
+    - SessionEnd
+  matcher_events:
+    - PreToolUse
+    - PostToolUse
+  timeout_field: timeout
+  timeout_seconds: 5
+
+otel:
+  delivery: none
+  protocol: none
+
+transcript:
+  session_rel_dir: sessions
+  format: jsonl
+  jmespath_queries:
+    model: "model"
+    tool_name: "tool_name || name"
+    final_response: "result || message.content || content"
+
+reflect_no_tools:
+  supported: false
+  base_flags: []
+  required_probe_flags: []
+  read_only_requires_sandbox: false
+
+headless:
+  subcommand: []
+  prompt_flag: "-p"
+  prompt_position: flag
+  cwd_flag: "-d"
+  base_flags:
+    - --max-tool-rounds
+    - "50"
+  tier2_common_flags: []
+  model_flag: "-m"
+  effort_flag: null
+  required_probe_flags:
+    - "-p"
+    - "-m"
+
+version_overlays: []

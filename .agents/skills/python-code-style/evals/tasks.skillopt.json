@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-code-style-01",
+      "project": "artagon-python",
+      "intent": "Standardize our team's Python code style config (`ruff` + `mypy`), naming conventions, and import ordering on a module `usr_mgr.py` that uses `class httpClientMgr:`, `maxRetries = 5`, relative `from ...common.hlp import fmt_dt`, and 155-char lines.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Configures `ruff` (`line-length = 120`, `I` isort import sorting, `E501` deferred to `ruff format`) and `mypy` (`strict = true`)\n- Replaces cryptic abbreviations and camelCase (`usr_mgr.py`, `httpClientMgr`, `maxRetries`, `fmt_dt`) with descriptive PEP 8 names (`user_manager.py`, `HTTPClientManager`, `MAX_RETRIES`, `format_datetime`)\n- Replaces deep parent relative imports (`from ...`) with 3-group sorted absolute imports (stdlib, third-party, local package)\n- Places module-level constants near the top in `SCREAMING_SNAKE_CASE`",
+      "judge": {},
+      "tags": [
+        "python-code-style",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-code-style"
+    },
+    {
+      "id": "python-code-style-02",
+      "project": "artagon-python",
+      "intent": "Write Google-style docstrings for a public `fetch_exchange_rate(base: str, quote: str, *, as_of: date | None = None) -> Decimal` function (which can raise `UnsupportedCurrencyError` or `RateProviderTimeoutError`) and show when comments/docstrings should be omitted.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Formats the public function docstring in Google style with imperative summary line plus `Args:`, `Returns:`, `Raises:`, and `Example:` sections\n- Documents both `UnsupportedCurrencyError` and `RateProviderTimeoutError` accurately under `Raises:`\n- Advises against redundant noise comments restating obvious code (`# increment i`) and reserves inline comments for non-obvious 'why' invariants or workarounds\n- Configures `[tool.ruff.lint.pydocstyle] convention = 'google'` if enforcing docstring lint rules",
+      "judge": {},
+      "tags": [
+        "python-code-style",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-code-style"
+    },
+    {
+      "id": "python-code-style-03",
+      "project": "artagon-python",
+      "intent": "Establish a `CHANGELOG.md` convention for our Python library so releases stay human-readable alongside our PEP 8 module layout.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses Keep a Changelog structure with `[Unreleased]`, `YYYY-MM-DD` ISO release dates, and SemVer version headers\n- Organizes entries under standard headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`)\n- Writes user-impact prose rather than raw git commit SHA dumps\n- Pairs cleanly with consistent module top-to-bottom ordering (module docstring -> `__future__` -> imports -> `__all__`/constants -> public classes/functions -> private `_` helpers)",
+      "judge": {},
+      "tags": [
+        "python-code-style",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-code-style"
+    }
+  ]
+}

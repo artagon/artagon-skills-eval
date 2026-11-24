@@ -1,0 +1,18 @@
+[
+  {"query": "design a custom Python domain exception hierarchy with RateLimitError(retry_after) and `raise ... from` chaining", "should_trigger": true},
+  {"query": "build a generic BatchResult(succeeded, failed) partial-failure collector with a progress callback in Python", "should_trigger": true},
+  {"query": "validate boundary inputs early in Python and include valid enum options in ValueError messages", "should_trigger": true},
+  {"query": "when should a Python function raise UserNotFoundError vs return User | None?", "should_trigger": true},
+  {"query": "map standard Python exceptions (ValueError vs TypeError vs RuntimeError) cleanly and preserve __cause__ tracebacks", "should_trigger": true},
+  {"query": "translate httpx transport exceptions into typed domain errors at our Python adapter boundary", "should_trigger": true},
+  {"query": "fix silent None returns and unchained `raise ServiceError` wrappers in our Python billing module", "should_trigger": true},
+  {"query": "combine Pydantic @field_validator input errors with structured API problem responses in Python", "should_trigger": true},
+  {"query": "configure tenacity exponential backoff with jitter and stop_after_attempt(5)", "should_trigger": false},
+  {"query": "implement __enter__/__exit__ and ExitStack resource cleanup in Python", "should_trigger": false},
+  {"query": "set up structlog JSON logging, Prometheus histograms, and OpenTelemetry spans", "should_trigger": false},
+  {"query": "retry DSPy predictor outputs using dspy.Refine and a reward function", "should_trigger": false},
+  {"query": "harden Bash trap ERR/EXIT signal cleanup in a shell script", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml", "should_trigger": false},
+  {"query": "profile Python CPU bottlenecks with cProfile and py-spy", "should_trigger": false},
+  {"query": "publish a Python package to PyPI using build and twine", "should_trigger": false}
+]

@@ -1,0 +1,18 @@
+[
+  {"query": "Review native Zsh array indexes with KSH_ARRAYS and SH_WORD_SPLIT options.", "should_trigger": true},
+  {"query": "Keep this Zsh plugin compatible with 5.9 rather than assuming 5.9.2.", "should_trigger": true},
+  {"query": "Check whether kill -q and _as_if need Zsh 5.9.1 or 5.9.2.", "should_trigger": true},
+  {"query": "Design an autoloaded Zsh function that preserves caller options and aliases.", "should_trigger": true},
+  {"query": "Fix this native Zsh completion without resetting the compsys option environment.", "should_trigger": true},
+  {"query": "Investigate Zsh startup order for a sourced plugin and interactive prompt.", "should_trigger": true},
+  {"query": "Can zsh -f -n plus Bash-mode ShellCheck validate a ZLE widget?", "should_trigger": true},
+  {"query": "$shell-zsh report role, emulation, modules and startup boundaries without smoke execution.", "should_trigger": true},
+  {"query": "Rewrite this Zsh script into POSIX.1-2017 sh for dash and ash.", "should_trigger": false},
+  {"query": "Keep our executable in Bash 3.2; the developer's login shell happens to be Zsh.", "should_trigger": false},
+  {"query": "Configure formatter CI for an already-profiled Zsh file without assessing language behavior.", "should_trigger": false},
+  {"query": "Write Bats fixtures for a Zsh executable; its version and option contract is already approved.", "should_trigger": false},
+  {"query": "Wire the existing shell gate into pre-commit without changing the native Zsh profile.", "should_trigger": false},
+  {"query": "Explain a Bash nameref bug in a terminal launched from Zsh.", "should_trigger": false},
+  {"query": "Compare POSIX 2017 and POSIX 2024 utilities; no native Zsh code is involved.", "should_trigger": false},
+  {"query": "Harden temporary-file cleanup in an already-profiled Zsh batch job without changing dialect policy.", "should_trigger": false}
+]

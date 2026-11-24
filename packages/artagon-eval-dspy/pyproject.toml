@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "artagon-eval-dspy"
+version = "0.2.0"
+description = "Decoupled DSPy / GEPA / pyDSP subscription optimizer adapter for artagon-skills-eval."
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Artagon" }]
+dependencies = [
+  "artagon-eval-core>=0.2.0,<0.3",
+]
+
+[project.entry-points."artagon_eval.optimizers"]
+dspy-gepa = "artagon_eval_dspy.plugin:create_dspy_gepa_adapter"
+optimize-anything = "artagon_eval_dspy.plugin:create_optimize_anything_adapter"
+pydsp = "artagon_eval_dspy.plugin:create_pydsp_adapter"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/artagon_eval_dspy"]

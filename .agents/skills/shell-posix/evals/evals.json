@@ -1,0 +1,44 @@
+{
+  "skill_name": "shell-posix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "On paper, assess this POSIX.1-2017 library for dash and BusyBox ash: namespace::load() { local rows; set -o pipefail; source ./config; readonly cache_dir=/tmp/cache; }. The caller sources it. Do not execute or edit anything.",
+      "expected_output": "Separates 2017 language requirements, implementation extensions and caller-state effects.",
+      "files": [],
+      "expectations": [
+        "Identifies the function name, local and source as nonportable for the 2017 contract.",
+        "States that pipefail is standardized in POSIX.1-2024 rather than POSIX.1-2017.",
+        "Recognizes readonly name=value as a standard POSIX form.",
+        "Does not silently disable required pipeline failure detection when an implementation lacks pipefail.",
+        "Requires named dash and BusyBox versions and sourced-caller tests rather than treating /bin/sh as a version."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our sh script claims POSIX.1-2024 and uses find -print0, xargs -0, sed -E, readlink -f and pipefail. Does green ShellCheck -s sh establish compatibility with an old BusyBox image? Answer on paper only, with utility and interpreter checks separated.",
+      "expected_output": "Keeps standards edition and deployed utility support separate and rejects a static-only portability pass.",
+      "files": [],
+      "expectations": [
+        "States that find -print0, xargs -0, sed -E and pipefail are in the 2024 standard.",
+        "States that readlink -f is not standardized by POSIX.1-2024.",
+        "Requests the actual BusyBox version, build or applet capabilities and shell invocation.",
+        "Does not claim that a current ShellCheck sh profile selects the POSIX 2017 edition or proves deployed behavior.",
+        "Reports old BusyBox execution and utility support as unverified."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Plan verification for a POSIX.1-2017 executable on dash, BusyBox ash, FreeBSD sh and macOS utilities. Existing Bats tests source it into Bash and use GNU sed -i/stat -c. Do not run commands or install tools.",
+      "expected_output": "Proposes native interpreter and utility cells while preserving missing coverage as visible.",
+      "files": [],
+      "expectations": [
+        "Explains that Bats is a Bash runner and sourcing the target into Bash is not dash or ash evidence.",
+        "Uses explicit target interpreter invocations or a same-shell runner for the intended role.",
+        "Separates GNU, FreeBSD, macOS and BusyBox utility behavior instead of inferring it from shell syntax.",
+        "Marks unavailable interpreter or utility cells as missing coverage rather than successful skips.",
+        "Does not install tools, run commands or claim POSIX conformance from the plan."
+      ]
+    }
+  ]
+}

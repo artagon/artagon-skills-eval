@@ -1,0 +1,18 @@
+[
+  {"query": "review our PostgreSQL composite indexes, JSONB GIN operators, and query plans in db/queries/", "should_trigger": true},
+  {"query": "audit asyncpg connection pool sizing, statement_timeout, and transaction isolation in app/db/", "should_trigger": true},
+  {"query": "check our Postgres wallet transfer SQL for lost updates, deadlocks, and FOR UPDATE lock ordering", "should_trigger": true},
+  {"query": "review migrations/012_add_jsonb.sql for -> vs ->> vs @> operator indexing and lock impact on large tables", "should_trigger": true},
+  {"query": "verify pg_try_advisory_xact_lock usage in our multi-replica Postgres background scheduler", "should_trigger": true},
+  {"query": "audit raw psycopg3 SQL queries in src/reporting/ for parameter binding, seq scans, and connection leaks", "should_trigger": true},
+  {"query": "check whether CREATE INDEX CONCURRENTLY is needed in our Postgres migration on a 50M-row table", "should_trigger": true},
+  {"query": "review Postgres READ COMMITTED vs REPEATABLE READ isolation usage in our inventory reservation SQL", "should_trigger": true},
+  {"query": "review FastAPI APIRouter response_model decorators and Depends() auth chains", "should_trigger": false},
+  {"query": "audit SQLAlchemy 2.0 ORM relationship lazy loading and session.scalars() idioms", "should_trigger": false},
+  {"query": "review pytest async fixtures and mock patch targets in tests/", "should_trigger": false},
+  {"query": "find dead Python functions and duplicate code blocks with vulture and pylint", "should_trigger": false},
+  {"query": "unit test a Mongoose CustomerRepository with mongodb-memory-server in TypeScript", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml", "should_trigger": false},
+  {"query": "publish a Python wheel to PyPI with build and twine", "should_trigger": false},
+  {"query": "optimize a DSPy RAG prompt with MIPROv2", "should_trigger": false}
+]

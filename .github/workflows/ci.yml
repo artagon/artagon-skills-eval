@@ -1,0 +1,205 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Least-privilege default. Jobs that need more must opt in explicitly.
+permissions:
+  contents: read
+
+# Cancel in-flight runs on the same ref when a new push arrives.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-quality:
+    name: Core quality (lint, type, complexity, architecture, pytest, skill-lint, nix-check)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Harden Runner (egress audit)
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: ".python-version"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          version: "0.11.7"
+          require-checksums: true
+          enable-cache: true
+
+      - name: Sync workspace dependencies (frozen)
+        shell: bash
+        run: uv sync --frozen --group dev
+
+      - name: Ruff lint and format check
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv run --frozen ruff check
+          uv run --frozen ruff format --check
+
+      - name: Static type checks (mypy + basedpyright)
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv run --frozen mypy
+          uv run --frozen basedpyright
+
+      - name: Cyclomatic complexity gate (radon cc -n C)
+        shell: bash
+        run: |
+          set -euo pipefail
+          radon_out="$(uv run --frozen radon cc -n C packages/*/src)"
+          if [[ -n "$radon_out" ]]; then
+            printf 'Functions exceeding CC <= 10 (grade C or worse):\n%s\n' "$radon_out" >&2
+            exit 1
+          fi
+
+      - name: Architecture boundary contracts (import-linter)
+        shell: bash
+        run: uv run --frozen lint-imports
+
+      - name: Hypothesis property-based test suite (ci profile, zero skips)
+        shell: bash
+        env:
+          HYPOTHESIS_PROFILE: "ci"
+        run: uv run --frozen pytest -m property --fail-on-skip -q
+
+      - name: Full workspace pytest suite with coverage (zero skips)
+        shell: bash
+        env:
+          HYPOTHESIS_PROFILE: "ci"
+        run: uv run --frozen pytest --cov --fail-on-skip -q
+
+      - name: Tier-0 Agent Skills lint (skills-ref)
+        shell: bash
+        run: uv run --frozen skill-lint --skills-dir skills
+
+      - name: Nix locked-versions receipt check
+        shell: bash
+        run: uv run --frozen harness-eval-nix-check --repo-root .
+
+  ast-grep:
+    name: ast-grep structural lint and rule tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner (egress audit)
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install pinned ast-grep (hash-verified)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --require-hashes \
+            --only-binary=:all: -r .github/ci/requirements-ast-grep.txt
+
+      - name: Run ast-grep rule tests and structural scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          ast-grep --version
+          ast-grep test --config sgconfig.yml
+          ast-grep scan --config sgconfig.yml
+
+  openspec:
+    name: OpenSpec validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner (egress audit)
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: ".github/ci/openspec/package-lock.json"
+
+      - name: Install pinned OpenSpec CLI (lockfile-verified)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .github/ci/openspec
+          npm ci --ignore-scripts
+          echo "${GITHUB_WORKSPACE}/.github/ci/openspec/node_modules/.bin" >> "$GITHUB_PATH"
+
+      - name: Validate all OpenSpec changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          openspec --version
+          openspec validate --all --strict
+
+  nix-parse:
+    name: Nix flake parse and evaluation guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden Runner (egress audit)
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+        with:
+          determinate: false
+          diagnostic-endpoint: ""
+
+      - name: Parse flake.nix, check metadata, and evaluate ADR-0006 assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          nix-instantiate --parse flake.nix >/dev/null
+          nix flake metadata --no-write-lock-file --no-update-lock-file
+          check_name="$(nix eval --raw .#checks.x86_64-linux.offline.name)"
+          printf 'Evaluated offline check: %s\n' "$check_name"
+          test "$check_name" = "artagon-skills-eval-offline-check"
+          drv_path="$(nix eval --raw .#checks.x86_64-linux.offline.drvPath)"
+          printf 'Instantiated offline check drv: %s\n' "$drv_path"

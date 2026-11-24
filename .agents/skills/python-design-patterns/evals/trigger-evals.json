@@ -1,0 +1,18 @@
+[
+  {"query": "replace an over-engineered Java-style Factory class in Python with a typed dict of callables and KISS", "should_trigger": true},
+  {"query": "refactor deep Notification inheritance subclasses in Python to composition and typing.Protocol DI", "should_trigger": true},
+  {"query": "enforce downward API Handler -> Service -> Repository layering and split a 9-dependency Python service class (SRP)", "should_trigger": true},
+  {"query": "apply the Rule of Three and YAGNI to decide whether two similar Python helpers should be abstracted now", "should_trigger": true},
+  {"query": "design clean constructor dependency injection with Protocol ports in Python without a heavyweight DI container", "should_trigger": true},
+  {"query": "decouple domain business logic from SQLAlchemy repositories and FastAPI HTTPException transport code", "should_trigger": true},
+  {"query": "choose between simple functions, dataclasses, and classes using Pythonic KISS and SRP principles", "should_trigger": true},
+  {"query": "replace a global singleton client with explicit constructor injection in our Python backend", "should_trigger": true},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml for Python 3.13", "should_trigger": false},
+  {"query": "scan Python code for SQL injection and weak MD5 hashes using bandit", "should_trigger": false},
+  {"query": "build a wheel and upload to PyPI with build and twine", "should_trigger": false},
+  {"query": "compose multiple DSPy predictors with dspy.teleprompt.Ensemble and MultiChainComparison", "should_trigger": false},
+  {"query": "profile slow Python loops with py-spy and line_profiler", "should_trigger": false},
+  {"query": "write a compile-time TypeScript Builder<T, S> type", "should_trigger": false},
+  {"query": "configure Celery task_acks_late and Redis Dead Letter Queues", "should_trigger": false},
+  {"query": "set up .pre-commit-config.yaml and symlink lint-gate.py", "should_trigger": false}
+]

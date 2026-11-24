@@ -1,0 +1,18 @@
+[
+  {"query": "review src/services/reconciler.py for type safety, exception chaining, resource leaks, and async bugs", "should_trigger": true},
+  {"query": "perform an evidence-gated Python code review on these changed .py files with [FILE:LINE] citations", "should_trigger": true},
+  {"query": "check my Python utility module diff for mutable default arguments, bare excepts, and blocking calls in async def", "should_trigger": true},
+  {"query": "review src/parsers/invoice.py while avoiding false positives on valid cast() guards and documented noqa comments", "should_trigger": true},
+  {"query": "audit error handling, context managers, and T | None type hints across src/core/ in this PR", "should_trigger": true},
+  {"query": "critique this Python class implementation for subtle runtime bugs before I merge it", "should_trigger": true},
+  {"query": "inspect src/workers/sync.py for swallowed CancelledError, unclosed sockets, and missing raise ... from", "should_trigger": true},
+  {"query": "do a focused Python code review on scripts/generate-skill-evals.py", "should_trigger": true},
+  {"query": "review only our pytest fixtures and unittest.mock.patch paths in tests/test_sync.py", "should_trigger": false},
+  {"query": "audit PostgreSQL composite index column order and GIN indexes in migrations/", "should_trigger": false},
+  {"query": "review Alembic downgrade() reversibility and SQLAlchemy selectinload queries", "should_trigger": false},
+  {"query": "set up pyproject.toml with ruff, mypy, and basedpyright for Python 3.13", "should_trigger": false},
+  {"query": "build and upload our Python wheel to PyPI with twine", "should_trigger": false},
+  {"query": "run a Clean Code review on a TypeScript class in src/orders.ts", "should_trigger": false},
+  {"query": "review Bash scripts for quoting and set -e pitfalls using shell-authoring", "should_trigger": false},
+  {"query": "optimize a DSPy RAG pipeline with MIPROv2", "should_trigger": false}
+]

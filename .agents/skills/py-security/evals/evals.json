@@ -1,0 +1,41 @@
+{
+  "skill_name": "py-security",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Remediate the security vulnerabilities in this Python helper: `cursor.execute(f\"SELECT * FROM {table} WHERE email = '{email}'\")`, `token = ''.join(random.choices(string.ascii_letters, k=32))`, and `pw_hash = hashlib.md5(password.encode()).hexdigest()`.",
+      "expected_output": "Scans with `ruff check --select S` and `bandit -r . -ll`, replaces string-formatted SQL (`S608`) with parameterized `%s` query bindings plus an explicit allowlist and `psycopg2.sql.Identifier(table)` for dynamic table identifiers, replaces predictable `random.choices` (`S311`) with `secrets.token_urlsafe(32)`, and replaces broken `hashlib.md5` (`S324`) password hashing with `argon2.PasswordHasher()` (`argon2-cffi`, noting `hashlib.sha256`/`blake2b` is only for non-password file integrity).",
+      "files": [],
+      "expectations": [
+        "Runs or cites `ruff check --select S` and `bandit -r . -ll` (`S608`, `S311`, `S324`) for automated verification",
+        "Parameterizes `email` via `%s` bind parameters AND validates `table` against a strict allowlist with `psycopg2.sql.Identifier` rather than f-strings",
+        "Replaces `random` token generation with `secrets.token_urlsafe` or `secrets.token_hex`",
+        "Replaces `hashlib.md5` password hashing with `argon2.PasswordHasher` (or `bcrypt`), distinguishing password KDFs from `sha256`/`blake2b` checksums"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit and fix a Python deployment utility that runs `os.system(f'tar -czf {archive_name} {source_dir}')`, loads config via `yaml.load(raw_yaml)`, deserializes cached sessions with `pickle.loads(redis_bytes)`, and reads a hardcoded `DB_PASSWORD = '<REDACTED_EXAMPLE>'` literal.",
+      "expected_output": "Replaces `os.system` / `shell=True` (`S602`/`S605`) with `subprocess.run(['tar', '-czf', archive_name, source_dir], check=True, shell=False)` plus path validation, replaces unsafe `yaml.load` (`S506`) with `yaml.safe_load`, replaces untrusted `pickle.loads` (`S301`) with validated JSON/Pydantic serialization (or HMAC-verified structured payloads), and moves credentials (`S105`) to `os.environ` / secret manager with `.env` ignored in `.gitignore`.",
+      "files": [],
+      "expectations": [
+        "Replaces `os.system(...)` shell interpolation with `subprocess.run([...], check=True)` using an explicit argument list (`shell=False`)",
+        "Replaces `yaml.load(...)` with `yaml.safe_load(...)` to block arbitrary Python object instantiation",
+        "Replaces `pickle.loads(...)` on external/session bytes with safe JSON/Pydantic deserialization",
+        "Removes hardcoded credential literals in favor of environment/secret-store injection and warns to rotate any previously committed secret"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Configure automated security gates for a Python service covering both static code issues (`ruff` `S` rules / `bandit`) and vulnerable third-party dependencies (`pip-audit`), without blocking `assert` statements inside `tests/`.",
+      "expected_output": "Enables `S` (`flake8-bandit`) in `[tool.ruff.lint]` with `[tool.ruff.lint.per-file-ignores] 'tests/**/*.py' = ['S101']`, runs `bandit -r src/ -ll` for deeper AST checks, and runs `uv run pip-audit` (or `pip-audit --strict`) in CI against locked dependencies.",
+      "files": [],
+      "expectations": [
+        "Enables Bandit `S` rules in `[tool.ruff.lint]` and scopes `S101` (`assert`) exemptions strictly to `tests/**/*.py`",
+        "Runs `bandit -r src/ -ll` targeting production source directories",
+        "Includes dependency vulnerability scanning via `pip-audit` against locked requirements",
+        "Warns against blanket `# noqa: S...` or `# nosec` suppressions without documented justification"
+      ]
+    }
+  ]
+}

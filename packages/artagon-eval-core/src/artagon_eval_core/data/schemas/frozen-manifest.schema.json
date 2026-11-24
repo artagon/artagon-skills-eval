@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/frozen-manifest/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_sha256",
+    "frozen_at",
+    "campaign_id",
+    "pin_mode",
+    "execution_mode",
+    "confounded_billing_path",
+    "billing_guard",
+    "protocol",
+    "resolved_binaries",
+    "schedule"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-frozen-manifest/v1"},
+    "manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "frozen_at": {"type": "string", "minLength": 1},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "pin_mode": {"enum": ["nix", "host"]},
+    "execution_mode": {"enum": ["headless", "ntm", "herdr", "cao"]},
+    "confounded_billing_path": {"type": "boolean"},
+    "billing_guard": {"enum": ["separated", "env_only", "api_key_explicit"]},
+    "nix_closure_drv": {"type": ["string", "null"]},
+    "cassette_digests": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    },
+    "protocol": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean", "null", "array", "object"]
+      }
+    },
+    "resolved_binaries": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["real_path", "sha256", "version"],
+        "properties": {
+          "real_path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "version": {"type": "string"},
+          "size": {"type": "integer", "minimum": 0},
+          "mtime_ns": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["block_id", "slot_index", "trial_id", "task_id", "arm_id", "auth_mode"],
+        "properties": {
+          "block_id": {"type": "string", "minLength": 1},
+          "randomization_unit_id": {"type": "string", "minLength": 1},
+          "slot_index": {"type": "integer", "minimum": 0},
+          "abba_pattern": {"type": "string"},
+          "trial_id": {"type": "string", "minLength": 1},
+          "task_id": {"type": "string", "minLength": 1},
+          "arm_id": {"type": "string", "minLength": 1},
+          "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+          "auth_mode": {"enum": ["subscription", "api_key"]}
+        }
+      }
+    }
+  }
+}

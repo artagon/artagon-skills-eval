@@ -1,0 +1,70 @@
+id: static-redacted-literal-const-only
+snapshots:
+  "msg = primitives.static_redacted_literal(\"prefix \" + user_input)\n":
+    labels:
+    - source: primitives.static_redacted_literal("prefix " + user_input)
+      style: primary
+      start: 6
+      end: 64
+    - source: primitives.static_redacted_literal
+      style: secondary
+      start: 6
+      end: 40
+    - source: "\"prefix \" + user_input"
+      style: secondary
+      start: 41
+      end: 63
+    - source: "\"prefix \" + user_input"
+      style: secondary
+      start: 41
+      end: 63
+  "msg = static_redacted_literal(f\"Failed for {secret}\")\n":
+    labels:
+    - source: static_redacted_literal(f"Failed for {secret}")
+      style: primary
+      start: 6
+      end: 53
+    - source: static_redacted_literal
+      style: secondary
+      start: 6
+      end: 29
+    - source: "{secret}"
+      style: secondary
+      start: 43
+      end: 51
+  "msg = static_redacted_literal(raw_err)\n":
+    labels:
+    - source: static_redacted_literal(raw_err)
+      style: primary
+      start: 6
+      end: 38
+    - source: static_redacted_literal
+      style: secondary
+      start: 6
+      end: 29
+    - source: raw_err
+      style: secondary
+      start: 30
+      end: 37
+    - source: raw_err
+      style: secondary
+      start: 30
+      end: 37
+  "msg = static_redacted_literal(str(exc))\n":
+    labels:
+    - source: static_redacted_literal(str(exc))
+      style: primary
+      start: 6
+      end: 39
+    - source: static_redacted_literal
+      style: secondary
+      start: 6
+      end: 29
+    - source: str(exc)
+      style: secondary
+      start: 30
+      end: 38
+    - source: str(exc)
+      style: secondary
+      start: 30
+      end: 38

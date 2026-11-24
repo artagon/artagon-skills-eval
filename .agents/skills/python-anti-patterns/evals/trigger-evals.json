@@ -1,0 +1,18 @@
+[
+  {"query": "check this Python module against common anti-patterns like double retries, ORM model leaks, mutable defaults, and silent except pass", "should_trigger": true},
+  {"query": "audit our Python service for architectural code smells: SQL mixed into routes, hardcoded config, and unclosed files", "should_trigger": true},
+  {"query": "why is retrying in both our FastAPI handler and our HTTP client an anti-pattern in Python?", "should_trigger": true},
+  {"query": "fix batch processing anti-patterns where one bad item aborts 10,000 records and untyped `list` hides element types", "should_trigger": true},
+  {"query": "spot Python async, typing, and testing anti-patterns before I open this pull request", "should_trigger": true},
+  {"query": "replace `def add_tag(tag, tags=[])` and `except Exception: pass` anti-patterns across our Python helpers", "should_trigger": true},
+  {"query": "why is leaking SQLAlchemy ORM models directly from API endpoints a dangerous Python anti-pattern?", "should_trigger": true},
+  {"query": "review our onboarding code samples for classic Python footguns and over-mocked happy-path-only tests", "should_trigger": true},
+  {"query": "set up pyproject.toml with ruff, mypy, and basedpyright for Python 3.13", "should_trigger": false},
+  {"query": "publish a wheel and sdist to PyPI using build and twine", "should_trigger": false},
+  {"query": "configure Celery task_acks_late and Dead Letter Queues with Redis", "should_trigger": false},
+  {"query": "profile Python CPU hotspots using py-spy flamegraphs and line_profiler", "should_trigger": false},
+  {"query": "review TypeScript code smells citing Clean Code references/smells/rules.md", "should_trigger": false},
+  {"query": "install git pre-commit hooks and symlink lint-gate.py", "should_trigger": false},
+  {"query": "migrate requirements.txt to uv lockfiles", "should_trigger": false},
+  {"query": "design a DSPy Signature with Pydantic OutputField constraints", "should_trigger": false}
+]

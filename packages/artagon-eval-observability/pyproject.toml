@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "artagon-eval-observability"
+version = "0.2.0"
+description = "Decoupled Apache-2.0 Arize Phoenix OTel/Client and MLflow 3 telemetry sink adapter for artagon-skills-eval."
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Artagon" }]
+dependencies = [
+  "artagon-eval-core>=0.2.0,<0.3",
+]
+
+[project.entry-points."artagon_eval.sinks"]
+phoenix = "artagon_eval_observability.plugin:create_phoenix_sink_adapter"
+mlflow = "artagon_eval_observability.plugin:create_mlflow_sink_adapter"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/artagon_eval_observability"]

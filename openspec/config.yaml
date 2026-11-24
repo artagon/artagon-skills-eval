@@ -1,0 +1,78 @@
+schema: spec-driven-evidence
+
+context: |
+  `artagon-skills-eval` is a standalone Python 3.12+/3.13 `uv` workspace and
+  Nix flake (`nixos-26.05`) for subscription-first multi-CLI Agent Skill and
+  harness evaluation (`claude`, `codex`, `agy`, `copilot`, `kimi`).
+
+  Workspace layout:
+    - Root umbrella package `artagon-skills-eval` (`pyproject.toml`, `uv.lock`)
+      exposing `harness-eval`, `skill-eval`, `skill-lint`, `skillopt-runner`,
+      and `harness-eval-nix-check`.
+    - `packages/artagon-eval-core/`: pure FCIS `domain/`, typed effect `ports/`,
+      `runtime/` (`structlog` + `SecretVault`), `plugins/` (Pluggy hookspecs and
+      lazy `importlib.metadata` registry), `shell/`, `store/` (DuckDB/Parquet
+      and OTLP), ADR-0012 `-P -s -m` hot-path `shims/` (stdlib + optional
+      `msgspec` only), `packaging/`, `cli/`, and single canonical `data/`
+      (10 JSON schemas, 6 harness catalogs, default providers/keychain configs).
+    - `packages/artagon-eval-skills/`: official `agentskills.io` `skills-ref`
+      isolated strictly in `spec_adapter.py`, frozen `eval-v2` contracts,
+      Tier-0/1/2 linter, PyYAML generator, workflows, and `skill-eval`/`skill-lint`.
+    - Six decoupled lazy Pluggy adapters: `artagon-eval-{waza,dspy,skillopt,
+      evoskill,skillspec,observability}` (zero cross-adapter imports; missing
+      adapters fail closed with `AdapterUnavailableError`, exit `69`).
+    - Root `flake.nix` + `flake.lock` + `nix/locked-versions.json` enforcing
+      ADR-0006 `lib.fileset.toSource` clean-source filtering, eval-time
+      forbidden-file assertions, `O_NOFOLLOW` host staging, and offline checks.
+
+  Core invariants:
+    - Strict deeply frozen Pydantic v2 `FrozenModel` (`frozen=True`,
+      `extra="forbid"`, `strict=True`, `validate_default=True`); evolve only
+      via validated `.with_*()` / `_evolve()`, never `model_copy(update=...)`.
+    - `Expression 6.0.1` (`expression[pydantic]`) + `rpds-py` (`PersistentMap`,
+      `PersistentSet`) as the sole FP primitive layer; zero hand-rolled monads
+      and zero `dict[str, Any]` / `Any` in `domain/`.
+    - Capability-sealed `RedactedStr` minted only by `SecretVault` /
+      `SecretScrubberPort` or literal `static_redacted_literal(...)`.
+    - Hypothesis property-based testing (`@pytest.mark.property`, profiles
+      `dev`/`ci`/`thorough`) as default for domain and boundary invariants.
+    - Mandatory gates: `openspec validate --all --strict`, `pytest --fail-on-skip`,
+      `ruff`, `mypy --strict`, `basedpyright --strict`, `radon cc -n C`,
+      `lint-imports` (6 contracts), `ast-grep` (`sgconfig.yml`), and Nix offline.
+    - Public repository hygiene: repository-relative paths only; never include
+      corporate domains, personal emails, local home paths, local file-scheme
+      URIs, or secrets.
+
+  Read `AGENTS.md` for engineering rules, `openspec/project.md` for change
+  sequencing, and `openspec/AGENTS.md` for OpenSpec editing rules.
+
+rules:
+  proposal:
+    - State the problem, explicit scope boundaries, capabilities, and observable
+      success criteria concisely (target under 2 pages).
+    - Mark breaking interface or schema changes with **BREAKING** in What Changes.
+    - Check `openspec/specs/` and sibling `openspec/changes/*/specs/` before
+      naming a new capability to avoid archive collisions.
+  specs:
+    - Put one `spec.md` per capability under `specs/<capability-name>/`.
+    - Use `## ADDED Requirements` for new capabilities and `MODIFIED`/`REMOVED`
+      only for capabilities already promoted under `openspec/specs/`.
+    - Use normative SHALL/MUST language, keep each requirement body under 450
+      characters so `openspec validate --strict` passes with zero warnings, and
+      attach at least one `#### Scenario:` (`GIVEN`/`WHEN`/`THEN`) to each.
+  design:
+    - Capture module boundaries, typestate invariants, alternatives rejected,
+      and security/offline Nix constraints; reference repo-relative paths only.
+  tasks:
+    - Use `- [ ] <id> <task>` checkboxes grouped by implementation phase with
+      explicit `Proof:` and `Status:` lines.
+    - Do not check off a task until code and verification pass in this worktree.
+  evidence:
+    - Record only observed, reproducible proof with repo-relative paths. Keep
+      pending and unrun checks explicit (`not checked` / `not run`).
+  review:
+    - Log concrete review findings with repo-relative file and line references,
+      severity, disposition, and explicit status (`pending` or `resolved`).
+  verification:
+    - Record exact gate commands, evidence paths, and observed status (`not run`,
+      `passed`, or `failed`), plus remaining gaps without extrapolating results.

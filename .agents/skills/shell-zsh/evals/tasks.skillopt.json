@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-shell",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "shell-zsh-01",
+      "project": "artagon-shell",
+      "intent": "On paper, review a native Zsh 5.9 sourced plugin that sets KSH_ARRAYS and SH_WORD_SPLIT globally, overwrites precmd and calls compinit -u. Can ShellCheck --shell=bash validate it? Do not run or change anything.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Explains native one-based arrays and nonsplitting scalar expansion together with the named option effects.\n- Rejects Bash-mode ShellCheck as native Zsh validation.\n- Does not reset a completion function option environment blindly with emulate -L zsh.\n- Protects existing hooks and preserves compaudit checks instead of recommending compinit -u.\n- Requires explicit ownership or restoration of changed caller options and registrations.",
+      "judge": {},
+      "tags": [
+        "shell-zsh",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-zsh"
+    },
+    {
+      "id": "shell-zsh-02",
+      "project": "artagon-shell",
+      "intent": "Our native Zsh targets 5.9, 5.9.1 and 5.9.2. A source says real-time signals, kill -q/-L and _as_if arrived in 5.9.2. Check that claim and plan optional-module and new-syntax gates. Do not execute commands.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Attributes the listed signal and completion additions to Zsh 5.9.1 using the official release notes.\n- Does not claim that the upstream 5.9.2 test result proves 5.9 or macOS compatibility.\n- Uses a numeric-aware version mechanism such as is-at-least rather than lexical comparison.\n- Separates optional module availability from the language version.\n- Keeps newer parse-time syntax in a separately selected file rather than assuming an if branch hides it.",
+      "judge": {},
+      "tags": [
+        "shell-zsh",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-zsh"
+    },
+    {
+      "id": "shell-zsh-03",
+      "project": "artagon-shell",
+      "intent": "Review a proposed read-only check: zsh -f -n plugin.zsh, then automatically run plugin.zsh with a temporary ZDOTDIR. The plugin includes a ZLE widget and autoloaded function. Explain the evidence and startup boundary only; run no commands.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- States that -n parses without executing the target body and does not test its behavior.\n- States that global zshenv can still run under -f and a temporary ZDOTDIR is not containment.\n- Does not automatically execute the plugin after a syntax-only request.\n- Requires role-specific autoload and PTY tests for the function and ZLE widget.\n- Does not claim that top-level emulate -L zsh localizes state as it does inside an enclosing function.",
+      "judge": {},
+      "tags": [
+        "shell-zsh",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-zsh"
+    }
+  ]
+}

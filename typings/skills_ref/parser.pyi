@@ -1,0 +1,3 @@
+from __future__ import annotations
+
+def parse_frontmatter(content: str) -> tuple[dict[str, object], str]: ...

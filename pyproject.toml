@@ -1,0 +1,325 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "artagon-skills-eval"
+version = "0.2.0"
+description = "Subscription-first multi-CLI skill & harness evaluation suite, static linter, trace store, and pluggable optimizer adapters."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Artagon" }]
+dependencies = [
+  "artagon-eval-core>=0.2.0,<0.3",
+  "artagon-eval-skills>=0.2.0,<0.3",
+]
+
+[project.optional-dependencies]
+waza = ["artagon-eval-waza>=0.2.0,<0.3"]
+dspy = ["artagon-eval-dspy>=0.2.0,<0.3"]
+skillopt = ["artagon-eval-skillopt>=0.2.0,<0.3"]
+evoskill = ["artagon-eval-evoskill>=0.2.0,<0.3"]
+skillspec = ["artagon-eval-skillspec>=0.2.0,<0.3"]
+phoenix = ["artagon-eval-observability>=0.2.0,<0.3"]
+mlflow = ["artagon-eval-observability>=0.2.0,<0.3"]
+all-adapters = [
+  "artagon-eval-waza>=0.2.0,<0.3",
+  "artagon-eval-dspy>=0.2.0,<0.3",
+  "artagon-eval-skillopt>=0.2.0,<0.3",
+  "artagon-eval-evoskill>=0.2.0,<0.3",
+  "artagon-eval-skillspec>=0.2.0,<0.3",
+  "artagon-eval-observability>=0.2.0,<0.3",
+]
+
+[project.scripts]
+skill-eval = "artagon_eval_skills.cli.app:main"
+harness-eval = "artagon_eval_core.cli.app:main"
+skill-lint = "artagon_eval_skills.cli.lint:main"
+skillopt-runner = "artagon_eval_core.cli.skillopt_proxy:main"
+harness-eval-nix-check = "artagon_eval_core.packaging.nix_check:main"
+
+[dependency-groups]
+dev = [
+  "artagon-eval-dspy",
+  "artagon-eval-evoskill",
+  "artagon-eval-observability",
+  "artagon-eval-skillopt",
+  "artagon-eval-skillspec",
+  "artagon-eval-waza",
+  "basedpyright>=1.39.0",
+  "hatchling>=1.27.0",
+  "hypothesis>=6.150.0",
+  "import-linter>=2.17",
+  "mypy>=1.20.0",
+  "pytest>=9.0.0",
+  "pytest-cov>=6.0.0",
+  "pytest-xdist>=3.6.0",
+  "radon>=6.0.1",
+  "ruff>=0.15.0",
+  "types-jsonschema>=4.23.0",
+  "types-protobuf>=5.29.1",
+  "types-pyyaml>=6.0.12",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/artagon_skills_eval"]
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+artagon-eval-core = { workspace = true }
+artagon-eval-skills = { workspace = true }
+artagon-eval-waza = { workspace = true }
+artagon-eval-dspy = { workspace = true }
+artagon-eval-skillopt = { workspace = true }
+artagon-eval-evoskill = { workspace = true }
+artagon-eval-skillspec = { workspace = true }
+artagon-eval-observability = { workspace = true }
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.3"
+testpaths = ["packages", "tests"]
+addopts = [
+  "--import-mode=importlib",
+  "-ra",
+  "--strict-markers",
+  "--strict-config",
+]
+markers = [
+  "property: Hypothesis property-based test",
+  "adapter(name): Requires optional adapter package",
+  "slow: Long-running integration or Nix staging test",
+  "hotpath: ADR-0012 -P -s -m zero-heavy-import shim contract test",
+  "typing: Compile-time negative typing contract test",
+]
+
+# ---------------------------------------------------------------------------
+# Ruff
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "packages/*/src", "packages/*/tests", "tests"]
+extend-exclude = [".agents", ".claude"]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "B",
+  "UP",
+  "SIM",
+  "RUF",
+  "C90",
+  "PT",
+  "RET",
+  "ARG",
+  "BLE",
+  "TRY",
+  "T20",
+  "S",
+]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["S101", "ARG", "T20", "TRY003", "S603"]
+"tests/**" = ["S101", "ARG", "T20", "TRY003", "S603"]
+"**/cli/**" = ["T20"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+# ---------------------------------------------------------------------------
+# basedpyright (strict, zero-Any in domain/ports, unused Result errors)
+# ---------------------------------------------------------------------------
+[tool.basedpyright]
+pythonVersion = "3.12"
+include = ["src", "packages/*/src"]
+stubPath = "typings"
+typeCheckingMode = "strict"
+reportAny = "error"
+reportExplicitAny = "error"
+reportUnusedCallResult = "error"
+reportUnnecessaryComparison = "error"
+reportMatchNotExhaustive = "error"
+
+# ---------------------------------------------------------------------------
+# mypy (strict + domain explicit-Any ban + exhaustive-match)
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+strict = true
+warn_unreachable = true
+explicit_package_bases = true
+mypy_path = [
+  "typings",
+  "src",
+  "packages/artagon-eval-core/src",
+  "packages/artagon-eval-skills/src",
+  "packages/artagon-eval-waza/src",
+  "packages/artagon-eval-dspy/src",
+  "packages/artagon-eval-skillopt/src",
+  "packages/artagon-eval-evoskill/src",
+  "packages/artagon-eval-skillspec/src",
+  "packages/artagon-eval-observability/src",
+]
+files = [
+  "src",
+  "packages/artagon-eval-core/src",
+  "packages/artagon-eval-skills/src",
+  "packages/artagon-eval-waza/src",
+  "packages/artagon-eval-dspy/src",
+  "packages/artagon-eval-skillopt/src",
+  "packages/artagon-eval-evoskill/src",
+  "packages/artagon-eval-skillspec/src",
+  "packages/artagon-eval-observability/src",
+]
+enable_error_code = [
+  "ignore-without-code",
+  "redundant-expr",
+  "truthy-bool",
+  "exhaustive-match",
+]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[[tool.mypy.overrides]]
+module = ["artagon_eval_core.domain.*"]
+disallow_any_explicit = true
+
+[[tool.mypy.overrides]]
+module = [
+  "duckdb.*",
+  "pyarrow.*",
+  "jmespath.*",
+  "rfc8785.*",
+]
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# Import Linter (6 Mechanical Architecture Boundary Contracts)
+# ---------------------------------------------------------------------------
+[tool.importlinter]
+include_external_packages = true
+root_packages = [
+  "artagon_eval_core",
+  "artagon_eval_skills",
+  "artagon_eval_waza",
+  "artagon_eval_dspy",
+  "artagon_eval_skillopt",
+  "artagon_eval_evoskill",
+  "artagon_eval_skillspec",
+  "artagon_eval_observability",
+]
+
+[[tool.importlinter.contracts]]
+name = "FCIS layers inside artagon_eval_core"
+type = "layers"
+layers = [
+  "artagon_eval_core.cli",
+  "artagon_eval_core.shell",
+  "artagon_eval_core.runtime",
+  "artagon_eval_core.plugins",
+  "artagon_eval_core.ports",
+  "artagon_eval_core.domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "Pure domain has zero I/O, CLI, or database imports"
+type = "forbidden"
+source_modules = ["artagon_eval_core.domain"]
+forbidden_modules = [
+  "subprocess",
+  "shutil",
+  "socket",
+  "urllib",
+  "fcntl",
+  "typer",
+  "click",
+  "duckdb",
+  "pyarrow",
+  "pluggy",
+]
+
+[[tool.importlinter.contracts]]
+name = "ADR-0012 hot-path shims never import heavy dependencies"
+type = "forbidden"
+source_modules = ["artagon_eval_core.shims"]
+forbidden_modules = [
+  "pydantic",
+  "expression",
+  "structlog",
+  "detect_secrets",
+  "yaml",
+  "typer",
+  "click",
+  "pluggy",
+  "duckdb",
+  "pyarrow",
+  "google",
+  "opentelemetry",
+  "tomlkit",
+  "jinja2",
+  "jmespath",
+]
+
+[[tool.importlinter.contracts]]
+name = "Core and skills never import integration adapters directly"
+type = "forbidden"
+source_modules = ["artagon_eval_core", "artagon_eval_skills"]
+forbidden_modules = [
+  "artagon_eval_waza",
+  "artagon_eval_dspy",
+  "artagon_eval_skillopt",
+  "artagon_eval_evoskill",
+  "artagon_eval_skillspec",
+  "artagon_eval_observability",
+]
+
+[[tool.importlinter.contracts]]
+name = "Integration adapters are mutually independent"
+type = "independence"
+modules = [
+  "artagon_eval_waza",
+  "artagon_eval_dspy",
+  "artagon_eval_skillopt",
+  "artagon_eval_evoskill",
+  "artagon_eval_skillspec",
+  "artagon_eval_observability",
+]
+
+[[tool.importlinter.contracts]]
+name = "skills-ref is isolated strictly inside spec_adapter"
+type = "forbidden"
+source_modules = [
+  "artagon_eval_core",
+  "artagon_eval_skills.contracts",
+  "artagon_eval_skills.lint",
+  "artagon_eval_skills.generator",
+  "artagon_eval_skills.workflows",
+  "artagon_eval_skills.cli",
+]
+forbidden_modules = ["skills_ref"]
+ignore_imports = ["artagon_eval_skills.spec_adapter -> skills_ref"]
+
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+branch = true
+source = ["packages"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true

@@ -1,0 +1,18 @@
+[
+  {"query": "set up .pre-commit-config.yaml to run ruff, mypy, and basedpyright before every git commit", "should_trigger": true},
+  {"query": "migrate our manual .git/hooks/pre-commit bash script to pre-commit without losing custom checks", "should_trigger": true},
+  {"query": "replace noisy Claude PostToolUse ruff hooks with the Stop hook lint-gate.py", "should_trigger": true},
+  {"query": "fix mirrors-mypy missing third-party stub errors inside .pre-commit-config.yaml on a uv project", "should_trigger": true},
+  {"query": "symlink lint-gate.py into ~/.claude/hooks and guard stop_hook_active so Claude checks code at turn end", "should_trigger": true},
+  {"query": "autoupdate pre-commit hook revisions and run ruff + basedpyright across all Python files", "should_trigger": true},
+  {"query": "add a local basedpyright pre-commit hook alongside ruff-pre-commit in .pre-commit-config.yaml", "should_trigger": true},
+  {"query": "why did pre-commit modify files on ruff --fix and how should developers re-stage and commit cleanly?", "should_trigger": true},
+  {"query": "author the initial [tool.ruff], [tool.mypy], and pyrightconfig.json sections in pyproject.toml without git hooks", "should_trigger": false},
+  {"query": "install tgrep refresh hooks for Codex and Kimi", "should_trigger": false},
+  {"query": "install HCOM transcript hooks via scripts/hcom-coordinator.sh", "should_trigger": false},
+  {"query": "scan Python code for Bandit S608 SQL injection and S324 MD5 vulnerabilities", "should_trigger": false},
+  {"query": "migrate setup.py and requirements.txt to uv and Python 3.13 syntax", "should_trigger": false},
+  {"query": "measure pytest branch coverage and mutmut mutation score", "should_trigger": false},
+  {"query": "run ShellCheck and shfmt gates on Bash scripts", "should_trigger": false},
+  {"query": "review FastAPI endpoints for blocking I/O and missing response_model", "should_trigger": false}
+]

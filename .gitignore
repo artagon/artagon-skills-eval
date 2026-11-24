@@ -1,0 +1,45 @@
+# Secrets, credentials, and local runtime state (ADR-0006 / ADR-0009)
+.env
+.env.*
+!.env.example
+auth/
+private/
+holdouts/
+results/
+candidates/
+logs/
+scratch/
+.beads/
+.ntm/
+
+# Python virtual environments, bytecode, and build artifacts
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Test, lint, type-check, and coverage caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.import_linter_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+node_modules/
+
+# Nix build symlinks
+result
+result-*
+
+# OS / editor noise
+.DS_Store
+*.swp
+*.swo

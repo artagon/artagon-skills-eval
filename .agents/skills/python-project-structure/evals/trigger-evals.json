@@ -1,0 +1,18 @@
+[
+  {"query": "organize package directories, __all__ public boundaries, and domain vs layered layout for a growing Python backend", "should_trigger": true},
+  {"query": "flatten deep app/core/internal/services/impl/ folders and break up a 1,500-line utils.py in Python", "should_trigger": true},
+  {"query": "untangle circular imports between users and billing packages by fixing Python module boundaries", "should_trigger": true},
+  {"query": "promote a 550-line orders.py module into an orders/ subpackage without breaking existing caller imports", "should_trigger": true},
+  {"query": "choose between parallel top-level tests/ vs colocated tests and structure unit vs integration folders in Python", "should_trigger": true},
+  {"query": "define clean __init__.py re-exports and __all__ contracts between feature modules in a modular Python monolith", "should_trigger": true},
+  {"query": "decide between horizontal layered folders (routers/services/repos) and vertical domain slices (users/orders/shared) in Python", "should_trigger": true},
+  {"query": "audit import-time side effects in __init__.py across our Python project tree", "should_trigger": true},
+  {"query": "upload a wheel and sdist to PyPI with twine and Trusted Publishing", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml", "should_trigger": false},
+  {"query": "scan Python code for SQL injection and hardcoded passwords using bandit", "should_trigger": false},
+  {"query": "run mutmut mutation testing on our pytest suite", "should_trigger": false},
+  {"query": "profile Python CPU hotspots with py-spy and cProfile", "should_trigger": false},
+  {"query": "add tenacity exponential backoff retries on HTTP 503 responses", "should_trigger": false},
+  {"query": "analyze Rust crate structure and traits using LSP", "should_trigger": false},
+  {"query": "optimize a DSPy pipeline with MIPROv2", "should_trigger": false}
+]

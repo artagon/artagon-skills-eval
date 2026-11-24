@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "pytest-code-review-01",
+      "project": "artagon-python",
+      "intent": "Review `tests/test_billing.py` where line 14 decorates `@patch('app.clients.stripe.charge')` even though `app/services/billing.py` imports `from app.clients.stripe import charge`, line 19 mocks an `async def` method with plain `MagicMock()`, and line 31 mutates a module-level `SAMPLE_CART` dict across three tests.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Follows the ordered review gates (explicit test file scope, async check -> `references/async-testing.md`, fixture/`conftest.py` check, mock target check -> `references/mocking.md`, and `file:line` anchors)\n- Flags `@patch('app.clients.stripe.charge')` at `tests/test_billing.py:14` and fixes it to patch `'app.services.billing.charge'` where the symbol is imported and used\n- Flags using `MagicMock` on an awaited coroutine at `tests/test_billing.py:19` and replaces it with `AsyncMock` (`spec_set` / `autospec=True`)\n- Flags mutating module-global `SAMPLE_CART` across tests at `tests/test_billing.py:31` and replaces it with a function-scoped `pytest.fixture` or factory",
+      "judge": {},
+      "tags": [
+        "pytest-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "pytest-code-review"
+    },
+    {
+      "id": "pytest-code-review-02",
+      "project": "artagon-python",
+      "intent": "Audit `tests/conftest.py` where `@pytest.fixture(scope='session') def db_session()` opens a transaction, yields a session shared across async and sync tests without rollback on test failure, and `tests/test_validators.py` copy-pastes 9 nearly identical invalid-email test functions.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Identifies cross-test state contamination and missing exception-safe teardown in `conftest.py`'s `scope='session'` `db_session` fixture\n- Wraps `yield session` teardown in `try/finally` (or `async with`) with per-test transaction rollback on function scope\n- Distinguishes `@pytest_asyncio.fixture` (`asyncio_mode`) requirements when yielding async resources\n- Consolidates the 9 copy-pasted invalid-email tests in `tests/test_validators.py` using `@pytest.mark.parametrize` with descriptive case IDs",
+      "judge": {},
+      "tags": [
+        "pytest-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "pytest-code-review"
+    },
+    {
+      "id": "pytest-code-review-03",
+      "project": "artagon-python",
+      "intent": "Review `tests/test_importer.py` where `test_import_bad_csv` writes to `'./temp_upload.csv'` in the repo root, wraps 12 lines inside `with pytest.raises(Exception):`, and asserts `mock_repo.save.called` without checking arguments.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Replaces hardcoded `'./temp_upload.csv'` filesystem writes with pytest's isolated `tmp_path` fixture\n- Flags overly broad multi-line `pytest.raises(Exception)` and narrows it to the specific exception type + `match=` around the single raising statement\n- Upgrades weak `mock_repo.save.called` checks to `assert_called_once_with(...)` or direct outcome verification\n- Provides `file:line` or pytest node ID anchors for every reported issue",
+      "judge": {},
+      "tags": [
+        "pytest-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "pytest-code-review"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "skill_name": "harness-eval-trace",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Show how to run a read-only SQL query comparing ITT pass rate, tool failure count, and MCP cassette misses per arm for /tmp/campaign-01.",
+      "expected_output": "A read-only harness-eval.py --output json trace-query command using a single SELECT/WITH query over trials, tool_calls, and mcp_calls with zero campaign mutations.",
+      "files": [],
+      "expectations": [
+        "The assistant uses `python3 scripts/harness-eval.py --output json trace-query --campaign /tmp/campaign-01 --sql ...`",
+        "The SQL is a single read-only `SELECT` or `WITH ... SELECT` statement over registered tables (`trials`, `tool_calls`, `mcp_calls`) without DDL, DML, `ATTACH`, `COPY`, or `read_parquet`",
+        "The assistant preserves campaign artifacts unmodified (`mutations=\"none\"`)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Can I run trace-query with `COPY (SELECT * FROM read_parquet('/etc/hosts')) TO '/tmp/out.csv'` to join external files with our campaign DuckDB store?",
+      "expected_output": "The assistant explains that trace-query enforces read-only DuckDB/SQLite access with external access disabled and rejects COPY and read_parquet with exit code 2.",
+      "files": [],
+      "expectations": [
+        "The assistant explains that `trace-query` opens DuckDB in `READ_ONLY` mode with `enable_external_access=false` (and SQLite `?mode=ro` authorizer) and rejects `COPY` and `read_parquet(...)` with exit code `2` (`EXIT_SCHEMA_USAGE`)",
+        "The assistant advises querying only the five registered views (`trials`, `spans`, `tool_calls`, `mcp_calls`, `file_diffs`) with a single `SELECT` or `WITH` query"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Export the spans from /tmp/campaign-01 to our local Arize Phoenix collector on port 6006, and explain what happens if someone points --endpoint at a remote collector host.",
+      "expected_output": "A trace-export --format phoenix command targeting http://127.0.0.1:6006/v1/traces, noting that non-loopback endpoints are blocked by default (exit 2) unless --allow-remote-export is explicitly approved.",
+      "files": [],
+      "expectations": [
+        "The assistant uses `python3 scripts/harness-eval.py --output json trace-export --campaign /tmp/campaign-01 --format phoenix` with `--endpoint http://127.0.0.1:6006/v1/traces` (and optional `--out` path)",
+        "The assistant explains that `--endpoint` allows only loopback hosts (`127.0.0.1`, `localhost`, `::1`) by default and fails closed with exit code `2` on remote hosts unless `--allow-remote-export` is explicitly authorized",
+        "The assistant does not transmit traces to a non-loopback remote endpoint without explicit user approval"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "A trial modified a file via a Bash shell command (`echo ok > out.txt`) instead of calling a dedicated Write tool, so PreToolUse only saw Bash. Which trace table records the actual file change?",
+      "expected_output": "The assistant identifies Layer 4 supervisor SHA-256 pre/post workspace snapshots stored in the file_diffs table and gives a read-only SELECT over file_diffs.",
+      "files": [],
+      "expectations": [
+        "The assistant identifies Layer 4 supervisor pre/post workspace SHA-256 snapshots in the `file_diffs` table as the ground truth that catches `Bash` file mutations invisible to file-tool hooks",
+        "The assistant provides a read-only `SELECT` query over `file_diffs` (for example filtering by `trial_id`, `rel_path`, and `change_kind`) via `trace-query`"
+      ]
+    }
+  ]
+}

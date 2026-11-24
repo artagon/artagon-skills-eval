@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a bug, regression, or gate failure in artagon-skills-eval
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Concise description of the bug and expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Exact commands, package, and minimal fixture (do not paste secrets, tokens, or private transcripts).
+      placeholder: |
+        1. uv run --frozen ...
+        2. Observed exit code / redacted error output
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, uv version, and Nix/non-Nix mode.
+      placeholder: "macOS 15 / Ubuntu 24.04, Python 3.12, uv 0.11.x"
+    validations:
+      required: true

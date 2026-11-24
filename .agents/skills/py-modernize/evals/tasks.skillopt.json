@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "py-modernize-01",
+      "project": "artagon-python",
+      "intent": "Migrate our legacy Python repository from `python -m venv`, `pip install -e \".[dev]\"`, `pip install -r requirements.txt`, and pip-based GitHub Actions to `uv` and Python 3.13+.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Replaces legacy venv and pip workflows with `uv venv`, `uv pip install -e \".[dev]\"`, `uv pip compile pyproject.toml -o requirements.txt`, and `uv pip sync requirements.txt`\n- Updates GitHub Actions CI workflows to install `uv` (`astral-sh/setup-uv@v1`) and install dependencies via `uv venv` and `uv pip install -e \".[dev]\"`\n- Updates `README.md` development setup instructions to reflect `uv` installation (via OS package manager or `pip install --user uv`) and `uv venv` / `uv pip install`\n- Verifies `pytest` passes after migrating dependency installation to `uv`",
+      "judge": {},
+      "tags": [
+        "py-modernize",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-modernize"
+    },
+    {
+      "id": "py-modernize-02",
+      "project": "artagon-python",
+      "intent": "Upgrade this legacy Python module to Python 3.13+ syntax and replace deprecated stdlib APIs: it uses `Optional[List[Dict[str, Any]]]` and `Union[int, str]` from `typing`, `from __future__ import annotations`, `%`-formatted strings, `from collections import Iterable`, `datetime.utcnow()`, `datetime.utcfromtimestamp(ts)`, `imp`, and `os.path`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Configures `requires-python = \">=3.13\"`, `[tool.pyupgrade] target-version = \"py313\"`, `[tool.ruff] target-version = \"py313\"`, and `[tool.ruff.lint] select = [\"UP\"]` in `pyproject.toml`\n- Runs `pyupgrade --py313-plus` and `ruff check . --select UP` (`--fix`) to upgrade `List`/`Dict`/`Optional`/`Union`, obsolete `__future__` imports, and `%`/`.format()` strings to Python 3.13+ syntax\n- Replaces `collections.Iterable` with `collections.abc.Iterable`, `datetime.utcnow()` / `datetime.utcfromtimestamp()` with `datetime.now(UTC)` / `datetime.fromtimestamp(ts, UTC)`, `imp` with `importlib`, and `os.path` with `pathlib.Path`\n- Verifies changes with `git diff`, typecheckers (`mypy` / `basedpyright`), and `pytest`",
+      "judge": {},
+      "tags": [
+        "py-modernize",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-modernize"
+    },
+    {
+      "id": "py-modernize-03",
+      "project": "artagon-python",
+      "intent": "Consolidate our legacy `setup.py` and `setup.cfg` packaging files into `pyproject.toml` as the single source of configuration for a Python 3.13+ codebase.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Consolidates `setup.py` and `setup.cfg` metadata and `[build-system]` into `pyproject.toml` with `requires-python = \">=3.13\"` as the single configuration source\n- Adds `pyupgrade` and `ruff` to `[dependency-groups]` `dev` with `[tool.ruff.lint] select = [\"UP\"]` and notes `py-quality-setup` for complete linter/typechecker configuration\n- Removes retired `setup.py` and `setup.cfg` files and verifies editable install with `uv pip install -e \".[dev]\"` (or `uv pip install -e .`)\n- Runs `ruff check . --select UP` and `pytest` to confirm zero regressions",
+      "judge": {},
+      "tags": [
+        "py-modernize",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "py-modernize"
+    }
+  ]
+}

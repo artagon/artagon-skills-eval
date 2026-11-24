@@ -1,0 +1,41 @@
+{
+  "skill_name": "pytest-code-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review `tests/test_billing.py` where line 14 decorates `@patch('app.clients.stripe.charge')` even though `app/services/billing.py` imports `from app.clients.stripe import charge`, line 19 mocks an `async def` method with plain `MagicMock()`, and line 31 mutates a module-level `SAMPLE_CART` dict across three tests.",
+      "expected_output": "Walks through `pytest-code-review`'s 5 ordered review gates (loading `references/async-testing.md` and `references/mocking.md`, inspecting `conftest.py` and `app/services/billing.py` imports) and reports anchored `file:line` findings: wrong `patch` target (`patch('app.services.billing.charge')` where looked up, not where defined) at `tests/test_billing.py:14`, `MagicMock` instead of `AsyncMock` for an awaited coroutine at `tests/test_billing.py:19`, and shared mutable `SAMPLE_CART` state breaking test isolation at `tests/test_billing.py:31`.",
+      "files": [],
+      "expectations": [
+        "Follows the ordered review gates (explicit test file scope, async check -> `references/async-testing.md`, fixture/`conftest.py` check, mock target check -> `references/mocking.md`, and `file:line` anchors)",
+        "Flags `@patch('app.clients.stripe.charge')` at `tests/test_billing.py:14` and fixes it to patch `'app.services.billing.charge'` where the symbol is imported and used",
+        "Flags using `MagicMock` on an awaited coroutine at `tests/test_billing.py:19` and replaces it with `AsyncMock` (`spec_set` / `autospec=True`)",
+        "Flags mutating module-global `SAMPLE_CART` across tests at `tests/test_billing.py:31` and replaces it with a function-scoped `pytest.fixture` or factory"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit `tests/conftest.py` where `@pytest.fixture(scope='session') def db_session()` opens a transaction, yields a session shared across async and sync tests without rollback on test failure, and `tests/test_validators.py` copy-pastes 9 nearly identical invalid-email test functions.",
+      "expected_output": "Flags the session-scoped mutable `db_session` fixture leaking committed/dirty state across tests and lacking `try...finally` rollback/close around `yield` (recommending function-scoped transactional rollback around `yield` plus `pytest_asyncio.fixture` for async sessions), and consolidates the 9 duplicate functions in `tests/test_validators.py` with `@pytest.mark.parametrize(..., ids=...)`.",
+      "files": [],
+      "expectations": [
+        "Identifies cross-test state contamination and missing exception-safe teardown in `conftest.py`'s `scope='session'` `db_session` fixture",
+        "Wraps `yield session` teardown in `try/finally` (or `async with`) with per-test transaction rollback on function scope",
+        "Distinguishes `@pytest_asyncio.fixture` (`asyncio_mode`) requirements when yielding async resources",
+        "Consolidates the 9 copy-pasted invalid-email tests in `tests/test_validators.py` using `@pytest.mark.parametrize` with descriptive case IDs"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review `tests/test_importer.py` where `test_import_bad_csv` writes to `'./temp_upload.csv'` in the repo root, wraps 12 lines inside `with pytest.raises(Exception):`, and asserts `mock_repo.save.called` without checking arguments.",
+      "expected_output": "Reports `file:line` findings: replace hardcoded `'./temp_upload.csv'` working-tree pollution with pytest's built-in `tmp_path` fixture, narrow `pytest.raises(Exception)` to the exact domain exception (`pytest.raises(CsvValidationError, match=...)`) wrapping only the single raising call, and replace weak `.called` with `assert_called_once_with(...)` (or behavioral state assertions).",
+      "files": [],
+      "expectations": [
+        "Replaces hardcoded `'./temp_upload.csv'` filesystem writes with pytest's isolated `tmp_path` fixture",
+        "Flags overly broad multi-line `pytest.raises(Exception)` and narrows it to the specific exception type + `match=` around the single raising statement",
+        "Upgrades weak `mock_repo.save.called` checks to `assert_called_once_with(...)` or direct outcome verification",
+        "Provides `file:line` or pytest node ID anchors for every reported issue"
+      ]
+    }
+  ]
+}

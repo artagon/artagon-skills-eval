@@ -1,0 +1,18 @@
+[
+  {"query": "orchestrate a full end-to-end Python refactoring roadmap across security, test coverage, dead code, complexity, and modernization", "should_trigger": true},
+  {"query": "plan a phased codebase cleanup for a legacy 30k-line Python service starting with baseline reports/", "should_trigger": true},
+  {"query": "in what order should we sequence Bandit fixes, mutmut coverage, vulture dead-code removal, radon simplification, and uv migration?", "should_trigger": true},
+  {"query": "coordinate py-security, py-test-quality, py-code-health, py-complexity, and py-modernize on our inherited Python monolith", "should_trigger": true},
+  {"query": "audit technical debt across all dimensions of our Python repo and produce a prioritized multi-phase remediation plan", "should_trigger": true},
+  {"query": "generate before-and-after health metrics across security, coverage, dead code, and maintainability index for a Python overhaul", "should_trigger": true},
+  {"query": "when is full py-refactor orchestration overkill vs running a single targeted Python quality skill?", "should_trigger": true},
+  {"query": "systematically pay down years of Python tech debt without breaking behavior in a low-coverage codebase", "should_trigger": true},
+  {"query": "just fix a single SQL injection query in app/db.py", "should_trigger": false},
+  {"query": "add a dev dependency with `uv add --dev pytest-httpx`", "should_trigger": false},
+  {"query": "review our FastAPI route decorators for missing response_model and status_code", "should_trigger": false},
+  {"query": "run a multi-step TypeScript Clean Code refactoring workflow citing references/smells/rules.md", "should_trigger": false},
+  {"query": "configure structlog JSON logging and Prometheus counters in Python", "should_trigger": false},
+  {"query": "write an async producer-consumer queue with asyncio.Queue and Semaphore", "should_trigger": false},
+  {"query": "optimize a DSPy ChainOfThought pipeline with MIPROv2", "should_trigger": false},
+  {"query": "rename a Rust trait method safely across crates using LSP", "should_trigger": false}
+]

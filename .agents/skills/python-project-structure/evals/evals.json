@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-project-structure",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Reorganize a sprawling Python backend that currently nests `app/core/internal/services/impl/v1/user_service_impl.py` (6 lines per file across 8 directory levels) alongside a 1,400-line `app/utils.py` grab-bag and circular imports between `users` and `orders`.",
+      "expected_output": "Flattens the deep Java-esque `core/internal/services/impl/v1/` hierarchy into shallow, cohesive domain packages (`src/myapp/users/`, `src/myapp/orders/`, `src/myapp/shared/`), breaks up the 1,400-line `utils.py` into domain-named modules (`~300–500` lines, one cohesive concept per file), resolves the `users` <-> `orders` circular import via downward dependency direction (shared value types in `shared/` or `TYPE_CHECKING` for type-only references), and uses clean absolute imports.",
+      "files": [],
+      "expectations": [
+        "Flattens deep `core/internal/services/impl/` directory nesting in favor of shallow, discoverable Python packages (2–3 levels deep)",
+        "Dismantles the 1,400-line `utils.py` grab-bag into cohesive topic-named modules (`auth_tokens.py`, `money.py`, `pagination.py`)",
+        "Breaks the `users` <-> `orders` runtime circular import structurally (extracting shared domain primitives or application orchestration above both, rather than hiding cycles with scattered inline imports)",
+        "Enforces absolute package imports (`from myapp.users.service import ...`) over fragile multi-dot relative imports"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Design the public package boundary (`__init__.py` and `__all__`) and mirrored `tests/` directory layout for a medium-sized Python service (`users`, `billing`, `notifications`) so internal helper refactors do not break callers.",
+      "expected_output": "Defines explicit `__all__ = [...]` in each domain package's `__init__.py` exposing only stable public types/functions while prefixing internal modules/helpers (`_queries.py` or unexported symbols), and sets up a consistent parallel `tests/` tree (`tests/unit/users/`, `tests/unit/billing/`, `tests/integration/`, `tests/conftest.py`) matching `src/myapp/`.",
+      "files": [],
+      "expectations": [
+        "Uses explicit `__all__` in package `__init__.py` files to declare the supported public surface while keeping implementation helpers private",
+        "Avoids heavy side effects or eager network/DB initialization at `__init__.py` import time",
+        "Chooses ONE consistent test layout (parallel `tests/` mirroring `src/<pkg>/` with `unit/` and `integration/` tiers and shared `conftest.py`) instead of mixing colocated and top-level tests randomly",
+        "Explains when layered structure (`api/`, `services/`, `repositories/`) fits small services vs domain/feature slicing (`users/`, `billing/`, `shared/`) for growing multi-domain codebases"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "When should a single `billing.py` module stay one file versus splitting into a `billing/` subpackage (`models.py`, `service.py`, `repository.py`), and how do you split it without breaking existing `from myapp.billing import charge_invoice` callers?",
+      "expected_output": "Keeps `billing.py` as a single cohesive file while under ~300–500 lines with one clear domain focus, splits into `src/myapp/billing/` (`__init__.py`, `models.py`, `service.py`, `repository.py`) once responsibilities diverge or size crosses ~400–500 lines, and re-exports `charge_invoice` in `billing/__init__.py` (`__all__ = ['charge_invoice', ...]`) for zero-downtime caller compatibility.",
+      "files": [],
+      "expectations": [
+        "Advises starting with a flat `billing.py` module rather than creating 5 near-empty files prematurely",
+        "Gives concrete triggers for promoting `billing.py` to a `billing/` package (~300–500+ lines or distinct persistence/domain/transport concerns)",
+        "Preserves backwards compatibility for `from myapp.billing import charge_invoice` via explicit re-exports and `__all__` in `billing/__init__.py`",
+        "Verifies zero import cycles and clean `mypy`/`basedpyright` resolution after the split"
+      ]
+    }
+  ]
+}

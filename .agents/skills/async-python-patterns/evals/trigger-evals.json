@@ -1,0 +1,18 @@
+[
+  {"query": "bound concurrent HTTP fetches in Python asyncio with Semaphore(10), wait_for timeouts, and gather return_exceptions", "should_trigger": true},
+  {"query": "build a bounded asyncio.Queue producer-consumer worker pool with graceful task cancellation", "should_trigger": true},
+  {"query": "stop a synchronous requests and CPU-heavy parser call from blocking our Python asyncio event loop", "should_trigger": true},
+  {"query": "write an async context manager (__aenter__/__aexit__) and AsyncIterator stream in Python", "should_trigger": true},
+  {"query": "protect shared async cache state with asyncio.Lock without holding the lock across slow network awaits if avoidable", "should_trigger": true},
+  {"query": "why did catching Exception vs BaseException swallow or mishandle asyncio.CancelledError in my background task?", "should_trigger": true},
+  {"query": "stream paginated records asynchronously in Python using async for and async generators", "should_trigger": true},
+  {"query": "offload GIL-bound vs blocking I/O functions safely from asyncio using to_thread and ProcessPoolExecutor", "should_trigger": true},
+  {"query": "configure Celery workers with task_acks_late=True, Redis broker, and Dead Letter Queues", "should_trigger": false},
+  {"query": "review our FastAPI router diff for missing response_model and status_code decorators", "should_trigger": false},
+  {"query": "refactor JavaScript Promise chains to Promise.allSettled and ES2022 private class fields", "should_trigger": false},
+  {"query": "review pytest-asyncio test fixtures and AsyncMock patch paths in tests/test_orders.py", "should_trigger": false},
+  {"query": "add tenacity exponential backoff retries on transient HTTP 503 responses", "should_trigger": false},
+  {"query": "scan our Python repo for SQL injection and weak MD5 hashes using bandit and ruff S rules", "should_trigger": false},
+  {"query": "configure pyproject.toml for Python 3.13 with ruff, mypy, and basedpyright", "should_trigger": false},
+  {"query": "build a tool-using LLM agent with dspy.ReAct", "should_trigger": false}
+]

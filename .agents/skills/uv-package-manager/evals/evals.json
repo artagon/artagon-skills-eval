@@ -1,0 +1,41 @@
+{
+  "skill_name": "uv-package-manager",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Initialize a new Python 3.12 project with `uv`, pin the Python interpreter for teammates, add `fastapi` and `httpx` as runtime dependencies plus `pytest` and `ruff` as dev dependencies, and show the exact commands CI should run so `uv.lock` cannot drift.",
+      "expected_output": "Runs `uv init`, `uv python install 3.12` + `uv python pin 3.12` (writing `.python-version`), `uv add fastapi httpx`, `uv add --dev pytest ruff` (updating `pyproject.toml` and `uv.lock`), executes commands via `uv run pytest`, and uses `uv sync --locked` (or `uv sync --frozen` / `uv run --locked`) in CI so lockfile mismatches fail instead of mutating `uv.lock`.",
+      "files": [],
+      "expectations": [
+        "Pins the Python runtime via `uv python install 3.12` and `uv python pin 3.12` (`.python-version`)",
+        "Uses `uv add fastapi httpx` for runtime dependencies and `uv add --dev pytest ruff` for development dependencies",
+        "Commits `uv.lock` alongside `pyproject.toml` and runs tools via `uv run ...` without manual virtualenv activation",
+        "Uses `uv sync --locked` (or `--frozen` with `uv lock --check`) in CI so out-of-sync `pyproject.toml` / `uv.lock` changes are caught"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Configure `[tool.uv.sources]` in `pyproject.toml` so our service pulls `internal-auth` from an editable sibling workspace directory `../internal-auth` and `dspy` pinned to a specific Git commit SHA, plus upgrade ONLY `cryptography` in `uv.lock` without bumping every transitive dependency.",
+      "expected_output": "Declares `internal-auth` and `dspy` in `[project] dependencies` and maps their sources under `[tool.uv.sources]` (`internal-auth = { path = '../internal-auth', editable = true }` and `dspy = { git = 'https://github.com/stanfordnlp/dspy.git', rev = '<commit_sha>' }`), then upgrades a single package cleanly via `uv lock --upgrade-package cryptography && uv sync`.",
+      "files": [],
+      "expectations": [
+        "Keeps PEP 621 `[project] dependencies` standard while declaring path/git overrides under `[tool.uv.sources]`",
+        "Uses `editable = true` path source for `../internal-auth` and an immutable `rev = '...'` commit SHA (rather than a floating branch) for the Git dependency",
+        "Upgrades only `cryptography` via `uv lock --upgrade-package cryptography` followed by `uv sync` rather than full `uv lock --upgrade`",
+        "Verifies the resolved version in `uv.lock` / `uv tree`"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Import an existing `requirements.txt` + `requirements-dev.txt` project into `uv`'s native `pyproject.toml` + `uv.lock` workflow, and also show how to export a hash-pinned `requirements.txt` for a legacy Docker scanner that does not speak `uv.lock` yet.",
+      "expected_output": "Imports runtime requirements with `uv add -r requirements.txt` and dev requirements with `uv add --dev -r requirements-dev.txt` to populate `pyproject.toml` + `uv.lock`, and exports a deterministic hash-pinned `requirements.txt` when needed via `uv export --no-dev --format requirements-txt --output-file requirements.txt` (or `uv pip compile --generate-hashes` / `uv pip freeze`).",
+      "files": [],
+      "expectations": [
+        "Migrates runtime and dev requirements into `pyproject.toml` + `uv.lock` using `uv add -r requirements.txt` and `uv add --dev -r requirements-dev.txt`",
+        "Exports a hash-locked `requirements.txt` for downstream scanners using `uv export` (which includes hashes by default) or `uv pip compile --generate-hashes`",
+        "Distinguishes native project commands (`uv add`, `uv lock`, `uv sync`, `uv run`) from low-level `uv pip` compatibility commands",
+        "Runs `uv run pytest` to verify the locked environment works cleanly"
+      ]
+    }
+  ]
+}

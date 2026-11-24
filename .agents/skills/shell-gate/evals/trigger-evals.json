@@ -1,0 +1,66 @@
+[
+  {
+    "query": "Use the packaged shell quality gate to check a Bash script without edits.",
+    "should_trigger": true
+  },
+  {
+    "query": "Wire the packaged shell-gate.sh into project CI after inspecting its supported profiles.",
+    "should_trigger": true
+  },
+  {
+    "query": "Explain the shell quality gate's findings and unsupported-target exit statuses.",
+    "should_trigger": true
+  },
+  {
+    "query": "Check a Bash 3.2 target using the gate and distinguish the gate host Bash requirement.",
+    "should_trigger": true
+  },
+  {
+    "query": "Review the gate contract for POSIX.1-2017 and POSIX.1-2024 targets.",
+    "should_trigger": true
+  },
+  {
+    "query": "Check native Zsh with the packaged gate and report unsupported checks explicitly.",
+    "should_trigger": true
+  },
+  {
+    "query": "Design an advisory shell command gate plus an OS sandbox for an authorized agent workflow.",
+    "should_trigger": true
+  },
+  {
+    "query": "Add a project-local gate hook as an explicit task and verify current client capabilities.",
+    "should_trigger": true
+  },
+  {
+    "query": "Explain native Zsh arrays and choose the shell-zsh profile only.",
+    "should_trigger": false
+  },
+  {
+    "query": "Select the POSIX edition for a proposed script without running quality tools.",
+    "should_trigger": false
+  },
+  {
+    "query": "Tell me whether Bash 5.0 satisfies a 4.4 minimum version check.",
+    "should_trigger": false
+  },
+  {
+    "query": "Author a shell argument parser without gate wiring.",
+    "should_trigger": false
+  },
+  {
+    "query": "Harden a cleanup trap in production code without changing hooks.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write Bats tests for a POSIX program rather than invoking a gate.",
+    "should_trigger": false
+  },
+  {
+    "query": "Configure ShellCheck JSON severity without using the packaged gate.",
+    "should_trigger": false
+  },
+  {
+    "query": "Install a global agent hook automatically because a repository contains shell files.",
+    "should_trigger": false
+  }
+]

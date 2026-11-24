@@ -1,0 +1,155 @@
+harness: claude
+binary_name: claude
+campaign_v1_supported: true
+skillopt_supported: true
+
+auth:
+  vendor_family: anthropic
+  default_model: claude-sonnet-4-5
+  harness_home_env: CLAUDE_CONFIG_DIR
+  subscription_files:
+    - .credentials.json
+    - .claude.json
+  subscription_env_vars:
+    - CLAUDE_CODE_OAUTH_TOKEN
+  api_key_env_var: ANTHROPIC_API_KEY
+  provider_base_url_env: ANTHROPIC_BASE_URL
+  scrubbed_env_vars:
+    - ANTHROPIC_API_KEY
+    - ANTHROPIC_AUTH_TOKEN
+    - ANTHROPIC_BASE_URL
+    - CLAUDE_CODE_USE_BEDROCK
+    - CLAUDE_CODE_USE_VERTEX
+    - CLAUDE_CODE_USE_FOUNDRY
+  metered_env_prefixes:
+    - ANTHROPIC_BEDROCK_
+    - ANTHROPIC_VERTEX_
+
+system_prompt:
+  default:
+    flags: []
+  append:
+    flags:
+      - --append-system-prompt
+      - "{text}"
+  replace:
+    flags:
+      - --system-prompt
+      - "{text}"
+
+hooks:
+  home_env_var: CLAUDE_CONFIG_DIR
+  default_home_rel: .claude
+  user_hook_rel: settings.json
+  workspace_hook_rel: .claude/settings.json
+  format: json
+  dialect: nested_matcher_groups
+  events:
+    - SessionStart
+    - InstructionsLoaded
+    - UserPromptSubmit
+    - PreToolUse
+    - PostToolUse
+    - PostToolUseFailure
+    - PermissionRequest
+    - PermissionDenied
+    - SubagentStart
+    - SubagentStop
+    - PreCompact
+    - PostCompact
+    - Stop
+    - StopFailure
+    - FileChanged
+    - SessionEnd
+  matcher_events:
+    - PreToolUse
+    - PostToolUse
+    - PostToolUseFailure
+  timeout_field: timeout
+  timeout_seconds: 5
+
+otel:
+  delivery: env_http
+  protocol: http/json
+  env_vars:
+    CLAUDE_CODE_ENABLE_TELEMETRY: "1"
+    CLAUDE_CODE_ENHANCED_TELEMETRY_BETA: "1"
+    OTEL_METRICS_EXPORTER: otlp
+    OTEL_LOGS_EXPORTER: otlp
+    OTEL_TRACES_EXPORTER: otlp
+    OTEL_EXPORTER_OTLP_PROTOCOL: http/json
+    OTEL_LOG_USER_PROMPTS: "1"
+    OTEL_LOG_ASSISTANT_RESPONSES: "1"
+    OTEL_LOG_TOOL_DETAILS: "1"
+
+transcript:
+  session_rel_dir: projects
+  format: stream_json
+  jmespath_queries:
+    model: "model || message.model"
+    tool_uses: "message.content[?type=='tool_use'].{tool_use_id: id, tool_name: name, arguments: input}"
+    assistant_text_blocks: "message.content[?type=='text'].text[]"
+    final_response: "result"
+    result_usage: "usage"
+    result_cost_usd: "total_cost_usd || usage.cost_usd"
+
+reflect_no_tools:
+  supported: true
+  base_flags:
+    - --output-format
+    - stream-json
+    - --verbose
+    - --tools
+    - ""
+    - --no-session-persistence
+    - --strict-mcp-config
+  required_probe_flags:
+    - --output-format
+    - --tools
+    - --no-session-persistence
+    - --strict-mcp-config
+  read_only_requires_sandbox: false
+
+headless:
+  subcommand: []
+  prompt_flag: "-p"
+  prompt_position: flag
+  base_flags:
+    - --output-format
+    - stream-json
+    - --verbose
+    - --dangerously-skip-permissions
+    - --no-session-persistence
+  tier2_common_flags:
+    - --strict-mcp-config
+  model_flag: --model
+  effort_flag: --effort
+  max_calls_flag: --max-turns
+  max_cost_flag: --max-budget-usd
+  plugin_dir_flag: --plugin-dir
+  mcp_config_flag:
+    - --mcp-config
+    - "{path}"
+  required_probe_flags:
+    - --output-format
+    - --dangerously-skip-permissions
+    - --mcp-config
+    - --append-system-prompt
+    - --system-prompt
+
+version_overlays:
+  - specifier: ">=99.0.0"
+    overrides:
+      system_prompt:
+        append:
+          flags:
+            - --append-system-prompt-file
+            - "{path}"
+          write_rel_path: append_system_prompt.md
+          target_root: harness_home
+        replace:
+          flags:
+            - --system-prompt-file
+            - "{path}"
+          write_rel_path: system_prompt.md
+          target_root: harness_home

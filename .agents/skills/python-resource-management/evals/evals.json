@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-resource-management",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Implement both a class-based `__enter__`/`__exit__` resource manager (for a leased temporary workspace directory + lockfile) and an `@asynccontextmanager` database transaction helper (`BEGIN` -> `yield` -> `COMMIT` on clean exit, `ROLLBACK` + re-raise on exception, unconditional connection release).",
+      "expected_output": "Implements `__enter__` and `__exit__(self, exc_type, exc_val, exc_tb) -> Literal[False]` returning `False` so exceptions are never accidentally suppressed while unconditionally releasing the lockfile/workspace, alongside an `@asynccontextmanager` wrapping `yield conn` in `try ... except BaseException: await conn.rollback(); raise else: await conn.commit() finally: await pool.release(conn)`.",
+      "files": [],
+      "expectations": [
+        "Implements `__exit__` returning `False` (or `None`) so body exceptions propagate after cleanup, unless explicitly documenting a narrow suppression case",
+        "Wraps `yield` inside `@asynccontextmanager` with `try / except BaseException / else / finally` so `CancelledError` and exceptions trigger `ROLLBACK` and `finally` always releases the connection",
+        "Ensures partial failures inside `__enter__` clean up any already-acquired sub-resource rather than leaking it",
+        "Annotates return types cleanly (`Iterator[...]` / `AsyncIterator[...]`, `TracebackType | None`)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A batch merger opens an arbitrary dynamic list of N input files (`paths: Sequence[Path]`) and an async fan-out opens K `httpx.AsyncClient` sessions configured at runtime. Replace nested manual `try/finally` close loops with `ExitStack` and `AsyncExitStack`.",
+      "expected_output": "Uses `with contextlib.ExitStack() as stack:` (`files = [stack.enter_context(p.open('r', encoding='utf-8')) for p in paths]`) and `async with contextlib.AsyncExitStack() as stack:` (`clients = [await stack.enter_async_context(...) for ...]`), guaranteeing LIFO cleanup of already-opened handles even if opening the 4th resource fails.",
+      "files": [],
+      "expectations": [
+        "Uses `contextlib.ExitStack` (`stack.enter_context(...)`) to manage the dynamic list of N synchronous file handles",
+        "Uses `contextlib.AsyncExitStack` (`await stack.enter_async_context(...)`) for dynamic async client lifecycles",
+        "Explains that `ExitStack` unwinds already-entered resources in LIFO order even when a subsequent `open()` fails mid-setup",
+        "Demonstrates `stack.callback(...)` / `stack.push_async_callback(...)` when wrapping cleanup functions that are not context managers"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Build an async `StreamingResult` accumulator wrapper for streaming LLM token chunks that tracks time-to-first-byte (TTFB) and total duration, accumulates chunks in `O(n)` (`''.join`), and guarantees the underlying HTTP stream closes even if the caller breaks out of `async for` early.",
+      "expected_output": "An async context-managed (or `try/finally` generator-closed) `StreamingResult` recording `time.perf_counter()` TTFB on chunk 1, appending chunks to a `list[str]` joined once via `''.join(chunks)` (`O(n)` instead of `+=`), and closing the underlying response stream inside `finally` / `__aexit__` on early `break` or `GeneratorExit`.",
+      "files": [],
+      "expectations": [
+        "Accumulates streamed chunks in a `list[str]` and materializes text with `''.join(chunks)` (`O(n)`) rather than repeated string `+=`",
+        "Records monotonic `time.perf_counter()` timestamps for TTFB (first chunk) and total stream completion",
+        "Closes the underlying network stream inside `try...finally` / `__aexit__` so early `break` or exceptions never leak open sockets",
+        "Uses `time.perf_counter()` (not wall-clock `datetime.now()`) for elapsed latency measurement"
+      ]
+    }
+  ]
+}

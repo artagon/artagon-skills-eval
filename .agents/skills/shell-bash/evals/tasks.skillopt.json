@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-shell",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "shell-bash-01",
+      "project": "artagon-shell",
+      "intent": "Review this proposed Bash 3.2 executable preamble on paper only: set -Eeuo pipefail; shopt -s inherit_errexit; declare -A seen; mapfile -t rows. The deployment includes macOS /bin/bash 3.2 and Linux Bash 5.3. Do not execute commands or edit files.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- States that associative arrays and mapfile require Bash 4.0 or later.\n- States that inherit_errexit requires Bash 4.4 or later.\n- Keeps Bash 3.2 as the target rather than silently raising the version floor.\n- Does not claim that Bash 5.3 execution or ShellCheck proves Bash 3.2 behavior.\n- Does not execute commands or edit files.",
+      "judge": {},
+      "tags": [
+        "shell-bash",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-bash"
+    },
+    {
+      "id": "shell-bash-02",
+      "project": "artagon-shell",
+      "intent": "On paper, fix the feature guard for Bash 4.4+: (( BASH_VERSINFO[0] >= 4 && BASH_VERSINFO[1] >= 4 )). Check 3.2, 4.0, 4.3, 4.4, 5.0 and 5.3. We use mapfile -d and namerefs. Do not run commands.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses major > 4 or major == 4 and minor >= 4 for the Bash 4.4 floor.\n- Rejects 3.2, 4.0 and 4.3 while accepting 4.4, 5.0 and 5.3.\n- Distinguishes namerefs at 4.3 from mapfile -d at 4.4.\n- Does not compare version strings lexically.\n- Does not report the paper decisions as executed runtime tests.",
+      "judge": {},
+      "tags": [
+        "shell-bash",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-bash"
+    },
+    {
+      "id": "shell-bash-03",
+      "project": "artagon-shell",
+      "intent": "Review lib/cache.bash as a sourced Bash 4.3 library on paper: its first lines enable set -Eeuo pipefail, replace IFS and install EXIT/ERR traps. Its caller checks cache_load inside if. Explain the contract and focused test plan. Do not edit or run anything.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Explains that sourcing executes in the caller and a shebang does not select a new interpreter.\n- Identifies options, traps and IFS as caller state that requires ownership or restoration.\n- Explains that calling a function as an if condition can suppress errexit and ERR behavior inside it.\n- Does not prescribe an unconditional inherit_errexit command for the Bash 4.3 target.\n- Requires actual minimum-version sourced-library tests and reports them as not run.",
+      "judge": {},
+      "tags": [
+        "shell-bash",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "shell-bash"
+    }
+  ]
+}

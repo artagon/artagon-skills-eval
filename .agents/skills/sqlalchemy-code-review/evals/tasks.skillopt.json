@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "sqlalchemy-code-review-01",
+      "project": "artagon-python",
+      "intent": "Review `app/repositories/orders.py` where line 16 instantiates a module-global `session = Session(engine)` shared across requests, line 24 uses legacy `session.query(Order).filter_by(tenant_id=tid).all()`, and line 27 loops `[len(order.items) for order in orders]` on a default lazy-loaded `Order.items` relationship.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Cites `file:line` for session scope (Gate 1) and flags the module-global `Session(engine)` shared across concurrent requests, replacing it with request-scoped `with` / `async with` session management\n- Cites both the iteration loop (`orders.py:27`) and the lazy `Order.items` relationship (Gate 2) to prove the N+1 query, fixing it with `selectinload(Order.items)` / `joinedload` (or SQL `COUNT`)\n- Replaces legacy 1.x `session.query(Order)` with SQLAlchemy 2.0 `select(Order)` + `session.scalars(...)`\n- Notes `AsyncAttrs` / `lazy='raise'` safeguards when using `AsyncSession` to prevent implicit sync lazy-load `MissingGreenlet` crashes",
+      "judge": {},
+      "tags": [
+        "sqlalchemy-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "sqlalchemy-code-review"
+    },
+    {
+      "id": "sqlalchemy-code-review-02",
+      "project": "artagon-python",
+      "intent": "Review Alembic migration `migrations/versions/20261115_backfill_tiers.py` which imports `from app.models.user import User` inside `upgrade()` to loop over 500,000 rows one by one (`session.add(user)`), adds `op.add_column('users', sa.Column('tier', sa.String(), nullable=False))` with no `server_default` on an existing populated table, and writes `def downgrade(): pass`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Cites the Alembic revision path and `op.*` snippets (Gate 3) before reporting migration findings\n- Flags importing live `app.models.user.User` ORM classes inside an Alembic revision and replaces it with `op.execute(sa.text(...))` or lightweight migration-local `sa.table(...)`\n- Flags adding `nullable=False` with no default on a populated table and row-by-row 500k Python loops, recommending nullable -> batched/set-based SQL backfill -> `alter_column(..., nullable=False)`\n- Flags no-op `def downgrade(): pass` and provides a concrete `op.drop_column` reversal",
+      "judge": {},
+      "tags": [
+        "sqlalchemy-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "sqlalchemy-code-review"
+    },
+    {
+      "id": "sqlalchemy-code-review-03",
+      "project": "artagon-python",
+      "intent": "Audit `app/services/importer.py` where `async with async_session() as session:` inserts 25,000 `MetricPoint` ORM objects via `for p in points: session.add(MetricPoint(**p)); await session.commit()` inside the loop.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Identifies `await session.commit()` inside the 25,000-row loop as a severe round-trip and partial-commit atomicity defect\n- Replaces per-row `session.add` + `commit` with SQLAlchemy 2.0 bulk `session.execute(insert(MetricPoint), batch)`\n- Configures `expire_on_commit=False` on `async_sessionmaker` so attributes remain accessible after `commit()` without `MissingGreenlet` errors\n- Chunks very large parameter lists safely to respect PostgreSQL/driver bind-parameter limits",
+      "judge": {},
+      "tags": [
+        "sqlalchemy-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "sqlalchemy-code-review"
+    }
+  ]
+}

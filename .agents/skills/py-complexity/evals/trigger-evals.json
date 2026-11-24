@@ -1,0 +1,18 @@
+[
+  {"query": "measure cyclomatic complexity and maintainability index in Python with radon cc, radon mi, lizard, and wily", "should_trigger": true},
+  {"query": "flatten this deeply nested 110-line Python if/elif function (CC 22) using guard clauses and lookup tables", "should_trigger": true},
+  {"query": "split a 900-line Python service file into cohesive modules under 500 lines and track wily diff", "should_trigger": true},
+  {"query": "replace 15 repetitive `if config.field` statements with a getattr/setattr loop and extract magic numbers in Python", "should_trigger": true},
+  {"query": "enforce complexity thresholds in CI/CD with xenon, radon, and lizard -C 15", "should_trigger": true},
+  {"query": "break down a grade-D Python function flagged by `radon cc . -n C` using extract function and guard clauses", "should_trigger": true},
+  {"query": "extract repeated Literal union types into TypeAlias definitions in types.py to reduce cognitive noise", "should_trigger": true},
+  {"query": "initialize `wily build .` and run `wily diff HEAD~10` to audit Python maintainability index regressions", "should_trigger": true},
+  {"query": "find unused imports and dead Python functions with vulture and whitelist.py", "should_trigger": false},
+  {"query": "scan Python code for Bandit security issues like SQL injection and hardcoded passwords", "should_trigger": false},
+  {"query": "run mutmut mutation testing to verify our pytest assertions catch boundary bugs", "should_trigger": false},
+  {"query": "migrate setup.py and requirements.txt to uv and Python 3.13 syntax", "should_trigger": false},
+  {"query": "profile wall-clock latency with py-spy flamegraphs and cProfile", "should_trigger": false},
+  {"query": "run a TypeScript Clean Code PERT estimation and deadline negotiation workflow", "should_trigger": false},
+  {"query": "configure pre-commit hooks for ruff, mypy, and basedpyright", "should_trigger": false},
+  {"query": "optimize a DSPy module with MIPROv2", "should_trigger": false}
+]

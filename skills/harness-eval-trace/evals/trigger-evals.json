@@ -1,0 +1,82 @@
+[
+  {
+    "query": "run a read-only DuckDB SQL query comparing tool failure rates and cassette misses across arms in /tmp/campaign-01",
+    "should_trigger": true
+  },
+  {
+    "query": "export 4-layer harness-eval traces from /tmp/campaign-01 to local Arize Phoenix on port 6006",
+    "should_trigger": true
+  },
+  {
+    "query": "export campaign trial spans to MLflow 3 JSON format with harness-eval.py trace-export",
+    "should_trigger": true
+  },
+  {
+    "query": "query the file_diffs table in our harness-eval store to see which files Bash commands modified",
+    "should_trigger": true
+  },
+  {
+    "query": "inspect TTFT and reasoning_tokens per chat span using harness-eval trace-query SQL",
+    "should_trigger": true
+  },
+  {
+    "query": "why did harness-eval trace-query reject my SQL statement with exit code 2?",
+    "should_trigger": true
+  },
+  {
+    "query": "dump OTLP JSON waterfall spans from a completed harness-eval campaign directory",
+    "should_trigger": true
+  },
+  {
+    "query": "join trials and tool_calls in DuckDB via trace-query to rank slowest tool executions by harness",
+    "should_trigger": true
+  },
+  {
+    "query": "how do the 4 trace layers (Unix-socket hooks, OTLP spans, transcripts, and file_diffs) map to SQL tables?",
+    "should_trigger": true
+  },
+  {
+    "query": "query mcp_calls for normalized vs exact JCS match tiers in a completed harness-eval campaign",
+    "should_trigger": true
+  },
+  {
+    "query": "freeze examples/four-cli-canary.json and execute a live ABBA evaluation campaign",
+    "should_trigger": false
+  },
+  {
+    "query": "author a new harness-eval-protocol/v1 manifest with a vendor-blind judge rubric",
+    "should_trigger": false
+  },
+  {
+    "query": "record or hand-author an RFC 8785 MCP replay cassette JSON fixture for protocol arms",
+    "should_trigger": false
+  },
+  {
+    "query": "check macOS Keychain vs Linux Secret Service subscription separation with harness-eval auth",
+    "should_trigger": false
+  },
+  {
+    "query": "spawn a multi-model NTM worker swarm in tmux worktrees",
+    "should_trigger": false
+  },
+  {
+    "query": "map declarations and line numbers in src/ using ast-grep outline",
+    "should_trigger": false
+  },
+  {
+    "query": "check dead-code candidates and high-complexity hotspots in an unfamiliar module with ripwire fresh-eyes",
+    "should_trigger": false
+  },
+  {
+    "query": "configure Grok Bot Desktop localToolPermissionCeiling in ~/.grokbot/settings.json",
+    "should_trigger": false
+  },
+  {
+    "query": "connect to a remote Herdr daemon over SSH and inspect unanswered swarm messages",
+    "should_trigger": false
+  },
+  {
+    "query": "harden an unattended cleanup shell script with signal traps and lockfiles",
+    "should_trigger": false
+  }
+]

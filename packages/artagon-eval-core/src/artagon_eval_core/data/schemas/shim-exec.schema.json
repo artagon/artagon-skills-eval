@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/shim-exec/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trial_id",
+    "harness",
+    "auth_mode",
+    "pin_mode",
+    "pid",
+    "ppid",
+    "started_wall_ns",
+    "started_mono_ns",
+    "real_binary",
+    "observed_binary_sha256",
+    "final_argv",
+    "cwd",
+    "billing_guard_verified",
+    "secret_file_consumed"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-shim-exec/v1"},
+    "trial_id": {"type": "string", "minLength": 1},
+    "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+    "auth_mode": {"enum": ["subscription", "api_key"]},
+    "pin_mode": {"enum": ["nix", "host"]},
+    "pid": {"type": "integer", "minimum": 1},
+    "ppid": {"type": "integer", "minimum": 0},
+    "started_wall_ns": {"type": "integer", "minimum": 0},
+    "started_mono_ns": {"type": "integer", "minimum": 0},
+    "real_binary": {"type": "string", "minLength": 1},
+    "observed_binary_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "observed_binary_size": {"type": "integer", "minimum": 0},
+    "final_argv": {"type": "array", "items": {"type": "string"}},
+    "cwd": {"type": "string", "minLength": 1},
+    "billing_guard_verified": {"type": "boolean"},
+    "secret_file_consumed": {"type": "boolean"},
+    "env_present_keys": {"type": "array", "items": {"type": "string"}}
+  }
+}

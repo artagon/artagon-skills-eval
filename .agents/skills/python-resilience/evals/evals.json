@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-resilience",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Harden an async Python `httpx` client calling a flaky partner API using `tenacity`: retry transient network timeouts and HTTP `{429, 502, 503, 504}` with exponential backoff + jitter (honoring `Retry-After` when present), NEVER retry `400`/`401`/`404` or `ValueError`, cap total retry wall time at 30 seconds / 5 attempts, and log each retry attempt cleanly.",
+      "expected_output": "Configures `tenacity` `@retry` with explicit transient whitelisting (`retry=retry_if_exception_type((httpx.TimeoutException, httpx.NetworkError)) | retry_if_result(lambda r: r.status_code in {429, 502, 503, 504})` — never bare `@retry`), `wait_exponential_jitter(initial=0.5, max=10)` (or custom `Retry-After` wait strategy), `stop=stop_after_attempt(5) | stop_after_delay(30)`, `before_sleep` structured warning logging, `reraise=True`, and an explicit per-request `httpx.Timeout`.",
+      "files": [],
+      "expectations": [
+        "Whitelists ONLY transient transport exceptions and `{429, 502, 503, 504}` status codes (`retry_if_exception_type` / `retry_if_result`), explicitly excluding `ValueError`, `400`, `401`, `403`, and `404`",
+        "Uses `wait_exponential_jitter` (and/or `Retry-After` header parsing on `429`) to prevent thundering-herd retry storms",
+        "Bounds retries with BOTH attempt count and wall-clock time (`stop_after_attempt(5) | stop_after_delay(30)`) plus `reraise=True`",
+        "Pairs retry policy with explicit per-attempt timeouts (`httpx.Timeout` / `asyncio.wait_for`) and `before_sleep` structured logging"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Implement a reusable `@with_timeout(seconds)` async decorator and a `@fail_safe(default=...)` graceful-degradation wrapper for non-critical product recommendations so a dead recommendations microservice falls back to an empty list in <500ms without hiding `CancelledError` or breaking checkout.",
+      "expected_output": "Implements `@with_timeout(0.5)` wrapping `await asyncio.wait_for(fn(*args, **kwargs), timeout=seconds)` and `@fail_safe(default_factory=list)` catching `Exception` (NEVER `BaseException`, so `asyncio.CancelledError`, `KeyboardInterrupt`, and `SystemExit` propagate cleanly!), logging degraded fallback warnings with metrics, and returning a fresh default per call (never sharing one mutable `default=[]` list across callers).",
+      "files": [],
+      "expectations": [
+        "Enforces a hard 500ms async deadline with `asyncio.wait_for(..., timeout=0.5)` (or Python 3.11+ `async with asyncio.timeout(0.5):`)",
+        "Catches `Exception` in `@fail_safe` while explicitly letting `asyncio.CancelledError`, `KeyboardInterrupt`, and `SystemExit` propagate",
+        "Uses `default_factory` (or copies mutable defaults) so callers mutating the fallback `[]` cannot corrupt subsequent fallback calls",
+        "Logs a structured `WARNING` / increments a fallback metric so silent degradation remains observable"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our checkout service experiences cascading thread/connection starvation whenever the downstream fraud-scoring service stalls for 60 seconds. Add circuit-breaker / bulkhead protection alongside bounded timeouts and explain why retries alone made the outage worse.",
+      "expected_output": "Explains how unbudgeted retries on a stalled dependency multiply load and hold open worker connections (retry storm), sets tight connect/read timeouts (`connect=1.0, read=2.5`), limits concurrent outbound calls with a bulkhead (`asyncio.Semaphore(20)` / bounded connection pool), and trips a circuit breaker (closed -> open after failure threshold -> half-open probe) to fail fast during sustained downstream outages.",
+      "files": [],
+      "expectations": [
+        "Explains why retrying a saturated/stalled dependency without tight timeouts and circuit breaking amplifies outages",
+        "Configures tight per-call connect/read timeouts rather than 60-second default hangs",
+        "Applies a concurrency bulkhead (`asyncio.Semaphore` / bounded pool) so one slow dependency cannot exhaust all service workers",
+        "Implements or configures a circuit breaker (`Closed` -> `Open` fail-fast -> `Half-Open` recovery probe) around the fraud-scoring call"
+      ]
+    }
+  ]
+}

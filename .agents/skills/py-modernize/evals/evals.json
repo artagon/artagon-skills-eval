@@ -1,0 +1,41 @@
+{
+  "skill_name": "py-modernize",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Migrate our legacy Python repository from `python -m venv`, `pip install -e \".[dev]\"`, `pip install -r requirements.txt`, and pip-based GitHub Actions to `uv` and Python 3.13+.",
+      "expected_output": "Replaces `python -m venv` and `pip` commands with `uv venv`, `uv pip install -e \".[dev]\"`, `uv pip compile pyproject.toml -o requirements.txt`, and `uv pip sync requirements.txt`, updates `.github/workflows/test.yml` to `astral-sh/setup-uv@v1` + `uv venv` + `uv pip install -e \".[dev]\"`, updates `README.md` setup instructions, sets `requires-python = \">=3.13\"` in `pyproject.toml`, and runs `pytest`.",
+      "files": [],
+      "expectations": [
+        "Replaces legacy venv and pip workflows with `uv venv`, `uv pip install -e \".[dev]\"`, `uv pip compile pyproject.toml -o requirements.txt`, and `uv pip sync requirements.txt`",
+        "Updates GitHub Actions CI workflows to install `uv` (`astral-sh/setup-uv@v1`) and install dependencies via `uv venv` and `uv pip install -e \".[dev]\"`",
+        "Updates `README.md` development setup instructions to reflect `uv` installation (via OS package manager or `pip install --user uv`) and `uv venv` / `uv pip install`",
+        "Verifies `pytest` passes after migrating dependency installation to `uv`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Upgrade this legacy Python module to Python 3.13+ syntax and replace deprecated stdlib APIs: it uses `Optional[List[Dict[str, Any]]]` and `Union[int, str]` from `typing`, `from __future__ import annotations`, `%`-formatted strings, `from collections import Iterable`, `datetime.utcnow()`, `datetime.utcfromtimestamp(ts)`, `imp`, and `os.path`.",
+      "expected_output": "Sets `requires-python = \">=3.13\"`, `[tool.pyupgrade] target-version = \"py313\"`, `[tool.ruff] target-version = \"py313\"`, and `[tool.ruff.lint] select = [\"UP\"]` in `pyproject.toml`, runs `pyupgrade --py313-plus` and `ruff check . --select UP --fix`, replaces `typing.List`/`Dict`/`Optional`/`Union` with `list`/`dict`/`X | None`/`X | Y`, replaces `collections.Iterable` with `collections.abc.Iterable`, replaces `datetime.utcnow()` / `utcfromtimestamp()` with `datetime.now(UTC)` / `datetime.fromtimestamp(ts, UTC)`, replaces `imp` with `importlib` and `os.path` with `pathlib.Path`, and runs `pytest`.",
+      "files": [],
+      "expectations": [
+        "Configures `requires-python = \">=3.13\"`, `[tool.pyupgrade] target-version = \"py313\"`, `[tool.ruff] target-version = \"py313\"`, and `[tool.ruff.lint] select = [\"UP\"]` in `pyproject.toml`",
+        "Runs `pyupgrade --py313-plus` and `ruff check . --select UP` (`--fix`) to upgrade `List`/`Dict`/`Optional`/`Union`, obsolete `__future__` imports, and `%`/`.format()` strings to Python 3.13+ syntax",
+        "Replaces `collections.Iterable` with `collections.abc.Iterable`, `datetime.utcnow()` / `datetime.utcfromtimestamp()` with `datetime.now(UTC)` / `datetime.fromtimestamp(ts, UTC)`, `imp` with `importlib`, and `os.path` with `pathlib.Path`",
+        "Verifies changes with `git diff`, typecheckers (`mypy` / `basedpyright`), and `pytest`"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Consolidate our legacy `setup.py` and `setup.cfg` packaging files into `pyproject.toml` as the single source of configuration for a Python 3.13+ codebase.",
+      "expected_output": "Reads `setup.py` and `setup.cfg`, migrates `[project]` metadata (`requires-python = \">=3.13\"`, `dependencies`), `[build-system]`, `[dependency-groups]` `dev` (`\"pyupgrade\"`, `\"ruff\"`), and `[tool.ruff.lint] select = [\"UP\"]` into `pyproject.toml` (noting `py-quality-setup` for full `ruff`/`mypy`/`basedpyright` setup), removes `setup.py` and `setup.cfg`, and validates `uv pip install -e \".[dev]\"`, `ruff check . --select UP`, and `pytest`.",
+      "files": [],
+      "expectations": [
+        "Consolidates `setup.py` and `setup.cfg` metadata and `[build-system]` into `pyproject.toml` with `requires-python = \">=3.13\"` as the single configuration source",
+        "Adds `pyupgrade` and `ruff` to `[dependency-groups]` `dev` with `[tool.ruff.lint] select = [\"UP\"]` and notes `py-quality-setup` for complete linter/typechecker configuration",
+        "Removes retired `setup.py` and `setup.cfg` files and verifies editable install with `uv pip install -e \".[dev]\"` (or `uv pip install -e .`)",
+        "Runs `ruff check . --select UP` and `pytest` to confirm zero regressions"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-performance-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our Python reconciliation job takes 48 seconds on 50,000 rows: inside a nested loop it checks `if tx_id in seen_ids_list:`, builds a CSV report via `report += row_str + '\\n'`, and recomputes `parse_tax_jurisdiction(code)` on the same 40 region codes 50,000 times. Walk through profiling first and optimizing it.",
+      "expected_output": "Profiles BEFORE changing code (`cProfile` sorted by `pstats.SortKey.CUMULATIVE`/`TIME` + `timeit` benchmark baseline), then fixes the three proven bottlenecks: converts `seen_ids_list` (`O(n)` membership scan -> `O(n^2)` total) to a `set` (`O(1)` lookup), replaces quadratic `+=` string concatenation with list accumulation + `'\\n'.join(lines)` (or streaming writer), Memoizes `parse_tax_jurisdiction` with `@functools.lru_cache(maxsize=128)`, and re-benchmarks to report measured speedup.",
+      "files": [],
+      "expectations": [
+        "Profiles first (`cProfile` + `pstats.SortKey.CUMULATIVE` / `line_profiler` / `timeit`) to establish a reproducible baseline before editing code",
+        "Replaces `list` membership checks (`O(n)`) inside the loop with a `set` or `dict` (`O(1)` average lookup)",
+        "Replaces repeated `report += ...` string concatenation with `''.join(...)` / `'\\n'.join(...)` or streaming file writes",
+        "Applies `@functools.lru_cache` to repeated pure `parse_tax_jurisdiction(code)` calls and verifies both identical output and measured speedup afterward"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A batch log analyzer runs out of RAM (8 GB OOM) because it loads `[parse_line(line) for line in f.readlines()]` on a 12 GB log file before filtering 0.5% error events, and we also need to attach a low-overhead profiler to a live stuck production Python PID without restarting it.",
+      "expected_output": "Replaces eager `readlines()` + full-file list comprehension with lazy generator expressions / `itertools` streaming (`for line in f:` -> generator pipeline) for `O(1)` peak memory (verified with `tracemalloc` or `memory_profiler`), and uses `py-spy top --pid <PID>` / `py-spy record -o profile.svg --pid <PID>` for safe sampling flamegraphs on a live production process without code modification.",
+      "files": [],
+      "expectations": [
+        "Replaces `f.readlines()` and full-file list materialization with lazy line iteration and generator expressions for `O(1)` streaming memory",
+        "Uses `tracemalloc` or `memory_profiler` (`mprof`) to verify peak memory drops from gigabytes to megabytes",
+        "Recommends `py-spy top --pid <PID>` and `py-spy record -o profile.svg --pid <PID>` for live sampling profiling of a running Python process",
+        "Mentions `__slots__` (or `dataclass(slots=True)`) when millions of small parsed event objects must stay resident in RAM"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "When micro-optimizing a verified hot inner loop in pure Python (confirmed via `kernprof -l -v`), what Python-specific techniques matter, and when should you stop micro-optimizing pure Python and move to NumPy/Polars or multiprocessing?",
+      "expected_output": "Shows line-level profiling with `kernprof -l -v`, applies targeted CPython hot-loop wins (hoisting invariant attribute/global lookups into local variables, list comprehensions/`map` over manual `.append` loops, `bisect` / `collections.deque` for `O(1)` `popleft()` instead of `list.pop(0)`), and states clearly when vectorized C/Rust engines (`numpy`, `polars`) or `ProcessPoolExecutor` bypass CPython bytecode/GIL limits by 10x–100x.",
+      "files": [],
+      "expectations": [
+        "Uses `line_profiler` (`kernprof -l -v`) to confirm which exact lines inside the hot function dominate runtime",
+        "Replaces `list.pop(0)` (`O(n)`) with `collections.deque.popleft()` (`O(1)`) and hoists repeated attribute/invariant work out of tight loops",
+        "Warns against unreadable micro-optimizations outside proven hot paths",
+        "Identifies when CPython loop overhead / the GIL warrants switching to vectorized `numpy`/`polars` operations or `ProcessPoolExecutor`"
+      ]
+    }
+  ]
+}

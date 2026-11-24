@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-design-patterns-01",
+      "project": "artagon-python",
+      "intent": "A teammate wrote a 140-line `AbstractFormatterFactory`, `FormatterRegistrySingleton`, and 4 subclasses just to dispatch `'json'`, `'csv'`, and `'markdown'` report strings, plus a `BaseNotifier -> EmailNotifier -> RetryableEmailNotifier -> AuditedRetryableEmailNotifier` inheritance chain. Simplify both using Pythonic design patterns.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Replaces the over-engineered factory/singleton class hierarchy with a simple typed dictionary mapping `OutputFormat` to `Callable[[Report], str]` functions (KISS)\n- Replaces deep `EmailNotifier` subclassing with composition + `typing.Protocol` structural interfaces\n- Avoids module-global mutable singletons in favor of explicit constructor dependency injection\n- Shows how adding a new channel or retry wrapper composes orthogonally without combinatorial subclasses",
+      "judge": {},
+      "tags": [
+        "python-design-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-design-patterns"
+    },
+    {
+      "id": "python-design-patterns-02",
+      "project": "artagon-python",
+      "intent": "Review an `OrderService.__init__` that takes 9 constructor dependencies (`order_repo`, `user_repo`, `inventory_repo`, `tax_client`, `stripe_client`, `pdf_renderer`, `s3_uploader`, `email_sender`, `slack_notifier`) and also imports `fastapi.HTTPException` directly inside `OrderService`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Treats 7+ constructor dependencies (9 here) as an SRP smell requiring cohesive responsibility decomposition rather than hiding all 9 inside a `ServiceContext` grab-bag\n- Enforces strict downward dependency flow (`API Handler -> Service -> Repository`) by removing `fastapi.HTTPException` imports from the service layer\n- Defines narrow `Protocol` interfaces for external ports (`PaymentGateway`, `DocumentStore`) so unit tests pass lightweight fakes without heavy mocking\n- Maps domain errors to HTTP status codes solely in the API/transport boundary",
+      "judge": {},
+      "tags": [
+        "python-design-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-design-patterns"
+    },
+    {
+      "id": "python-design-patterns-03",
+      "project": "artagon-python",
+      "intent": "Two modules in our Python app have 12-line date-range normalization helpers that look 70% similar, and a developer wants to build a generic `TemporalWindowEngine` framework now 'in case future modules need cron windows'. Apply the Rule of Three and advise.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Applies the Rule of Three and YAGNI to reject building a speculative `TemporalWindowEngine` for unrequested cron features\n- Distinguishes accidental structural similarity across two 12-line helpers from shared single-source-of-truth business invariants where diverging copies cause bugs\n- Warns against boolean-flag-ridden 'universal' abstractions born from premature generalization\n- Gives concrete criteria for when a third concrete caller justifies extracting a focused helper",
+      "judge": {},
+      "tags": [
+        "python-design-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-design-patterns"
+    }
+  ]
+}

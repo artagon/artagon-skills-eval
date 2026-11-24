@@ -1,0 +1,56 @@
+{
+  "schema_version": "harness-eval-cassette/v1",
+  "server_name": "canary-docs",
+  "protocol_version": "2026-07-28",
+  "server_version": "1.0.0",
+  "tools": [
+    {
+      "name": "lookup_canary_spec",
+      "description": "Return the required contents of canary_ok.txt.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ]
+      }
+    }
+  ],
+  "interactions": [
+    {
+      "method": "tools/call",
+      "tool_name": "lookup_canary_spec",
+      "match_keys": {
+        "topic": "canary"
+      },
+      "responses": [
+        {
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "Write exact string ok followed by a newline to canary_ok.txt."
+              }
+            ],
+            "isError": false
+          }
+        }
+      ],
+      "default_response": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Write exact string ok followed by a newline to canary_ok.txt."
+            }
+          ],
+          "isError": false
+        }
+      }
+    }
+  ]
+}

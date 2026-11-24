@@ -1,0 +1,20 @@
+id: no-mutable-module-globals
+valid:
+  - |
+    from typing import Final
+    ALLOWED: Final[frozenset[str]] = frozenset({"a", "b"})
+  - |
+    __all__ = ["Foo", "Bar"]
+  - |
+    def build() -> dict[str, int]:
+        local_map: dict[str, int] = {}
+        return local_map
+invalid:
+  - |
+    _ACTIVE_STATE = {}
+  - |
+    _HANDLERS: list[str] = []
+  - |
+    _SEEN = set()
+  - |
+    _CACHE = dict()

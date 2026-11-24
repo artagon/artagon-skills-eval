@@ -1,0 +1,18 @@
+[
+  {"query": "Keep this script compatible with macOS Bash 3.2; may it use mapfile?", "should_trigger": true},
+  {"query": "Choose a Bash minimum version for associative arrays, namerefs and inherit_errexit.", "should_trigger": true},
+  {"query": "Does our Bash 4.4 feature guard incorrectly reject Bash 5.0?", "should_trigger": true},
+  {"query": "Review a sourced Bash library for option and trap leakage into its caller.", "should_trigger": true},
+  {"query": "Explain why a Bash function called in if ignores errexit in this case.", "should_trigger": true},
+  {"query": "Port a Bash 5.x recipe back to the declared Bash 4.0 baseline.", "should_trigger": true},
+  {"query": "Audit mapfile -d on our Bash 4.3 hosts before changing the script.", "should_trigger": true},
+  {"query": "$shell-bash report the 3.2, 4.0, 4.3, 4.4 and 5.x profile boundaries without execution.", "should_trigger": true},
+  {"query": "Rewrite this Bash script into strict POSIX.1-2017 sh for dash and BusyBox ash.", "should_trigger": false},
+  {"query": "Fix native Zsh KSH_ARRAYS behavior in a completion function.", "should_trigger": false},
+  {"query": "Configure ShellCheck JSON diagnostics in CI; the Bash target is already fixed.", "should_trigger": false},
+  {"query": "Add Bats fixtures and PATH stubs for our already-profiled Bash CLI.", "should_trigger": false},
+  {"query": "Wire the packaged shell gate into a pre-commit hook.", "should_trigger": false},
+  {"query": "Format a Bash file with our existing shfmt configuration; do not assess compatibility.", "should_trigger": false},
+  {"query": "Review cron job locking and idempotency; do not change the declared Bash profile.", "should_trigger": false},
+  {"query": "Compare POSIX 2017 and 2024 pipefail requirements for /bin/sh.", "should_trigger": false}
+]

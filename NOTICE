@@ -1,0 +1,48 @@
+Third-Party Attributions and Notices
+====================================
+
+`artagon-skills-eval` is licensed under the MIT License (see `LICENSE`).
+It builds on or integrates with the following open-source projects:
+
+Core Runtime Dependencies
+-------------------------
+- Expression (https://github.com/dbrattli/Expression) — MIT License
+  Functional Option, Result, TaggedUnion, Block, and Map primitives with
+  Pydantic v2 core-schema support.
+- rpds-py (https://github.com/crate-py/rpds) — MIT License
+  Persistent HashTrieMap and HashTrieSet immutable data structures.
+- Pydantic (https://github.com/pydantic/pydantic) — MIT License
+  Strict schema validation and frozen domain modeling.
+- structlog (https://github.com/hynek/structlog) — MIT OR Apache-2.0 License
+  Structured stderr diagnostics with mandatory SecretVault redaction.
+- Pluggy (https://github.com/pytest-dev/pluggy) — MIT License
+  Hook specification and decoupled adapter plugin discovery.
+- Typer (https://github.com/fastapi/typer) — MIT License
+  CLI framework for `harness-eval`, `skill-eval`, and `skill-lint`.
+- DuckDB (https://github.com/duckdb/duckdb) — MIT License
+  Read-only local trace query engine.
+- detect-secrets (https://github.com/Yelp/detect-secrets) — Apache-2.0 License
+  Secret detection integrated into `SecretVault`.
+
+Skills Specification Adapter
+----------------------------
+- agentskills.io `skills-ref` (https://github.com/agentskills/agentskills) —
+  Apache-2.0 License. Official reference parser and validator for the Agent
+  Skills specification, wrapped strictly behind `artagon_eval_skills.spec_adapter`.
+
+Optional Integration Adapters
+-----------------------------
+- Microsoft Waza — MIT License
+- DSPy & GEPA — MIT License
+- Microsoft SkillOpt — MIT License
+- Sentient AGI EvoSkill — MIT License (pinned source revision)
+- SkillSpec — MIT License
+- Arize Phoenix OTel / Client & OpenInference Semantic Conventions —
+  Apache-2.0 License (`arize-phoenix` Elastic-2.0 server package is explicitly
+  excluded and banned by repository policy).
+- MLflow (`mlflow-tracing` / `mlflow-skinny`) — Apache-2.0 License
+
+Provenance
+----------
+Extracted as a clean greenfield workspace from `artagon/artagon-scripts`; see
+`docs/PROVENANCE.md` for the exact origin commit SHA and asset lineage.

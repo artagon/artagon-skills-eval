@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artagon/harness-eval/protocol/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "campaign_id",
+    "seed",
+    "arms",
+    "tasks",
+    "budget"
+  ],
+  "properties": {
+    "schema_version": {"const": "harness-eval-protocol/v1"},
+    "surface": {"enum": ["general", "skill_eval"], "default": "general"},
+    "contract_version": {"type": "string", "minLength": 1},
+    "campaign_id": {"$ref": "#/$defs/id"},
+    "description": {"type": "string"},
+    "seed": {"type": "integer", "minimum": 0, "maximum": 18446744073709551615},
+    "pin_mode": {"enum": ["nix", "host"], "default": "nix"},
+    "execution_mode": {"enum": ["headless", "ntm", "herdr", "cao"], "default": "headless"},
+    "allow_mixed_auth_modes": {"type": "boolean", "default": false},
+    "repetitions": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 1},
+    "cassette_miss_threshold": {"type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.0},
+    "budget": {"$ref": "#/$defs/budget"},
+    "judge": {"$ref": "#/$defs/judge"},
+    "arms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/arm"}
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/task"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "rel_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)(?!.*\\\\)(?!.*\\/$).+$"
+    },
+    "json_value": {
+      "type": ["string", "number", "boolean", "null", "array", "object"]
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_wall_seconds"],
+      "properties": {
+        "max_wall_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "max_calls": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "max_tokens": {"type": "integer", "minimum": 1, "maximum": 100000000},
+        "max_cost_usd": {"type": "number", "exclusiveMinimum": 0, "maximum": 100000},
+        "max_ai_credits": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "max_output_bytes": {"type": "integer", "minimum": 1024, "maximum": 1073741824}
+      }
+    },
+    "system_prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["default", "append", "replace"]},
+        "text": {"type": "string"},
+        "path": {"$ref": "#/$defs/rel_path"},
+        "agent_name": {"$ref": "#/$defs/id"}
+      }
+    },
+    "mcp_server": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "mode"],
+      "properties": {
+        "name": {"$ref": "#/$defs/id"},
+        "transport": {"const": "stdio", "default": "stdio"},
+        "mode": {"enum": ["mock", "cassette_replay", "cassette_record", "live"]},
+        "cassette_path": {"$ref": "#/$defs/rel_path"},
+        "command": {"type": "string", "minLength": 1},
+        "args": {"type": "array", "items": {"type": "string"}},
+        "env": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        }
+      }
+    },
+    "provider_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {"type": "string", "minLength": 1},
+        "base_url": {"type": "string", "minLength": 1},
+        "wire_api": {"type": "string", "minLength": 1}
+      }
+    },
+    "harness_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "extra_args": {"type": "array", "items": {"type": "string"}},
+        "settings": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/json_value"}
+        }
+      }
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arm_id", "harness", "model"],
+      "properties": {
+        "arm_id": {"$ref": "#/$defs/id"},
+        "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+        "model": {"type": "string", "minLength": 1},
+        "effort": {"enum": ["low", "medium", "high"]},
+        "auth_mode": {"enum": ["subscription", "api_key"], "default": "subscription"},
+        "claude_auth_strategy": {
+          "enum": ["persisted_eval_config_dir", "keychain_setup_token"]
+        },
+        "api_key_ref": {"type": "string", "minLength": 1},
+        "provider_override": {"$ref": "#/$defs/provider_override"},
+        "budget": {"$ref": "#/$defs/budget"},
+        "harness_config": {"$ref": "#/$defs/harness_config"},
+        "mcp_servers": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/mcp_server"}
+        },
+        "skills": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/rel_path"}
+        },
+        "plugins": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/rel_path"}
+        },
+        "system_prompt": {"$ref": "#/$defs/system_prompt"}
+      }
+    },
+    "trace_assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "type": {
+          "enum": [
+            "skill_invocation",
+            "action_sequence",
+            "behavior",
+            "output_regex",
+            "output_keyword",
+            "output_json_schema"
+          ]
+        },
+        "required_skills": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "expected_actions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "actions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "tools": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "ordered": {"type": "boolean"},
+        "mode": {
+          "enum": [
+            "exact",
+            "any",
+            "ordered",
+            "unordered",
+            "subsequence",
+            "subset",
+            "all"
+          ]
+        },
+        "allow_extra": {"type": "boolean"},
+        "max_tool_calls": {"type": "integer", "minimum": 0},
+        "max_duration_ms": {"type": "number", "minimum": 0},
+        "max_tokens": {"type": "integer", "minimum": 0},
+        "forbidden_tools": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "required_tools": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "pattern": {"type": "string", "minLength": 1},
+        "regex_match": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "regex_not_match": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "flags": {"type": "string"},
+        "case_insensitive": {"type": "boolean"},
+        "keywords": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "contains": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "must_contain": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "not_keywords": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "not_contains": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "must_not_contain": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "match_mode": {"enum": ["all", "any"]},
+        "case_sensitive": {"type": "boolean"},
+        "schema": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/json_value"}
+        },
+        "json_schema": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/json_value"}
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/json_value"}
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "prompt"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/id"},
+        "family": {"$ref": "#/$defs/id"},
+        "split": {"enum": ["train", "val", "test"]},
+        "prompt": {"type": "string", "minLength": 1},
+        "fixture_path": {"$ref": "#/$defs/rel_path"},
+        "fixture_sha256": {"$ref": "#/$defs/sha256"},
+        "verifier_cmd": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "verifier_path": {"$ref": "#/$defs/rel_path"},
+        "verifier_sha256": {"$ref": "#/$defs/sha256"},
+        "trace_assertions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/trace_assertion"}
+        },
+        "rubric": {"type": "string"}
+      }
+    },
+    "judge_member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["harness", "model"],
+      "properties": {
+        "member_id": {"$ref": "#/$defs/id"},
+        "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+        "model": {"type": "string", "minLength": 1},
+        "auth_mode": {"enum": ["subscription", "api_key"], "default": "subscription"},
+        "api_key_ref": {"type": "string", "minLength": 1}
+      }
+    },
+    "judge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+        "model": {"type": "string", "minLength": 1},
+        "auth_mode": {"enum": ["subscription", "api_key"], "default": "subscription"},
+        "api_key_ref": {"type": "string", "minLength": 1},
+        "rubric": {"type": "string"},
+        "panel": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/judge_member"}
+        }
+      },
+      "if": {
+        "properties": {"enabled": {"const": true}},
+        "required": ["enabled"]
+      },
+      "then": {
+        "oneOf": [
+          {
+            "required": ["harness", "model"],
+            "not": {"required": ["panel"]}
+          },
+          {
+            "required": ["panel"],
+            "not": {
+              "anyOf": [
+                {"required": ["harness"]},
+                {"required": ["model"]}
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

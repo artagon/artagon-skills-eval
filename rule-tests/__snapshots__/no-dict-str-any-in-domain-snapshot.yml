@@ -1,0 +1,20 @@
+id: no-dict-str-any-in-domain
+snapshots:
+  "from collections.abc import Mapping\nfrom typing import Any\ndef parse(raw: Mapping[str, Any]) -> None:\n    pass\n":
+    labels:
+    - source: Mapping[str, Any]
+      style: primary
+      start: 74
+      end: 91
+  "from collections.abc import MutableMapping\nfrom typing import Any\nbag: MutableMapping[str, Any]\n":
+    labels:
+    - source: MutableMapping[str, Any]
+      style: primary
+      start: 71
+      end: 95
+  "from typing import Any\npayload: dict[str, Any] = {}\n":
+    labels:
+    - source: dict[str, Any]
+      style: primary
+      start: 32
+      end: 46

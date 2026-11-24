@@ -1,0 +1,26 @@
+id: no-sys-path-mutation
+snapshots:
+  "import sys\nsys.meta_path.append(object())\n":
+    labels:
+    - source: sys.meta_path.append(object())
+      style: primary
+      start: 11
+      end: 41
+  "import sys\nsys.meta_path.insert(0, object())\n":
+    labels:
+    - source: sys.meta_path.insert(0, object())
+      style: primary
+      start: 11
+      end: 44
+  "import sys\nsys.path.append(\"/some/dir\")\n":
+    labels:
+    - source: sys.path.append("/some/dir")
+      style: primary
+      start: 11
+      end: 39
+  "import sys\nsys.path.insert(0, \"/some/dir\")\n":
+    labels:
+    - source: sys.path.insert(0, "/some/dir")
+      style: primary
+      start: 11
+      end: 42

@@ -1,0 +1,66 @@
+[
+  {
+    "query": "Write a Bash 3.2 executable that preserves arguments containing spaces and leading dashes.",
+    "should_trigger": true
+  },
+  {
+    "query": "Refactor this POSIX.1-2017 sh library without changing its callers' options or IFS.",
+    "should_trigger": true
+  },
+  {
+    "query": "Review a POSIX.1-2024 script using pipefail and record the required shell implementations.",
+    "should_trigger": true
+  },
+  {
+    "query": "Author a native Zsh 5.9 autoload function that keeps option changes local.",
+    "should_trigger": true
+  },
+  {
+    "query": "Rewrite our shell CLI using Google Shell Style while preserving the existing public function names.",
+    "should_trigger": true
+  },
+  {
+    "query": "Add argument parsing to a Bash 4.4+ cron script and keep errors on stderr.",
+    "should_trigger": true
+  },
+  {
+    "query": "Review an extensionless shell executable that uses BSD date and GNU stat on different hosts.",
+    "should_trigger": true
+  },
+  {
+    "query": "Improve a sourced Bash library's quoting without adding a global strict-mode preamble.",
+    "should_trigger": true
+  },
+  {
+    "query": "Tell me whether Bash 3.2 supports mapfile; do not author or review code.",
+    "should_trigger": false
+  },
+  {
+    "query": "Explain native Zsh array indexing and select the right language profile only.",
+    "should_trigger": false
+  },
+  {
+    "query": "Select POSIX 2017 or 2024 for a proposed deployment; do not change the script.",
+    "should_trigger": false
+  },
+  {
+    "query": "Configure ShellCheck json1 output and an info severity threshold.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write Bats tests for an unchanged POSIX sh command.",
+    "should_trigger": false
+  },
+  {
+    "query": "Use the packaged shell quality gate on an unchanged Bash script.",
+    "should_trigger": false
+  },
+  {
+    "query": "Investigate cleanup failures and preserve the original exit code in this production job.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a Python replacement for an existing shell program, with no shell edits.",
+    "should_trigger": false
+  }
+]

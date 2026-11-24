@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-anti-patterns-01",
+      "project": "artagon-python",
+      "intent": "Spot and fix the architectural and resilience anti-patterns in a Python checkout flow where the FastAPI route retries `order_service.place_order()` 3 times, `order_service` retries `payment_client.charge()` 3 times, `payment_client` retries `httpx` 3 times with hardcoded `'https://api.prod.internal'` URLs, and errors are caught with `except Exception: pass`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Identifies multi-layer retry multiplication (`3 x 3 x 3 = 27` calls) and consolidates retry/timeout policy at a single client boundary\n- Flags hardcoded environment URLs/timeouts and extracts them into validated `BaseSettings` configuration\n- Eliminates bare/silent `except Exception: pass` swallowing in favor of specific domain/transport exceptions and `raise ... from e`\n- Separates permanent client/validation errors (never retried) from transient transport failures",
+      "judge": {},
+      "tags": [
+        "python-anti-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-anti-patterns"
+    },
+    {
+      "id": "python-anti-patterns-02",
+      "project": "artagon-python",
+      "intent": "Audit a Python endpoint + batch importer where (1) `POST /users` executes raw SQL inside the route handler and returns the SQLAlchemy `User` ORM model (including `password_hash`), and (2) `import_users(rows: list)` opens a CSV without `with`, uses `tags=[]` as a default argument, and aborts all 1,000 rows on the first bad row.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Decouples SQL persistence (Repository), domain validation/business logic (Service), and HTTP serialization (Pydantic DTO hiding `password_hash`)\n- Fixes the mutable default argument (`tags=[]` -> `tags: list[str] | None = None`) and bare `list` annotation (`list[...]` / `Sequence[...]`)\n- Wraps file handles in a `with` context manager to prevent descriptor leaks on exceptions\n- Replaces fail-whole-batch-on-row-1 behavior with per-item error capture (`BatchResult` with `succeeded` and indexed `failed` records)",
+      "judge": {},
+      "tags": [
+        "python-anti-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-anti-patterns"
+    },
+    {
+      "id": "python-anti-patterns-03",
+      "project": "artagon-python",
+      "intent": "Review our team's Python code habits checklist: developers keep calling `time.sleep` and `requests` inside `async def`, mocking every internal helper method in unit tests while testing only happy paths, and adding generic `BaseManager` inheritance hierarchies after writing a pattern once.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Flags synchronous `time.sleep` and `requests` inside `async def` as event-loop stallers and gives non-blocking alternatives\n- Critiques over-mocking internal implementation details (which breaks on safe refactors while missing real integration bugs) and happy-path-only coverage\n- Replaces premature `BaseManager` inheritance hierarchies with simple functions/composition under the Rule of Three\n- Provides a concise before/after code contrast for each anti-pattern",
+      "judge": {},
+      "tags": [
+        "python-anti-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-anti-patterns"
+    }
+  ]
+}

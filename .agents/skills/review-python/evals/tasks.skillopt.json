@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "review-python-01",
+      "project": "artagon-python",
+      "intent": "Run a comprehensive `review-python` backend review on my feature branch (`app/api/orders.py`, `app/db/models.py`, `migrations/versions/009_orders.py`, and `tests/test_orders.py`), including a brand-new `app/integrations/shipping_preview.py` experimental module.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Runs Gate G1 (`git diff --name-only $(git merge-base HEAD main)..HEAD`) and Gate G2 (`ruff check` + `mypy`) BEFORE manual style/type inspection\n- Explicitly avoids manually flagging formatting, import-order, or type rules that a passing project `ruff`/`mypy` gate already owns\n- Conditionally loads the matching specialist skills (`review-verification-protocol`, `python-code-review`, `fastapi-code-review`, `sqlalchemy-code-review`, `postgres-code-review`, `pytest-code-review`) based on detected stack imports/paths\n- Downgrades findings in net-new standalone modules (`shipping_preview.py`) to `Informational` (unless severe security/data-loss bug) and bases the Merge Verdict strictly on `Critical`/`Major` findings with `[FILE:LINE]` anchors",
+      "judge": {},
+      "tags": [
+        "review-python",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "review-python"
+    },
+    {
+      "id": "review-python-02",
+      "project": "artagon-python",
+      "intent": "I pushed a follow-up commit fixing the 2 Major findings from your previous `review-python` pass on `feat/checkout-v2`. Run a re-review of the branch.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Verifies resolution status of each prior `Critical`/`Major` finding from Round 1 with `[FILE:LINE]` proof\n- Checks only newly changed lines in the fix commit for fresh regressions plus `ruff check` / `mypy` status\n- Explicitly avoids moving the goalposts by surfacing new style/minor complaints on untouched code from Round 1\n- Updates the single-pass Verdict (`APPROVE` once zero unresolved `Critical`/`Major` findings remain)",
+      "judge": {},
+      "tags": [
+        "review-python",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "review-python"
+    },
+    {
+      "id": "review-python-03",
+      "project": "artagon-python",
+      "intent": "Run `review-python` on a pure FastAPI + Pydantic-AI agent PR (`app/agents/support_agent.py` and `app/api/chat.py`) that has no SQLAlchemy, Alembic, or raw Postgres changes.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Runs G1 diff scoping and G2 `ruff`/`mypy` checks first\n- Loads `review-verification-protocol`, `python-code-review`, and `fastapi-code-review` while skipping irrelevant SQLAlchemy/Postgres specialist skills when absent from the diff\n- Reads full enclosing functions and checks middleware/DI callers before claiming missing validation or error handling\n- Emits a single consolidated report with `[FILE:LINE]` anchors and severity-calibrated Verdict",
+      "judge": {},
+      "tags": [
+        "review-python",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "review-python"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "skill_name": "py-git-hooks",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Configure `.pre-commit-config.yaml` for a Python 3.13 project managed with `uv` so every commit runs `ruff check --fix`, `ruff-format`, `mypy`, and `basedpyright`, and show how to safely migrate an existing handwritten `.git/hooks/pre-commit` script.",
+      "expected_output": "Backs up the existing handwritten `.git/hooks/pre-commit` (e.g., `.git/hooks/pre-commit.bak` and inspects any custom checks to port as `repo: local` hooks) BEFORE running `uv run pre-commit install`, writes `.pre-commit-config.yaml` with `astral-sh/ruff-pre-commit` (`ruff --fix` + `ruff-format`), `pre-commit/mirrors-mypy` (or `uv run mypy` local hook so project dependencies resolve), and a `repo: local` `basedpyright` hook, then verifies with `uv run pre-commit run --all-files`.",
+      "files": [],
+      "expectations": [
+        "Inspects and backs up any existing `.git/hooks/pre-commit` file before running `pre-commit install` so custom team checks are not lost",
+        "Configures `ruff` (`--fix`) and `ruff-format` in `.pre-commit-config.yaml` in lint-then-format order",
+        "Configures both `mypy` and `basedpyright` hooks (ensuring third-party type stubs / `uv run` environment dependencies are visible)",
+        "Installs hooks with `pre-commit install` and validates the setup via `pre-commit run --all-files`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our Claude Code sessions fire noisy `PostToolUse` `ruff` hooks on every intermediate file edit while refactoring. Replace them with a clean end-of-turn `Stop` quality gate (`lint-gate.py`) that will not infinite-loop.",
+      "expected_output": "Removes noisy per-edit `PostToolUse` linter hooks from `.claude/settings.json` / `.claude/settings.local.json`, installs/symlinks `lint-gate.py` into `~/.claude/hooks/lint-gate.py`, registers it under Claude's `Stop` hook event, and ensures `lint-gate.py` checks `stop_hook_active` from stdin JSON so a failing gate blocks stop once to let the agent fix errors without infinite looping.",
+      "files": [],
+      "expectations": [
+        "Replaces per-edit `PostToolUse` ruff/typecheck hooks with a `Stop` hook in Claude settings so multi-file edits are checked once when the turn finishes",
+        "Installs or symlinks `lint-gate.py` under `~/.claude/hooks/lint-gate.py` with executable permissions",
+        "Checks `stop_hook_active` in the `Stop` hook JSON payload to prevent infinite stop-hook retry loops",
+        "Runs `ruff`, `mypy`, and `basedpyright` on changed Python files and surfaces actionable diagnostics on failure"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "`pre-commit` `mirrors-mypy` passes locally in `uv run mypy src` but fails inside `pre-commit` with `Cannot find implementation or library stub for module named 'pydantic'` and `'fastapi'`. Explain why and fix `.pre-commit-config.yaml`.",
+      "expected_output": "Explains that `mirrors-mypy` runs inside an isolated pre-commit virtualenv lacking project dependencies, and fixes it either by switching mypy to a `repo: local` hook (`entry: uv run mypy`, `language: system`, `types: [python]`, `pass_filenames: false` or package args) or declaring `additional_dependencies` in `mirrors-mypy`.",
+      "files": [],
+      "expectations": [
+        "Diagnoses `mirrors-mypy`'s isolated virtualenv as the reason `pydantic` and `fastapi` imports are unresolved during `pre-commit`",
+        "Shows the `repo: local` `uv run mypy` hook configuration (sharing the locked project `.venv` alongside `basedpyright`) and/or `additional_dependencies`",
+        "Ensures `mypy` runs with consistent project config (`pyproject.toml`) whether invoked on staged files or `--all-files`",
+        "Verifies the fix with `pre-commit run mypy --all-files`"
+      ]
+    }
+  ]
+}

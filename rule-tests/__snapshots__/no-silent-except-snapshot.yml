@@ -1,0 +1,46 @@
+id: no-silent-except
+snapshots:
+  "from contextlib import suppress\nwith suppress(Exception):\n    work()\n":
+    labels:
+    - source: suppress(Exception)
+      style: primary
+      start: 37
+      end: 56
+  "import contextlib\nwith contextlib.suppress(BaseException):\n    work()\n":
+    labels:
+    - source: contextlib.suppress(BaseException)
+      style: primary
+      start: 23
+      end: 57
+  "try:\n    work()\nexcept Exception:\n    pass\n":
+    labels:
+    - source: |-
+        except Exception:
+            pass
+      style: primary
+      start: 16
+      end: 42
+    - source: pass
+      style: secondary
+      start: 38
+      end: 42
+    - source: pass
+      style: secondary
+      start: 38
+      end: 42
+  "try:\n    work()\nexcept:\n    pass\n":
+    labels:
+    - source: |-
+        except:
+            pass
+      style: primary
+      start: 16
+      end: 32
+    - source: pass
+      style: secondary
+      start: 28
+      end: 32
+    - source: pass
+      style: secondary
+      start: 28
+      end: 32

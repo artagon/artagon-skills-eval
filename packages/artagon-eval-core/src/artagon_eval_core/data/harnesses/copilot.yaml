@@ -1,0 +1,125 @@
+harness: copilot
+binary_name: copilot
+campaign_v1_supported: true
+skillopt_supported: true
+
+auth:
+  vendor_family: github_copilot
+  default_model: gpt-5-codex
+  min_subscription_credits: 30
+  harness_home_env: COPILOT_HOME
+  subscription_files:
+    - config.json
+    - hosts.json
+  subscription_env_vars: []
+  api_key_env_var: COPILOT_PROVIDER_API_KEY
+  provider_base_url_env: COPILOT_PROVIDER_BASE_URL
+  scrubbed_env_vars:
+    - GITHUB_COPILOT_API_TOKEN
+  metered_env_prefixes:
+    - COPILOT_PROVIDER_
+
+system_prompt:
+  default:
+    flags:
+      - --no-custom-instructions
+  append:
+    flags: []
+    write_rel_path: copilot-instructions.md
+    target_root: harness_home
+  replace:
+    flags: []
+    write_rel_path: "agents/{agent_slug}.agent.md"
+    target_root: harness_home
+    custom_agent_template: copilot_agent_md
+    agent_flag: --agent
+
+hooks:
+  home_env_var: COPILOT_HOME
+  default_home_rel: .copilot
+  user_hook_rel: hooks/eval-trace.json
+  workspace_hook_rel: .github/hooks/harness-eval.json
+  format: json
+  dialect: versioned_flat_map
+  events:
+    - SessionStart
+    - UserPromptSubmit
+    - PreToolUse
+    - PostToolUse
+    - PostToolUseFailure
+    - Notification
+    - SubagentStart
+    - SubagentStop
+    - Stop
+    - SessionEnd
+  special_matchers:
+    Notification: "agent_idle|permission_prompt"
+  timeout_field: timeoutSec
+  timeout_seconds: 5
+
+otel:
+  delivery: file_jsonl
+  protocol: jsonl
+  file_exporter_env: COPILOT_OTEL_FILE_EXPORTER_PATH
+  usage_output_flag: --usage-output-file
+  env_vars:
+    OTEL_INSTRUMENTATION_GENAI_CAPTURE_CONTENT: SPAN_ONLY
+
+transcript:
+  session_rel_dir: session-state
+  format: jsonl
+  jmespath_queries:
+    model: "model || data.model"
+    tool_call_id: "data.toolCallId || data.id || toolCallId || id"
+    tool_name: "data.toolName || data.name || toolName || name"
+    tool_args: "data.arguments || data.toolArgs || arguments || toolArgs"
+    final_response: "data.content || response || result || content"
+
+reflect_no_tools:
+  supported: true
+  base_flags:
+    - --output-format
+    - json
+    - --available-tools
+    - ""
+    - --disable-builtin-mcps
+    - --disable-client-telemetry
+    - --no-auto-update
+    - --no-ask-user
+  required_probe_flags:
+    - --output-format
+    - --available-tools
+    - --disable-builtin-mcps
+    - --no-ask-user
+  read_only_requires_sandbox: false
+
+headless:
+  subcommand: []
+  prompt_flag: "-p"
+  prompt_position: flag
+  cwd_flag: "-C"
+  base_flags:
+    - --output-format
+    - json
+    - --allow-all
+    - --no-auto-update
+    - --trust-folder
+  tier2_common_flags:
+    - --disable-builtin-mcps
+    - --disable-client-telemetry
+  model_flag: --model
+  effort_flag: --reasoning-effort
+  max_calls_flag: --max-autopilot-continues
+  max_credits_flag: --max-ai-credits
+  plugin_dir_flag: --plugin-dir
+  mcp_config_flag:
+    - --additional-mcp-config
+    - "@{path}"
+  required_probe_flags:
+    - --output-format
+    - --allow-all
+    - --trust-folder
+    - --additional-mcp-config
+    - --no-custom-instructions
+
+version_overlays: []

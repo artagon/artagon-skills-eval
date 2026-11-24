@@ -1,0 +1,24 @@
+Shell selector adaptations by Artagon, 2026-11-06.
+
+MIT contributions:
+posidoni/shell-skill at 201dc7b8f9a2320440248441b39727f29b051a77
+Copyright (c) 2026 Mikhail Kuznetsov (@posidoni)
+sjinks/ai-skills at 85c2e4f8413aca1de595c24a7b4efcf991fcc203
+Copyright (c) 2026 Volodymyr Kolesnykov
+
+Apache-2.0 contribution (native Zsh selector only):
+ZaguanLabs/zsh-expert-skill at cf2731a05cd6c8961d13b0f3faf79c49559fad32
+Modified guidance, not an unchanged upstream package. Source provenance and
+the corrected 5.9.1 attribution appear in sources.md and zsh-profiles.md.
+The source license uses the standard template copyright placeholder.
+No separate upstream NOTICE file was established by the research inventory.
+
+MPL-2.0 contribution:
+rikdc/ai-skills at c7bb0845c818519570e92f4e176f4fa32cf5a7df
+Only review-evidence-mpl.md is an MPL-2.0 modified source adaptation.
+It identifies its modifications and is distributed in Source Code Form.
+Other selector files retain their individual stated licenses.
+
+Full upstream grants accompany this notice. Rendered cached license text
+and canonical Apache wording preserve the grant; these files are not
+represented as byte-exact upstream license snapshots.

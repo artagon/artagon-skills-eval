@@ -1,0 +1,9 @@
+{
+  "name": "artagon-skills-eval-ci-openspec",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CI dependency pin for OpenSpec CLI",
+  "dependencies": {
+    "@fission-ai/openspec": "2.1.0"
+  }
+}

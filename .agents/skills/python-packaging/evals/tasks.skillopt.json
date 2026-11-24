@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-packaging-01",
+      "project": "artagon-python",
+      "intent": "Structure a distributable Python library + CLI package (`acme-linter`) using modern PEP 517/621 `src/` layout so downstream typecheckers recognize its inline type annotations (`py.typed`), `acme-lint` installs as a console script, and versions derive automatically from git tags.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses the `src/acme_linter/` layout so tests import the installed package rather than accidental CWD directory shadowing\n- Includes the PEP 561 `src/acme_linter/py.typed` marker file and verifies it is included in both sdist and wheel\n- Declares the CLI entry point under `[project.scripts]` (`acme-lint = 'acme_linter.cli:main'`) and configures tag-driven dynamic versioning (`setuptools-scm` or `hatch-vcs`)\n- Builds both wheel and sdist with `python -m build` (or `uv build`) and validates metadata rendering with `twine check dist/*`",
+      "judge": {},
+      "tags": [
+        "python-packaging",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-packaging"
+    },
+    {
+      "id": "python-packaging-02",
+      "project": "artagon-python",
+      "intent": "Design a secure GitHub Actions release pipeline that publishes our Python package to TestPyPI on release candidates and to PyPI on tagged releases without storing long-lived PyPI API tokens if Trusted Publishing is available (and show the `PYPI_API_TOKEN` fallback).",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Separates `build` (`python -m build` + `twine check dist/*` + clean-venv wheel smoke install) from `publish` jobs\n- Recommends PyPI OIDC Trusted Publishing (`pypa/gh-action-pypi-publish` with `id-token: write`) first and documents `${{ secrets.PYPI_API_TOKEN }}` (`TWINE_USERNAME=__token__`) as fallback without hardcoding any token\n- Validates on TestPyPI (`repository-url: https://test.pypi.org/legacy/`) before production PyPI release\n- Inspects wheel contents (`zipfile` / `tar -tzf`) so `tests/` or `.env` files are never accidentally shipped inside the wheel",
+      "judge": {},
+      "tags": [
+        "python-packaging",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-packaging"
+    },
+    {
+      "id": "python-packaging-03",
+      "project": "artagon-python",
+      "intent": "Users who `pip install mypkg[postgres,s3]` get missing `.sql` template files at runtime (`FileNotFoundError` using `__file__`), and users who install bare `mypkg` get `ModuleNotFoundError: boto3` on import. Fix both packaging bugs.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Configures `[project.optional-dependencies]` for `postgres` and `s3` extras and guards optional `boto3` imports with an actionable `ImportError('Install mypkg[s3]...')` message\n- Includes `.sql` non-code assets in build-backend package-data configuration and verifies wheel contents\n- Replaces `__file__` path concatenation with stdlib `importlib.resources.files(...)`\n- Tests installing bare `mypkg` vs `mypkg[s3]` in isolated virtualenvs against the built `.whl`",
+      "judge": {},
+      "tags": [
+        "python-packaging",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-packaging"
+    }
+  ]
+}

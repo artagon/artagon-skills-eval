@@ -1,0 +1,746 @@
+{
+  "schema": "art-swarm/providers/v1",
+  "notes": [
+    "Seeds for scripts/lib/art_swarm/registry.py: aliases, catalogs, efforts, and quirk profiles per provider.",
+    "The effective NTM config ([models.claude], [models.codex], [models.grok], [models.context_limits]) overlays the aliases and limits.",
+    "catalog_mode: seed = this list is the catalog; codex_cache = $CODEX_HOME/models_cache.json; agy_models = `agy models` (live) or the state cache.",
+    "Aliases and ids were refreshed from the operator's NTM config, the Codex 0.170.0 model cache, `agy models` (1.5.13), Claude Code 2.1.329, and GitHub Copilot CLI 1.0.113 on 2026-11-20.",
+    "Prompt and empty-input regexes were checked on live Claude Code 2.1.311, codex-cli 0.164.0, Antigravity CLI 1.4.7, and Grok Build 1.0.70 panes; the Kimi 2.3.2 patterns are generic and unverified.",
+    "Grok efforts are a seed guess (the CLI help lists no values); Kimi takes no effort (its [thinking] config decides).",
+    "required_env holds variable names only, never values.",
+    "D4 native answer policy is disabled pending the orchestrator live acceptance; tool/key bypasses are never answer policies."
+  ],
+  "providers": {
+    "claude": {
+      "modes": ["default", "plan", "edits", "auto", "yolo"],
+      "keys": [
+        "cc"
+      ],
+      "cli": "claude",
+      "catalog_mode": "seed",
+      "ntm_models_table": "claude",
+      "ntm_default_key": "default_claude",
+      "models": [
+        "claude-opus-5-5",
+        "claude-fable-5-2",
+        "claude-sonnet-5-5",
+        "claude-haiku-5-5",
+        "claude-fable-5-1",
+        "claude-sonnet-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "aliases": {
+        "opus": "claude-opus-5-5",
+        "best": "claude-opus-5-5",
+        "fable": "claude-fable-5-2",
+        "sonnet": "claude-sonnet-5-5",
+        "haiku": "claude-haiku-5-5",
+        "opus1m": "claude-opus-5-5[1m]",
+        "architect": "claude-opus-5-5",
+        "fast": "claude-sonnet-5-5"
+      },
+      "efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": "xhigh",
+      "context_suffixes": [
+        "1m"
+      ],
+      "context_limits": {
+        "claude-opus-5-5": 1000000,
+        "claude-fable-5-2": 1000000,
+        "claude-sonnet-5-5": 1000000,
+        "claude-haiku-5-5": 1000000,
+        "claude-fable-5-1": 1000000,
+        "claude-sonnet-5": 1000000,
+        "claude-haiku-4-5-20251001": 200000,
+        "claude-opus-5-5[1m]": 1000000
+      },
+      "key_rules": {
+        "cc": {
+          "takes_model": true,
+          "takes_effort": true
+        }
+      },
+      "profile": {
+        "idle_detection": "reliable",
+        "boot_check": "native",
+        "prompt_regex": "^❯",
+        "empty_input_regex": "^❯\\s*$",
+        "dialog_patterns": [
+          {
+            "classification": "claude_trust_prompt",
+            "kind": "trust_folder",
+            "regex": "Is this a project you created or one you trust",
+            "options_regex": "^[ \\t]*(?P<selected>[❯›>])?[ \\t]*(?P<label>No, exit|Yes, I trust this folder)[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n(?:[ \\t]*\\n)*)?(?P<scope_indent>[ \\t]*)(?P<scope>/[^\\r\\n]*(?:\\n(?=[ \\t])(?P=scope_indent)(?![ \\t]*(?:$|Accessing workspace:|Quick safety check:|Is this a project))[^\\r\\n]+)*)(?=\\n[ \\t]*(?:$|Accessing workspace:|Quick safety check:|Is this a project)|\\Z)",
+            "start_regex": "^[ \\t]*Accessing workspace:"
+          },
+          {
+            "classification": "claude_mcp_server_approval",
+            "regex": "New MCP server|Use this MCP server",
+            "kind": "mcp_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "New MCP server|Use this MCP server"
+          },
+          {
+            "classification": "claude_tool_permission",
+            "regex": "^\\s*Do you want to (proceed|make this edit|allow|run)\\b",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "^\\s*Do you want to (proceed|make this edit|allow|run)\\b"
+          },
+          {
+            "classification": "approval_unclassified",
+            "kind": "unclassified",
+            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
+            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
+          }
+        ],
+        "transcript_root": "~/.claude/projects",
+        "transcript_glob": "*/*.jsonl",
+        "transcript_scope": "path",
+        "transcript_pre_turn_types": [
+          "mode",
+          "permission-mode",
+          "atis-latch",
+          "file-history-snapshot"
+        ],
+        "report_json_strict": true,
+        "required_env": [
+          "ANTHROPIC_API_KEY"
+        ],
+        "approval_mode": "default",
+        "takes_model": true,
+        "takes_effort": true,
+        "send_quirks": [],
+        "answers": [
+          {
+            "backend": "ntm",
+            "classification": "trust_prompt",
+            "kind": "trust_folder",
+            "enabled": false
+          }
+        ],
+        "input_line_regex": "^[ \\t]*[❯>][ \\t]*[^\\r\\n]*$"
+      }
+    },
+    "codex": {
+      "modes": ["default", "plan", "edits", "auto", "yolo"],
+      "mode_fidelity": {"plan": "narrower"},
+      "keys": [
+        "cod"
+      ],
+      "cli": "codex",
+      "catalog_mode": "codex_cache",
+      "ntm_models_table": "codex",
+      "ntm_default_key": "default_codex",
+      "models": [
+        "gpt-6.2-sol",
+        "gpt-6.2-astra",
+        "gpt-6.1-terra",
+        "gpt-6.1-sol",
+        "gpt-6-astra",
+        "gpt-6-sol",
+        "gpt-6-luna",
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-luna",
+        "gpt-reserve",
+        "codex-auto-review"
+      ],
+      "aliases": {
+        "sol": "gpt-6.2-sol",
+        "sol62": "gpt-6.2-sol",
+        "6.2-sol": "gpt-6.2-sol",
+        "astra": "gpt-6.2-astra",
+        "astra62": "gpt-6.2-astra",
+        "6.2-astra": "gpt-6.2-astra",
+        "codex": "gpt-6.2-astra",
+        "gpt5": "gpt-6.2-astra",
+        "gpt6": "gpt-6.2-astra",
+        "sol61": "gpt-6.1-sol",
+        "6.1-sol": "gpt-6.1-sol",
+        "terra": "gpt-6.1-terra",
+        "6.1-terra": "gpt-6.1-terra",
+        "6-astra": "gpt-6-astra",
+        "6-sol": "gpt-6-sol",
+        "luna": "gpt-6-luna",
+        "6-luna": "gpt-6-luna",
+        "5.6-terra": "gpt-5.6-terra",
+        "sol56": "gpt-5.6-sol",
+        "5.6-sol": "gpt-5.6-sol",
+        "luna56": "gpt-5.6-luna",
+        "5.6-luna": "gpt-5.6-luna",
+        "autoreview": "codex-auto-review",
+        "reserve": "gpt-reserve"
+      },
+      "efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "default_effort": "xhigh",
+      "context_suffixes": [],
+      "context_limits": {
+        "gpt-6.2-sol": 500000,
+        "gpt-6.2-astra": 272000,
+        "gpt-6.1-sol": 500000,
+        "gpt-6.1-terra": 500000,
+        "gpt-6-astra": 272000,
+        "gpt-6-sol": 272000,
+        "gpt-6-luna": 272000,
+        "gpt-5.6-sol": 272000,
+        "gpt-5.6-terra": 272000,
+        "gpt-5.6-luna": 272000,
+        "gpt-reserve": 272000,
+        "codex-auto-review": 272000
+      },
+      "key_rules": {
+        "cod": {
+          "takes_model": true,
+          "takes_effort": true
+        }
+      },
+      "profile": {
+        "idle_detection": "reliable",
+        "boot_check": "native",
+        "prompt_regex": "^›",
+        "empty_input_regex": "^›\\s*(Ask Codex\\b.*)?$",
+        "dialog_patterns": [
+          {
+            "classification": "codex_folder_trust",
+            "kind": "trust_folder",
+            "regex": "Folder access|Trust this folder\\?",
+            "options_regex": "^[ \\t]*(?P<selected>[❯›>])?[ \\t]*(?P<number>[0-9]+)[.)][ \\t]+(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "Folder access|Trust this folder\\?",
+            "scope_regex": "(?m)^[ \\t]*Folder access:?[ \\t]*\\n(?:[ \\t]*\\n)*(?P<scope_indent>[ \\t]*)(?P<scope>/[^\\r\\n]*(?:\\n(?P=scope_indent)(?![ \\t]*(?:$|Folder access\\b|Trust this folder\\?))[^\\r\\n]+)*)(?=\\n[ \\t]*(?:$|Folder access\\b|Trust this folder\\?)|\\Z)"
+          },
+          {
+            "classification": "codex_hooks_review",
+            "regex": "(?i)hooks need review|hooks are new or changed|hooks\\.json.*(changed|review)",
+            "kind": "hooks_review",
+            "options_regex": "^[ \\t]*(?P<selected>[❯›>])?[ \\t]*(?P<number>[0-9]+)[.)][ \\t]+(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?i)hooks need review|hooks are new or changed|hooks\\.json.*(changed|review)"
+          },
+          {
+            "classification": "codex_command_approval",
+            "regex": "^\\s*(Allow command\\?|Would you like to run|Do you want to approve)",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?P<selected>[❯›>])?[ \\t]*(?P<number>[0-9]+)[.)][ \\t]+(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "^\\s*(Allow command\\?|Would you like to run|Do you want to approve)"
+          },
+          {
+            "classification": "approval_unclassified",
+            "kind": "unclassified",
+            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
+            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
+          }
+        ],
+        "transcript_root": "~/.codex/sessions",
+        "transcript_glob": "*/*/*/rollout-*.jsonl",
+        "transcript_scope": "first_record",
+        "report_json_strict": true,
+        "required_env": [
+          "OPENAI_API_KEY",
+          "CODEX_HOME"
+        ],
+        "approval_mode": "on-request",
+        "takes_model": true,
+        "takes_effort": true,
+        "send_quirks": [],
+        "answers": [
+          {
+            "backend": "ntm",
+            "classification": "trust_prompt",
+            "kind": "trust_folder",
+            "enabled": false
+          }
+        ],
+        "input_line_regex": "^[ \\t]*[›>][ \\t]*[^\\r\\n]*$"
+      }
+    },
+    "agy": {
+      "modes": ["default", "plan", "edits", "auto", "yolo"],
+      "keys": [
+        "agy",
+        "agyx"
+      ],
+      "cli": "agy",
+      "catalog_mode": "agy_models",
+      "ntm_models_table": null,
+      "ntm_default_key": null,
+      "models": [
+        "gemini-4-neon-high",
+        "gemini-4-neon-xhigh",
+        "gemini-4-neon-medium",
+        "gemini-4-neon-low",
+        "gemini-4-carbon-medium",
+        "gemini-4-carbon-high",
+        "gemini-4-carbon-low",
+        "gemini-4-argon-medium",
+        "gemini-4-argon-high",
+        "gemini-4-argon-low",
+        "gemini-4-hydrogen-high",
+        "gemini-4-hydrogen-xhigh",
+        "gemini-4-hydrogen-medium",
+        "gemini-4-hydrogen-low",
+        "gemini-pro-orchestrator-neon",
+        "gemini-pro-orchestrator",
+        "gemini-pro-orchestrator-argon",
+        "gemini-3.8-flash-high",
+        "gemini-3.8-flash-medium",
+        "gemini-3.8-flash-low",
+        "claude-opus-5-5-low",
+        "claude-opus-5-5-medium",
+        "claude-opus-5-5-high",
+        "claude-sonnet-5-5-low",
+        "claude-sonnet-5-5-medium",
+        "claude-sonnet-5-5-high",
+        "gpt-oss-120b-medium"
+      ],
+      "aliases": {
+        "neon": "gemini-4-neon-high",
+        "neon-xhigh": "gemini-4-neon-xhigh",
+        "carbon": "gemini-4-carbon-high",
+        "argon": "gemini-4-argon-high",
+        "hydrogen": "gemini-4-hydrogen-high",
+        "hydrogen-xhigh": "gemini-4-hydrogen-xhigh",
+        "flash": "gemini-3.8-flash-high"
+      },
+      "efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ],
+      "default_effort": null,
+      "context_suffixes": [],
+      "context_limits": {},
+      "key_rules": {
+        "agy": {
+          "takes_model": false,
+          "takes_effort": false,
+          "pinned_model": "gemini-4-argon-high",
+          "model_hint": "the agy key is pinned by NTM to Gemini 4 Argon (High); use agyx=N:MODEL for a selectable Antigravity model",
+          "effort_hint": "the agy key is pinned by NTM to Gemini 4 Argon (High) and takes no @EFFORT; use agyx=N:MODEL@EFFORT"
+        },
+        "agyx": {
+          "takes_model": true,
+          "takes_effort": true,
+          "effort_in_model": true,
+          "default_model": "gemini-4-neon-high",
+          "model_hint": "agyx ids come from `agy models`, for example gemini-4-neon-high or gemini-4-neon-xhigh"
+        }
+      },
+      "profile": {
+        "idle_detection": "unreliable",
+        "boot_check": "prompt_regex",
+        "prompt_regex": "^[ \\t]*>[ \\t]*$",
+        "empty_input_regex": "^[ \\t]*>[ \\t]*$",
+        "dialog_patterns": [
+          {
+            "classification": "agy_trust_prompt",
+            "kind": "trust_folder",
+            "regex": "Do you trust the contents of this project",
+            "options_regex": "^[ \\t]*(?P<selected>[❯›>])?[ \\t]*(?P<label>No, exit|Yes, I trust this folder)[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "^[ \\t]*Accessing workspace:"
+          },
+          {
+            "classification": "approval_unclassified",
+            "kind": "unclassified",
+            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
+            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
+          }
+        ],
+        "transcript_root": "~/.gemini/antigravity-cli/brain",
+        "transcript_glob": "*/.system_generated/logs/transcript_full.jsonl",
+        "transcript_scope": "none",
+        "report_json_strict": false,
+        "required_env": [
+          "GEMINI_API_KEY",
+          "GOOGLE_API_KEY"
+        ],
+        "approval_mode": "ask",
+        "takes_model": true,
+        "takes_effort": false,
+        "send_quirks": [
+          "enter_after_paste"
+        ],
+        "answers": [
+          {
+            "backend": "ntm",
+            "classification": "trust_prompt",
+            "kind": "trust_folder",
+            "enabled": false
+          }
+        ],
+        "input_line_regex": "^[ \\t]*>[ \\t]*[^\\r\\n]*$"
+      }
+    },
+    "grok": {
+      "modes": ["default", "plan", "edits", "auto", "yolo"],
+      "keys": [
+        "grok"
+      ],
+      "cli": "grok",
+      "catalog_mode": "seed",
+      "ntm_models_table": "grok",
+      "ntm_default_key": "default_grok",
+      "models": [
+        "grok-4.7",
+        "grok-4.7-build-fast",
+        "grok-4.6",
+        "grok-4.5"
+      ],
+      "aliases": {
+        "grok47": "grok-4.7",
+        "fast": "grok-4.7-build-fast",
+        "grok46": "grok-4.6",
+        "grok45": "grok-4.5"
+      },
+      "efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": null,
+      "context_suffixes": [],
+      "context_limits": {
+        "grok-4.7": 500000,
+        "grok-4.7-build-fast": 500000,
+        "grok-4.6": 500000
+      },
+      "key_rules": {
+        "grok": {
+          "takes_model": true,
+          "takes_effort": true
+        }
+      },
+      "profile": {
+        "idle_detection": "reliable",
+        "boot_check": "native",
+        "prompt_regex": "│\\s*❯",
+        "empty_input_regex": "^\\s*│\\s*❯\\s*│\\s*$",
+        "dialog_patterns": [
+          {
+            "classification": "grok_workspace_trust",
+            "kind": "trust_folder",
+            "regex": "(?i)Trust this (?:folder|workspace)\\?|Do you trust (?:this|the) (?:folder|workspace|project)",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?i)Trust this (?:folder|workspace)\\?|Do you trust (?:this|the) (?:folder|workspace|project)"
+          },
+          {
+            "classification": "grok_command_approval",
+            "regex": "Allow.*\\bcommand\\b",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "Allow.*\\bcommand\\b"
+          },
+          {
+            "classification": "grok_write_approval",
+            "regex": "Allow.*\\b(write|edit)\\b",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "Allow.*\\b(write|edit)\\b"
+          },
+          {
+            "classification": "grok_mcp_approval",
+            "regex": "Allow.*\\b(MCP|tool)\\b",
+            "kind": "mcp_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "Allow.*\\b(MCP|tool)\\b"
+          },
+          {
+            "classification": "grok_domain_approval",
+            "regex": "Allow.*\\b(fetch|domain)\\b",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "Allow.*\\b(fetch|domain)\\b"
+          },
+          {
+            "classification": "grok_option_dialog",
+            "regex": "\\(●\\)|\\(○\\)",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "\\(●\\)|\\(○\\)"
+          },
+          {
+            "classification": "approval_unclassified",
+            "kind": "unclassified",
+            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
+            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
+          }
+        ],
+        "transcript_root": "~/.grok/sessions",
+        "transcript_glob": "*/*/chat_history.jsonl",
+        "transcript_scope": "path",
+        "report_json_strict": true,
+        "required_env": [
+          "XAI_API_KEY",
+          "GROK_API_KEY"
+        ],
+        "approval_mode": "default",
+        "takes_model": true,
+        "takes_effort": true,
+        "send_quirks": [],
+        "answers": [
+          {
+            "backend": "ntm",
+            "classification": "trust_prompt",
+            "kind": "trust_folder",
+            "enabled": false
+          }
+        ],
+        "input_line_regex": "^[ \\t]*(?:│[ \\t]*)?❯[^\\r\\n]*$"
+      }
+    },
+    "kimi": {
+      "modes": ["default", "plan", "auto", "yolo"],
+      "keys": [
+        "kimi"
+      ],
+      "cli": "kimi",
+      "catalog_mode": "seed",
+      "ntm_models_table": null,
+      "ntm_default_key": null,
+      "models": [
+        "kimi-code/k3.1-pro",
+        "kimi-code/k3.1-pro-highspeed",
+        "kimi-code/k3",
+        "kimi-code/k3-256k",
+        "kimi-code/kimi-for-coding",
+        "kimi-code/kimi-for-coding-highspeed"
+      ],
+      "aliases": {
+        "k3.1-pro": "kimi-code/k3.1-pro",
+        "k3.1-pro-highspeed": "kimi-code/k3.1-pro-highspeed",
+        "k3": "kimi-code/k3",
+        "k3-256k": "kimi-code/k3-256k",
+        "kimi-for-coding": "kimi-code/kimi-for-coding",
+        "kimi-for-coding-highspeed": "kimi-code/kimi-for-coding-highspeed"
+      },
+      "efforts": [],
+      "default_effort": null,
+      "context_suffixes": [],
+      "context_limits": {
+        "kimi-code/k3.1-pro": 1048576,
+        "kimi-code/k3.1-pro-highspeed": 1048576,
+        "kimi-code/k3": 1048576,
+        "kimi-code/k3-256k": 262144,
+        "kimi-code/kimi-for-coding": 1048576,
+        "kimi-code/kimi-for-coding-highspeed": 262144
+      },
+      "key_rules": {
+        "kimi": {
+          "takes_model": true,
+          "takes_effort": false,
+          "model_hint": "kimi models: kimi-code/k3.1-pro (NTM default), kimi-code/k3.1-pro-highspeed, kimi-code/k3, kimi-code/k3-256k, kimi-code/kimi-for-coding, kimi-code/kimi-for-coding-highspeed",
+          "effort_hint": "kimi takes no @EFFORT; its effort comes from [thinking] in ~/.kimi-code/config.toml"
+        }
+      },
+      "profile": {
+        "idle_detection": "unreliable",
+        "boot_check": "prompt_regex",
+        "prompt_regex": "^\\s*[❯>›]",
+        "empty_input_regex": "^\\s*[❯>›]\\s*$",
+        "dialog_patterns": [
+          {
+            "classification": "kimi_workspace_trust",
+            "kind": "trust_folder",
+            "regex": "(?i)Trust this (?:folder|workspace)\\?|Workspace trust",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?i)Trust this (?:folder|workspace)\\?|Workspace trust"
+          },
+          {
+            "classification": "kimi_command_approval",
+            "regex": "Run this command\\?",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "Run this command\\?"
+          },
+          {
+            "classification": "approval_unclassified",
+            "kind": "unclassified",
+            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
+            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
+          }
+        ],
+        "transcript_root": "~/.kimi-code/sessions",
+        "transcript_glob": "wd_*/session_*/agents/main/wire.jsonl",
+        "transcript_scope": "path",
+        "report_json_strict": true,
+        "required_env": [
+          "KIMI_API_KEY",
+          "MOONSHOT_API_KEY",
+          "NODE_USE_SYSTEM_CA"
+        ],
+        "approval_mode": "manual",
+        "takes_model": true,
+        "takes_effort": false,
+        "send_quirks": [],
+        "answers": [
+          {
+            "backend": "ntm",
+            "classification": "trust_prompt",
+            "kind": "trust_folder",
+            "enabled": false
+          }
+        ],
+        "input_line_regex": "^[ \\t]*[❯›>][ \\t]*[^\\r\\n]*$"
+      }
+    },
+    "copilot": {
+      "modes": ["default", "plan", "edits", "auto", "yolo"],
+      "keys": [
+        "cop"
+      ],
+      "cli": "copilot",
+      "catalog_mode": "seed",
+      "ntm_models_table": null,
+      "ntm_default_key": null,
+      "models": [
+        "claude-sonnet-5.5",
+        "claude-opus-5.5",
+        "claude-haiku-5.5",
+        "claude-sonnet-5",
+        "claude-haiku-4.5",
+        "gpt-6.1-sol",
+        "gpt-6-astra",
+        "gpt-6-sol",
+        "gpt-6-luna",
+        "gpt-5.6-sol",
+        "gpt-5.6-luna",
+        "gpt-5.3-codex",
+        "mai-code-1.1-flash",
+        "gemini-3.8-flash",
+        "grok-4.7",
+        "gpt-6.2-astra",
+        "gpt-6.2-sol",
+        "claude-fable-5.2",
+        "claude-fable-5.1",
+        "claude-opus-4.8",
+        "gpt-6.1-terra",
+        "gemini-4-carbon",
+        "gemini-4-argon",
+        "kimi-k3"
+      ],
+      "aliases": {
+        "opus": "claude-opus-5.5",
+        "sonnet": "claude-sonnet-5.5",
+        "haiku": "claude-haiku-5.5",
+        "fable": "claude-fable-5.2",
+        "astra": "gpt-6-astra",
+        "astra62": "gpt-6.2-astra",
+        "sol": "gpt-6.1-sol",
+        "sol62": "gpt-6.2-sol",
+        "luna": "gpt-6-luna",
+        "flash": "gemini-3.8-flash",
+        "grok": "grok-4.7"
+      },
+      "efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": null,
+      "context_suffixes": [],
+      "context_limits": {
+        "claude-sonnet-5.5": 1000000,
+        "claude-opus-5.5": 1000000,
+        "claude-haiku-5.5": 1000000,
+        "claude-fable-5.2": 1000000,
+        "claude-sonnet-5": 1000000,
+        "claude-haiku-4.5": 136000,
+        "gpt-5.3-codex": 400000,
+        "mai-code-1.1-flash": 128000,
+        "gemini-3.8-flash": 1048576,
+        "grok-4.7": 500000
+      },
+      "key_rules": {
+        "cop": {
+          "takes_model": true,
+          "takes_effort": true
+        }
+      },
+      "profile": {
+        "idle_detection": "unreliable",
+        "boot_check": "prompt_regex",
+        "prompt_regex": "^\\s*[❯>›]",
+        "empty_input_regex": "^\\s*[❯>›]\\s*$",
+        "dialog_patterns": [
+          {
+            "classification": "copilot_folder_trust",
+            "kind": "trust_folder",
+            "regex": "(?i)Do you trust the files in this folder\\?|Confirm folder trust",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "scope_regex": "^[ \\t]*(?:Folder|Accessing workspace):[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?i)Do you trust the files in this folder\\?|Confirm folder trust"
+          },
+          {
+            "classification": "copilot_tool_permission",
+            "regex": "(?i)Allow Copilot to\\b|Approve tool execution\\?",
+            "kind": "tool_approval",
+            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
+            "start_regex": "(?i)Allow Copilot to\\b|Approve tool execution\\?"
+          },
+          {
+            "classification": "approval_unclassified",
+            "kind": "unclassified",
+            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
+            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
+            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
+            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
+          }
+        ],
+        "transcript_root": "~/.copilot/session-state",
+        "transcript_glob": "*/events.jsonl",
+        "transcript_scope": "first_record",
+        "report_json_strict": true,
+        "required_env": [
+          "COPILOT_GITHUB_TOKEN",
+          "GH_TOKEN",
+          "GITHUB_TOKEN",
+          "COPILOT_HOME"
+        ],
+        "approval_mode": "default",
+        "takes_model": true,
+        "takes_effort": true,
+        "send_quirks": [],
+        "answers": [
+          {
+            "backend": "ntm",
+            "classification": "trust_prompt",
+            "kind": "trust_folder",
+            "enabled": false
+          }
+        ],
+        "input_line_regex": "^[ \\t]*[❯›>][ \\t]*[^\\r\\n]*$"
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "async-python-patterns-01",
+      "project": "artagon-python",
+      "intent": "Refactor an `async def` fan-out fetcher that currently calls `requests.get(url)` and `time.sleep(1)` inside a loop over 50 URLs, so at most 10 requests run concurrently, each request times out after 5 seconds, and individual URL failures are captured without aborting the batch.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Eliminates event-loop blocking (`requests.get` and `time.sleep`) in favor of `httpx.AsyncClient` / `aiohttp` and `asyncio.sleep`\n- Enforces the 10-request concurrency cap using `async with asyncio.Semaphore(10):`\n- Enforces a 5-second per-request timeout via `asyncio.wait_for(..., timeout=5.0)` or client timeout config\n- Collects partial successes and exceptions via `asyncio.gather(*tasks, return_exceptions=True)` while ensuring `asyncio.CancelledError` is never swallowed",
+      "judge": {},
+      "tags": [
+        "async-python-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "async-python-patterns"
+    },
+    {
+      "id": "async-python-patterns-02",
+      "project": "artagon-python",
+      "intent": "Implement an async producer-consumer worker pool in Python using `asyncio.Queue` with backpressure (`maxsize=100`), 4 consumer workers, and graceful shutdown even if a producer raises mid-stream.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Creates `asyncio.Queue(maxsize=100)` so `await queue.put(item)` applies backpressure when consumers lag\n- Ensures each consumer calls `queue.task_done()` inside a `try/finally` block so `queue.join()` never deadlocks on item errors\n- Coordinates clean drainage with `await queue.join()` (or sentinel shutdown) and cancels/awaits consumer tasks in `finally`\n- Propagates `asyncio.CancelledError` cleanly during worker cancellation",
+      "judge": {},
+      "tags": [
+        "async-python-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "async-python-patterns"
+    },
+    {
+      "id": "async-python-patterns-03",
+      "project": "artagon-python",
+      "intent": "We have a CPU-heavy synchronous PDF text parser that blocks our `asyncio` event loop for 400ms per document, plus an async connection wrapper that needs deterministic `__aenter__`/`__aexit__` and `AsyncIterator` streaming.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Offloads blocking synchronous work from the event loop using `asyncio.to_thread(...)` or `loop.run_in_executor(...)` (noting `ProcessPoolExecutor` for GIL-heavy CPU work)\n- Implements `__aenter__` and `__aexit__(self, exc_type, exc_val, exc_tb)` with unconditional async resource cleanup\n- Defines an async generator (`yield chunk`) annotated with `collections.abc.AsyncIterator`\n- Demonstrates consuming the stream with `async for chunk in ...:` inside an `async with` block",
+      "judge": {},
+      "tags": [
+        "async-python-patterns",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "async-python-patterns"
+    }
+  ]
+}

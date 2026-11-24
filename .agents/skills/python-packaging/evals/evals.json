@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-packaging",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Structure a distributable Python library + CLI package (`acme-linter`) using modern PEP 517/621 `src/` layout so downstream typecheckers recognize its inline type annotations (`py.typed`), `acme-lint` installs as a console script, and versions derive automatically from git tags.",
+      "expected_output": "Creates `src/acme_linter/` containing `__init__.py`, `cli.py`, and an empty PEP 561 `py.typed` marker file, configures `pyproject.toml` with `[build-system]` (`hatchling` or `setuptools>=68` + `setuptools-scm`), `[project]` metadata + `[project.scripts] acme-lint = 'acme_linter.cli:main'`, dynamic git-tag versioning, and verifies artifacts via `python -m build` + `twine check dist/*`.",
+      "files": [],
+      "expectations": [
+        "Uses the `src/acme_linter/` layout so tests import the installed package rather than accidental CWD directory shadowing",
+        "Includes the PEP 561 `src/acme_linter/py.typed` marker file and verifies it is included in both sdist and wheel",
+        "Declares the CLI entry point under `[project.scripts]` (`acme-lint = 'acme_linter.cli:main'`) and configures tag-driven dynamic versioning (`setuptools-scm` or `hatch-vcs`)",
+        "Builds both wheel and sdist with `python -m build` (or `uv build`) and validates metadata rendering with `twine check dist/*`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Design a secure GitHub Actions release pipeline that publishes our Python package to TestPyPI on release candidates and to PyPI on tagged releases without storing long-lived PyPI API tokens if Trusted Publishing is available (and show the `PYPI_API_TOKEN` fallback).",
+      "expected_output": "A two-job GitHub Actions workflow (`build` uploading `dist/` artifacts after `twine check dist/*`, followed by environment-gated `publish` using `pypa/gh-action-pypi-publish` with `permissions: id-token: write` OIDC Trusted Publishing, plus the `__token__` + `${{ secrets.PYPI_API_TOKEN }}` environment-variable fallback when OIDC is unavailable) and smoke-installing the wheel in a clean venv before publishing.",
+      "files": [],
+      "expectations": [
+        "Separates `build` (`python -m build` + `twine check dist/*` + clean-venv wheel smoke install) from `publish` jobs",
+        "Recommends PyPI OIDC Trusted Publishing (`pypa/gh-action-pypi-publish` with `id-token: write`) first and documents `${{ secrets.PYPI_API_TOKEN }}` (`TWINE_USERNAME=__token__`) as fallback without hardcoding any token",
+        "Validates on TestPyPI (`repository-url: https://test.pypi.org/legacy/`) before production PyPI release",
+        "Inspects wheel contents (`zipfile` / `tar -tzf`) so `tests/` or `.env` files are never accidentally shipped inside the wheel"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Users who `pip install mypkg[postgres,s3]` get missing `.sql` template files at runtime (`FileNotFoundError` using `__file__`), and users who install bare `mypkg` get `ModuleNotFoundError: boto3` on import. Fix both packaging bugs.",
+      "expected_output": "Declares optional feature extras under `[project.optional-dependencies]` (`postgres = [...]`, `s3 = ['boto3>=...']`, `all = [...]`) with lazy/guarded imports yielding a clear `'Install mypkg[s3]'` message when bare `mypkg` is installed, includes `.sql` package data in wheel/sdist config, and loads templates via `importlib.resources.files('mypkg.templates').joinpath('query.sql').read_text('utf-8')` instead of fragile `__file__` paths.",
+      "files": [],
+      "expectations": [
+        "Configures `[project.optional-dependencies]` for `postgres` and `s3` extras and guards optional `boto3` imports with an actionable `ImportError('Install mypkg[s3]...')` message",
+        "Includes `.sql` non-code assets in build-backend package-data configuration and verifies wheel contents",
+        "Replaces `__file__` path concatenation with stdlib `importlib.resources.files(...)`",
+        "Tests installing bare `mypkg` vs `mypkg[s3]` in isolated virtualenvs against the built `.whl`"
+      ]
+    }
+  ]
+}

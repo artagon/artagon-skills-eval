@@ -1,0 +1,39 @@
+{
+  "skill_name": "shell-defensive",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Fix this Bash job: set -e; mycall(); rc=$?; echo done. Preserve fail-closed behavior; mycall has several commands.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Removes the malformed mycall() invocation syntax.",
+        "Does not rely on unreachable rc=$? after an unguarded failure under errexit.",
+        "Uses explicit status returns for critical steps inside functions called in conditional contexts.",
+        "Does not disable errexit globally or continue after the critical failure."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Harden a sourced POSIX.1-2017 library and an executed native Zsh helper that clean up temporary files.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Declares distinct dialect, role and option-state contracts.",
+        "Does not apply Bash ERR/inherit_errexit or EXIT syntax blindly to the POSIX library.",
+        "Tests or requests tests of cleanup status, signals and caller-state preservation without claiming they ran."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our Bash 3.2 job traverses a final symlink and batches filenames with xargs on GNU and BSD hosts.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "States that cd to a physical parent does not resolve the final symlink.",
+        "Uses argv-safe traversal and defines empty-input behavior.",
+        "Does not assume GNU xargs -r or POSIX-2024 utilities on a 2017 deployment."
+      ]
+    }
+  ]
+}

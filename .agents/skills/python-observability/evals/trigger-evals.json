@@ -1,0 +1,18 @@
+[
+  {"query": "set up structlog JSON logging with X-Correlation-ID ContextVar middleware and outbound httpx header propagation", "should_trigger": true},
+  {"query": "fix high-cardinality user_id labels in prometheus_client and instrument the Four Golden Signals in Python", "should_trigger": true},
+  {"query": "configure OpenTelemetry TracerProvider with BatchSpanProcessor and inject trace_id into structlog logs", "should_trigger": true},
+  {"query": "audit semantic log levels in our Python API so invalid user passwords log at INFO instead of paging ERROR", "should_trigger": true},
+  {"query": "write a reusable timed_operation context manager in Python that records Prometheus Histogram latency and errors", "should_trigger": true},
+  {"query": "correlate distributed OpenTelemetry spans across FastAPI, httpx, and Celery workers in Python", "should_trigger": true},
+  {"query": "configure Prometheus Histogram buckets and saturation Gauges for our Python database connection pool", "should_trigger": true},
+  {"query": "scrub Authorization headers and PII inside a structlog processor pipeline in Python", "should_trigger": true},
+  {"query": "enable mlflow.dspy.autolog and inspect GLOBAL_HISTORY in a DSPy program", "should_trigger": false},
+  {"query": "profile CPU hotspots locally with cProfile, line_profiler, and py-spy flamegraphs", "should_trigger": false},
+  {"query": "add tenacity exponential backoff retries on transient HTTP 503 responses", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml", "should_trigger": false},
+  {"query": "monitor live NTM swarm panes using ntm-swarm monitor", "should_trigger": false},
+  {"query": "check CAO session and terminal statuses via cao-ops MCP", "should_trigger": false},
+  {"query": "build and upload a Python wheel to PyPI with twine", "should_trigger": false},
+  {"query": "review PostgreSQL GIN indexes and composite index column order", "should_trigger": false}
+]

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "artagon-eval-skills"
+version = "0.2.0"
+description = "Official agentskills.io skills-ref adapter, skill-eval v2 contracts, static linter, and skill-eval / skill-lint CLIs."
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Artagon" }]
+dependencies = [
+  "artagon-eval-core>=0.2.0,<0.3",
+  "skills-ref>=0.1.1,<0.2",
+  "strictyaml>=1.7.3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/artagon_eval_skills"]

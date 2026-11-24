@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "fastapi-code-review-01",
+      "project": "artagon-python",
+      "intent": "Review `app/api/routes/users.py` where line 18 defines `@router.post('/users')` (`async def create_user(payload: dict, db = Depends(get_db)):`), calls `requests.post(AUDIT_URL, json=payload)` on line 24, and returns a raw SQLAlchemy `User` ORM object on line 27.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Applies FastAPI verification gates (`file:line` route decorator check, full handler body inspection, and dependency/signature check) before reporting findings\n- Flags missing `response_model=...` and `status_code=status.HTTP_201_CREATED` on `@router.post('/users')` at `app/api/routes/users.py:18`\n- Flags synchronous `requests.post` blocking the event loop inside `async def` at `app/api/routes/users.py:24` and recommends `httpx.AsyncClient` or `BackgroundTasks`/async client\n- Flags untyped `payload: dict` and returning a raw SQLAlchemy ORM instance without a Pydantic `response_model` DTO (`ConfigDict(from_attributes=True)`)",
+      "judge": {},
+      "tags": [
+        "fastapi-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "fastapi-code-review"
+    },
+    {
+      "id": "fastapi-code-review-02",
+      "project": "artagon-python",
+      "intent": "During a FastAPI review of `app/api/routes/health.py`, a junior reviewer flagged three 'bugs': (1) `async def healthcheck(): return {'status': 'ok'}` has no `await` inside, (2) `@router.get('/me', response_model=UserOut)` returns a `dict` instead of `UserOut(...)`, and (3) `db: AsyncSession = Depends(get_session)` is 'unused' in an auth-protected stub route. Evaluate each claim against FastAPI review gates.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Dismisses the false positive on `async def` without `await` as a valid FastAPI route idiom when no blocking sync I/O is called\n- Dismisses the false positive on returning a `dict` when `response_model=UserOut` is explicitly set on the route decorator\n- Checks `Depends(...)` side effects and router/app-level dependencies before claiming missing auth or unused dependency parameters\n- Refuses to emit speculative findings that lack `[FILE:LINE]` evidence after reading the full route and dependency definitions",
+      "judge": {},
+      "tags": [
+        "fastapi-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "fastapi-code-review"
+    },
+    {
+      "id": "fastapi-code-review-03",
+      "project": "artagon-python",
+      "intent": "Audit a FastAPI dependency `def get_http_client(): client = httpx.AsyncClient(); return client` injected via `Depends(get_http_client)` across 12 routes, plus an exception handler returning `500` stack traces to clients.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Identifies that returning `httpx.AsyncClient()` without `yield` teardown or `lifespan` management leaks connections and skips connection pooling\n- Shows proper FastAPI `lifespan` `@asynccontextmanager` or `async def` `yield` dependency cleanup (`async with httpx.AsyncClient() as client: yield client`)\n- Flags returning raw internal stack traces in 500 responses and replaces them with safe `HTTPException` / `@app.exception_handler` payloads\n- Anchors findings to concrete route/dependency locations and FastAPI lifecycle guarantees",
+      "judge": {},
+      "tags": [
+        "fastapi-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "fastapi-code-review"
+    }
+  ]
+}

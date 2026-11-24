@@ -1,0 +1,41 @@
+{
+  "skill_name": "py-quality-setup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Bootstrap the canonical Python 3.13 quality toolchain (`ruff`, `mypy`, and `basedpyright`) in `pyproject.toml` for a single-package repository, including dev dependency groups and Claude Code `.claude/settings.local.json` permissions.",
+      "expected_output": "Configures `[dependency-groups] dev` with `ruff`, `mypy`, and `basedpyright`, sets `[tool.ruff]` (`target-version = 'py313'`, comprehensive rule selection + `[tool.ruff.format]`), `[tool.mypy]` (`python_version = '3.13'`, `strict = true`, test overrides), and `[tool.basedpyright]` (`pythonVersion = '3.13'`, `typeCheckingMode = 'standard'`/`'strict'`), and merges non-destructively into `.claude/settings.local.json` (`permissions.allow` union + `Stop` hook `lint-gate.py`).",
+      "files": [],
+      "expectations": [
+        "Adds `ruff`, `mypy`, and `basedpyright` under PEP 735 `[dependency-groups] dev` in `pyproject.toml`",
+        "Configures `[tool.ruff]`, `[tool.mypy]` (`strict = true` with pragmatic `tests.*` overrides), and `[tool.basedpyright]` targeting Python 3.13",
+        "Merges `permissions.allow` entries into `.claude/settings.local.json` as a union without overwriting existing user-approved permissions",
+        "Verifies all three tools run cleanly via `uv run ruff check`, `uv run mypy`, and `uv run basedpyright`"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We have a multi-package Python 3.13 monorepo (`packages/core`, `packages/api`, `packages/worker`) where `basedpyright` needs per-package `executionEnvironments` in `pyrightconfig.json`, but someone also left `[tool.basedpyright]` in `pyproject.toml`.",
+      "expected_output": "Creates a root `pyrightconfig.json` defining `executionEnvironments` (`root`, `extraPaths`) for `packages/core`, `packages/api`, and `packages/worker`, explicitly removes `[tool.basedpyright]` from `pyproject.toml` so there is no conflicting/shadowed Pyright configuration, and aligns `mypy_path` / `namespace_packages` in `[tool.mypy]`.",
+      "files": [],
+      "expectations": [
+        "Configures `pyrightconfig.json` with `pythonVersion: '3.13'` and `executionEnvironments` mapping each `packages/*` root",
+        "Explicitly removes `[tool.basedpyright]` from `pyproject.toml` when `pyrightconfig.json` is introduced so settings never conflict or get ignored",
+        "Configures `[tool.mypy]` (`mypy_path` / `explicit_package_bases = true`) so `mypy` resolves cross-package imports across the monorepo",
+        "Runs both `basedpyright` and `mypy` from the repo root to verify zero import-resolution errors"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Explain why our Python 3.13 setup runs BOTH `mypy` and `basedpyright` alongside `ruff`, and configure relaxed test-directory rules (`assert` statements, mock attributes, untyped pytest fixtures) without weakening `src/` strictness.",
+      "expected_output": "Explains complementary coverage (`ruff` for fast lint/import/security/format rules, `mypy` for PEP-nominal/plugin ecosystems like Pydantic/SQLAlchemy, `basedpyright` for stronger narrowing, exhaustiveness, and IDE parity), and configures scoped `tests/**` overrides in `[tool.ruff.lint.per-file-ignores]` (`S101`, etc.), `[[tool.mypy.overrides]]` (`module = 'tests.*'`), and `basedpyright` `executionEnvironments` while keeping `src/` strict.",
+      "files": [],
+      "expectations": [
+        "Articulates why `mypy` (plugins/nominal checks) and `basedpyright` (narrowing/IDE type engine) complement each other alongside `ruff`",
+        "Adds `[tool.ruff.lint.per-file-ignores]` allowing `S101` (`assert`) in `tests/**/*.py` without disabling `S` rules in `src/`",
+        "Adds `[[tool.mypy.overrides]]` and `basedpyright` `executionEnvironments` scoped solely to `tests` while keeping `src/` strict",
+        "Preserves deterministic CLI verification commands for local dev and CI"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "query": "Set up ShellCheck json1 diagnostics that include SC2086 info findings.",
+    "should_trigger": true
+  },
+  {
+    "query": "Troubleshoot shfmt for mixed Bash, POSIX sh and native Zsh files.",
+    "should_trigger": true
+  },
+  {
+    "query": "Configure Bash 3.2 static checks without claiming generic Bash lint proves the version floor.",
+    "should_trigger": true
+  },
+  {
+    "query": "Review a Shellharden proposed diff before applying quoting changes.",
+    "should_trigger": true
+  },
+  {
+    "query": "Lint POSIX.1-2017 scripts while accounting for current ShellCheck's POSIX-2024 checks.",
+    "should_trigger": true
+  },
+  {
+    "query": "Configure read-only native Zsh syntax and formatting checks with incomplete shfmt coverage stated.",
+    "should_trigger": true
+  },
+  {
+    "query": "Fix CI discovery for extensionless shell scripts and filenames with spaces.",
+    "should_trigger": true
+  },
+  {
+    "query": "Audit a .shellcheckrc that forces Bash on sourced POSIX libraries.",
+    "should_trigger": true
+  },
+  {
+    "query": "Tell me native Zsh scalar splitting rules without configuring any analyzer.",
+    "should_trigger": false
+  },
+  {
+    "query": "Select POSIX 2017 versus 2024 as our target contract only.",
+    "should_trigger": false
+  },
+  {
+    "query": "Explain which features require Bash 4.4, with no lint work.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a new shell CLI using Google Shell Style.",
+    "should_trigger": false
+  },
+  {
+    "query": "Harden a cleanup function's error propagation under errexit.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write Bats runtime cases for BSD stat and GNU date.",
+    "should_trigger": false
+  },
+  {
+    "query": "Run the shipped shell quality gate without changing its lint configuration.",
+    "should_trigger": false
+  },
+  {
+    "query": "Configure Python Ruff and Black for a repository containing unchanged shell files.",
+    "should_trigger": false
+  }
+]

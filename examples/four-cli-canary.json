@@ -1,0 +1,108 @@
+{
+  "schema_version": "harness-eval-protocol/v1",
+  "campaign_id": "four-cli-canary",
+  "description": "Subscription-default four-CLI canary protocol across Claude Code, OpenAI Codex, Google Antigravity, and GitHub Copilot CLI.",
+  "seed": 20261114,
+  "pin_mode": "nix",
+  "execution_mode": "headless",
+  "repetitions": 1,
+  "cassette_miss_threshold": 0.0,
+  "budget": {
+    "max_wall_seconds": 180,
+    "max_calls": 20,
+    "max_ai_credits": 30,
+    "max_output_bytes": 1048576
+  },
+  "arms": [
+    {
+      "arm_id": "claude-sub-baseline",
+      "harness": "claude",
+      "model": "sonnet",
+      "effort": "high",
+      "auth_mode": "subscription",
+      "claude_auth_strategy": "persisted_eval_config_dir",
+      "mcp_servers": [
+        {
+          "name": "canary-docs",
+          "mode": "cassette_replay",
+          "cassette_path": "examples/cassettes/canary-docs.json"
+        }
+      ],
+      "skills": [],
+      "system_prompt": {
+        "mode": "append",
+        "text": "Complete the workspace task concisely and verify canary_ok.txt exists."
+      }
+    },
+    {
+      "arm_id": "codex-sub-baseline",
+      "harness": "codex",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "auth_mode": "subscription",
+      "mcp_servers": [
+        {
+          "name": "canary-docs",
+          "mode": "cassette_replay",
+          "cassette_path": "examples/cassettes/canary-docs.json"
+        }
+      ],
+      "skills": [],
+      "system_prompt": {
+        "mode": "append",
+        "text": "Complete the workspace task concisely and verify canary_ok.txt exists."
+      }
+    },
+    {
+      "arm_id": "agy-sub-baseline",
+      "harness": "agy",
+      "model": "gemini-4-carbon-high",
+      "effort": "high",
+      "auth_mode": "subscription",
+      "mcp_servers": [
+        {
+          "name": "canary-docs",
+          "mode": "cassette_replay",
+          "cassette_path": "examples/cassettes/canary-docs.json"
+        }
+      ],
+      "skills": [],
+      "system_prompt": {
+        "mode": "append",
+        "text": "Complete the workspace task concisely and verify canary_ok.txt exists."
+      }
+    },
+    {
+      "arm_id": "copilot-sub-baseline",
+      "harness": "copilot",
+      "model": "claude-sonnet-4.6",
+      "effort": "high",
+      "auth_mode": "subscription",
+      "mcp_servers": [
+        {
+          "name": "canary-docs",
+          "mode": "cassette_replay",
+          "cassette_path": "examples/cassettes/canary-docs.json"
+        }
+      ],
+      "skills": [],
+      "system_prompt": {
+        "mode": "append",
+        "text": "Complete the workspace task concisely and verify canary_ok.txt exists."
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "write-canary-file",
+      "family": "canary",
+      "prompt": "Read README.md in the workspace and create canary_ok.txt containing ok.",
+      "fixture_path": "examples/fixtures/canary-workspace",
+      "verifier_cmd": [
+        "python3",
+        "-c",
+        "from pathlib import Path; assert Path('canary_ok.txt').read_text(encoding='utf-8').strip() == 'ok'"
+      ]
+    }
+  ]
+}

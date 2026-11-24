@@ -1,0 +1,39 @@
+{
+  "skill_name": "shell-testing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write Bats tests for a POSIX.1-2017 program on dash and native Zsh; ShellSpec is absent.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Uses Bats as a Bash host while explicitly invoking each target interpreter.",
+        "Does not require ShellSpec just because the program is non-Bash.",
+        "Does not source native Zsh or POSIX-target code into Bash and call that target proof."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Design tests for a sourced Bash 3.2 library and a Bash 4.4+ executable with inherit_errexit.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Runs the actual minimum and current interpreter identities when available.",
+        "Checks caller options, traps, IFS and cwd for the library.",
+        "Covers conditional-function, substitution, pipeline and cleanup failure paths.",
+        "Marks missing interpreter runs unverified rather than substituting a newer Bash."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Test POSIX.1-2024 pipefail and BSD/GNU utility-dependent behavior with hostile filenames.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Separates the standards edition from deployed interpreter and utility capability.",
+        "Asserts exact exit codes, stdout/stderr and argv preservation for empty/spaced/newline/leading-dash inputs.",
+        "Reports only tests actually executed and keeps missing matrix cells visible."
+      ]
+    }
+  ]
+}

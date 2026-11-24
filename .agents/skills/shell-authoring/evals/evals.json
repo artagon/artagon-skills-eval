@@ -1,0 +1,38 @@
+{
+  "skill_name": "shell-authoring",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a Bash 3.2 CLI using Google style; the deployment uses macOS BSD utilities.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Declares Bash 3.2, executable role and the BSD utility dependencies.",
+        "Does not use unguarded inherit_errexit, mapfile or associative arrays.",
+        "Separates Google's /bin/bash and 80-column baseline from Artagon shebang adaptations."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review a sourced POSIX.1-2017 library; keep its existing public names and caller state.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Uses portable function names for new POSIX functions.",
+        "Does not inject Bash options, arrays, [[ or global IFS changes.",
+        "Reports source-mode option, trap, cwd and environment effects separately from executable behavior."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Author a native Zsh 5.9 autoload function and a separate POSIX.1-2024 pipeline command.",
+      "expected_output": "Returns a target-specific result with checkable evidence and explicit unverified boundaries.",
+      "files": [],
+      "expectations": [
+        "Selects native Zsh semantics for the autoload function.",
+        "Treats pipefail as POSIX 2024 with actual implementation prerequisites.",
+        "Does not claim Bash-mode lint or sh emulation proves either target compatible."
+      ]
+    }
+  ]
+}

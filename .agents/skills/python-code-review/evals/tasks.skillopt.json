@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-code-review-01",
+      "project": "artagon-python",
+      "intent": "Review `src/sync/client.py` where line 12 defines `def fetch_items(filters: dict = {}):`, line 21 runs `time.sleep(2)` inside `async def poll_remote():`, and line 29 catches `except KeyError as err: raise SyncError('missing key')` without exception chaining.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Follows the 5 reporting gates and anchors every finding with exact `[FILE:LINE]` coordinates\n- Flags the mutable default argument `filters: dict = {}` at `src/sync/client.py:12` and replaces it with `None` sentinel initialization and parameterized `dict` types\n- Flags synchronous `time.sleep(2)` inside `async def poll_remote` at `src/sync/client.py:21` and replaces it with `await asyncio.sleep(2)`\n- Flags `raise SyncError(...)` inside `except KeyError as err:` without `from err` at `src/sync/client.py:29` because it discards `__cause__` traceback context",
+      "judge": {},
+      "tags": [
+        "python-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-code-review"
+    },
+    {
+      "id": "python-code-review-02",
+      "project": "artagon-python",
+      "intent": "Check whether these four snippets in `src/adapters/legacy.py` should be flagged as bugs during a `python-code-review`: (1) an empty `src/adapters/__init__.py`, (2) `typing.Any` on a thin wrapper around an untyped C extension, (3) `cast(UserDict, raw)` immediately after an `isinstance(raw, dict)` + key check, and (4) `# noqa: BLE001` with a comment explaining top-level plugin isolation.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Screens each candidate against Gate 2 Valid Patterns and Context-Sensitive Rules before emitting findings\n- Recognizes empty `__init__.py`, `Any` at an untyped C-extension boundary, `cast()` immediately after a runtime guard, and a justified `# noqa` comment as valid patterns not to flag\n- Verifies enclosing function context rather than applying blind regex rules\n- Produces a clean zero-false-positive review report explaining what was verified",
+      "judge": {},
+      "tags": [
+        "python-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-code-review"
+    },
+    {
+      "id": "python-code-review-03",
+      "project": "artagon-python",
+      "intent": "Review `src/reports/loader.py` where line 15 opens `data = json.load(open(path))` without closing the file, line 28 uses `Optional[Union[str, int]]`, and line 40 catches `except Exception: return None` inside `load_financial_ledger(path: Path)`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Flags the unclosed `open(path)` handle + missing `encoding='utf-8'` at `src/reports/loader.py:15` and replaces it with a `with` block\n- Flags `except Exception: return None` at `src/reports/loader.py:40` for silently masking `JSONDecodeError`/`PermissionError` on financial data\n- Calibrates severity accurately (correctness/resource bugs above style suggestions like `str | int | None`)\n- Cites `[FILE:LINE]` and concrete replacement code for every finding",
+      "judge": {},
+      "tags": [
+        "python-code-review",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-code-review"
+    }
+  ]
+}

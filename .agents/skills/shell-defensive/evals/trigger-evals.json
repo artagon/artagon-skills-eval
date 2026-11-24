@@ -1,0 +1,66 @@
+[
+  {
+    "query": "Harden a Bash 3.2 unattended job while keeping its failure propagation fail closed.",
+    "should_trigger": true
+  },
+  {
+    "query": "Review cleanup and ERR traps in a Bash 4.4+ production script.",
+    "should_trigger": true
+  },
+  {
+    "query": "Fix a sourced POSIX.1-2017 library that changes the caller's IFS and traps.",
+    "should_trigger": true
+  },
+  {
+    "query": "Handle pipeline failures in a POSIX.1-2024 cron command with an explicit implementation floor.",
+    "should_trigger": true
+  },
+  {
+    "query": "Make this native Zsh function's option changes and cleanup local.",
+    "should_trigger": true
+  },
+  {
+    "query": "Fix symlink and empty-path risks before this shell program deletes files.",
+    "should_trigger": true
+  },
+  {
+    "query": "Add atomic writes and lock ownership to a GNU/Linux shell job.",
+    "should_trigger": true
+  },
+  {
+    "query": "Make a macOS shell script handle BSD utilities and preserve the failing command's exit code.",
+    "should_trigger": true
+  },
+  {
+    "query": "Explain the Bash 4.4 feature floor without assessing a script.",
+    "should_trigger": false
+  },
+  {
+    "query": "Select native Zsh versus sh emulation for a new project.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a simple shell --help parser with no unattended or risky operations.",
+    "should_trigger": false
+  },
+  {
+    "query": "Set up ShellCheck severity info and shfmt diff output.",
+    "should_trigger": false
+  },
+  {
+    "query": "Write Bats assertions for this already hardened command.",
+    "should_trigger": false
+  },
+  {
+    "query": "Run the packaged shell quality gate in check mode.",
+    "should_trigger": false
+  },
+  {
+    "query": "Rotate deployment secrets using a cloud secret manager, with no shell work.",
+    "should_trigger": false
+  },
+  {
+    "query": "Review a Python file deletion helper; the shell wrapper is unchanged.",
+    "should_trigger": false
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "skill_name": "python-anti-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Spot and fix the architectural and resilience anti-patterns in a Python checkout flow where the FastAPI route retries `order_service.place_order()` 3 times, `order_service` retries `payment_client.charge()` 3 times, `payment_client` retries `httpx` 3 times with hardcoded `'https://api.prod.internal'` URLs, and errors are caught with `except Exception: pass`.",
+      "expected_output": "Flags retry amplification (`3 * 3 * 3 = 27` cascading attempts on failure — keep bounded retry at ONE well-defined boundary, never double-retrying across layers), replaces hardcoded prod URLs with `pydantic-settings` `BaseSettings`, and replaces silent `except Exception: pass` error swallowing with specific exception handling, `raise ... from e` chaining, and structured logging.",
+      "files": [],
+      "expectations": [
+        "Identifies multi-layer retry multiplication (`3 x 3 x 3 = 27` calls) and consolidates retry/timeout policy at a single client boundary",
+        "Flags hardcoded environment URLs/timeouts and extracts them into validated `BaseSettings` configuration",
+        "Eliminates bare/silent `except Exception: pass` swallowing in favor of specific domain/transport exceptions and `raise ... from e`",
+        "Separates permanent client/validation errors (never retried) from transient transport failures"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit a Python endpoint + batch importer where (1) `POST /users` executes raw SQL inside the route handler and returns the SQLAlchemy `User` ORM model (including `password_hash`), and (2) `import_users(rows: list)` opens a CSV without `with`, uses `tags=[]` as a default argument, and aborts all 1,000 rows on the first bad row.",
+      "expected_output": "Identifies and fixes all six Python anti-patterns: separates route -> pure domain logic -> repository instead of mixing SQL and HTTP, returns an explicit Pydantic DTO (never leaking ORM `password_hash`), wraps file I/O in `with open(...)`, replaces mutable default `tags: list[str] | None = None`, types `rows: Sequence[UserRow]` instead of bare `list`, and returns `BatchResult(succeeded, failed)` so one malformed row does not abort 999 valid rows.",
+      "files": [],
+      "expectations": [
+        "Decouples SQL persistence (Repository), domain validation/business logic (Service), and HTTP serialization (Pydantic DTO hiding `password_hash`)",
+        "Fixes the mutable default argument (`tags=[]` -> `tags: list[str] | None = None`) and bare `list` annotation (`list[...]` / `Sequence[...]`)",
+        "Wraps file handles in a `with` context manager to prevent descriptor leaks on exceptions",
+        "Replaces fail-whole-batch-on-row-1 behavior with per-item error capture (`BatchResult` with `succeeded` and indexed `failed` records)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review our team's Python code habits checklist: developers keep calling `time.sleep` and `requests` inside `async def`, mocking every internal helper method in unit tests while testing only happy paths, and adding generic `BaseManager` inheritance hierarchies after writing a pattern once.",
+      "expected_output": "Diagnoses the three anti-pattern clusters with concrete replacements: (1) event-loop blocking in `async def` -> `asyncio.sleep` / `httpx.AsyncClient` / `asyncio.to_thread`, (2) brittle over-mocking of internal collaborators + happy-path-only tests -> mock only external I/O boundaries and test validation/timeout/boundary failure paths, and (3) premature inheritance -> composition + Rule of Three.",
+      "files": [],
+      "expectations": [
+        "Flags synchronous `time.sleep` and `requests` inside `async def` as event-loop stallers and gives non-blocking alternatives",
+        "Critiques over-mocking internal implementation details (which breaks on safe refactors while missing real integration bugs) and happy-path-only coverage",
+        "Replaces premature `BaseManager` inheritance hierarchies with simple functions/composition under the Rule of Three",
+        "Provides a concise before/after code contrast for each anti-pattern"
+      ]
+    }
+  ]
+}

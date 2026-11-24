@@ -1,0 +1,30 @@
+id: static-redacted-literal-const-only
+language: Python
+severity: error
+message: "static_redacted_literal() must receive only a single compile-time non-f-string literal; use SecretScrubberPort.scrub() for dynamic text."
+note: "Enforces compile-time RedactedStr soundness so dynamic or secret-bearing text cannot bypass SecretVault."
+files:
+  - "packages/*/src/**/*.py"
+rule:
+  kind: call
+  all:
+    - has:
+        field: function
+        any:
+          - pattern: static_redacted_literal
+          - pattern: $MOD.static_redacted_literal
+    - any:
+        - has:
+            kind: interpolation
+            stopBy: end
+        - has:
+            field: arguments
+            has:
+              any:
+                - kind: identifier
+                - kind: call
+                - kind: binary_operator
+                - kind: attribute
+                - kind: subscript
+                - kind: conditional_expression
+                - kind: keyword_argument

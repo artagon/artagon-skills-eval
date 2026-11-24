@@ -1,0 +1,541 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Artagon promoted skill eval results and hash-bound legacy corrections v1",
+  "description": "Metadata validation is not proof of native execution. Legacy and partial summaries are never eligible scores. Artifact refs are confined project-relative paths or opaque symbolic refs; symbolic contents are not fetched.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/summary"
+    },
+    {
+      "$ref": "#/$defs/legacy_manifest"
+    }
+  ],
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "sha256"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "pattern": "^(?:symbolic:)?[A-Za-z0-9][A-Za-z0-9._/-]*$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cli",
+        "requested_model",
+        "observed_model"
+      ],
+      "properties": {
+        "cli": {
+          "enum": [
+            "claude",
+            "codex",
+            "agy",
+            "kimi",
+            "copilot",
+            "grok",
+            "opencode",
+            "other",
+            null
+          ]
+        },
+        "requested_model": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_model": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "passed",
+        "score",
+        "evidence_refs"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/artifact"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "plugin",
+        "run_id",
+        "source",
+        "cases",
+        "rubric_version",
+        "adapter_version",
+        "evaluation_tier",
+        "partial",
+        "legacy",
+        "legacy_reason",
+        "eligible_for_scoring",
+        "lanes",
+        "results",
+        "evidence_refs"
+      ],
+      "properties": {
+        "schema": {
+          "const": "artagon/skill-eval-result/v1"
+        },
+        "plugin": {
+          "type": "string",
+          "pattern": "^artagon-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/artifact"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cases": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/artifact"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rubric_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adapter_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evaluation_tier": {
+          "enum": [
+            "plan",
+            "discovery",
+            "execution",
+            "unknown"
+          ]
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "legacy": {
+          "type": "boolean"
+        },
+        "legacy_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "eligible_for_scoring": {
+          "type": "boolean"
+        },
+        "lanes": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,79}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/lane"
+          }
+        },
+        "results": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,79}$"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/result"
+            }
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/artifact"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "Keep this published plan version aligned with configs/skill_eval_rubric.json .version; runtime validation also checks the canonical file. This does not define an execution rubric.",
+          "if": {
+            "properties": {
+              "legacy": {"const": false},
+              "evaluation_tier": {"const": "plan"}
+            }
+          },
+          "then": {
+            "properties": {
+              "rubric_version": {"const": "plan-v1"}
+            }
+          }
+        },
+        {
+          "$comment": "The current inventory marks discovery/execution unsupported for scoring. Non-plan provenance must not reuse the canonical version or reserved plan-* identifiers. Runtime validation also checks the canonical inventory/version; distinct external rubric metadata stays ineligible.",
+          "if": {
+            "properties": {
+              "legacy": {"const": false},
+              "evaluation_tier": {"enum": ["discovery", "execution"]}
+            }
+          },
+          "then": {
+            "properties": {
+              "rubric_version": {"not": {"anyOf": [{"const": "plan-v1"}, {"pattern": "^plan-"}]}},
+              "eligible_for_scoring": {"const": false}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "legacy": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "run_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+              },
+              "source": {
+                "$ref": "#/$defs/artifact"
+              },
+              "cases": {
+                "$ref": "#/$defs/artifact"
+              },
+              "rubric_version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+              },
+              "adapter_version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+              },
+              "evaluation_tier": {
+                "enum": [
+                  "plan",
+                  "discovery",
+                  "execution"
+                ]
+              },
+              "legacy_reason": {
+                "type": "null"
+              },
+              "evidence_refs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "#/$defs/artifact"
+                }
+              },
+              "lanes": {
+                "additionalProperties": {
+                  "properties": {
+                    "cli": {
+                      "type": "string"
+                    },
+                    "requested_model": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160,
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+                    },
+                    "observed_model": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160,
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+                    }
+                  }
+                }
+              },
+              "results": {
+                "additionalProperties": {
+                  "items": {
+                    "properties": {
+                      "evidence_refs": {"minItems": 1}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "eligible_for_scoring": {
+                "const": false
+              },
+              "legacy_reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "partial": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "eligible_for_scoring": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "legacy_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "plugin",
+        "files"
+      ],
+      "properties": {
+        "schema": {
+          "const": "artagon/skill-eval-legacy-corrections/v1"
+        },
+        "plugin": {
+          "type": "string",
+          "pattern": "^artagon-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/legacy_entry"
+          }
+        }
+      }
+    },
+    "legacy_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "sha256",
+        "legacy",
+        "status",
+        "partial",
+        "evaluation_tier",
+        "eligible_for_scoring",
+        "eligible_for_native",
+        "declared_plugin",
+        "declared_cli",
+        "declared_lanes",
+        "undeclared_lane_tables",
+        "unknown_provenance",
+        "reason"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*\\.json$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "legacy": {
+          "const": true
+        },
+        "status": {
+          "const": "legacy_unbound"
+        },
+        "partial": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "evaluation_tier": {
+          "enum": [
+            "plan",
+            "unknown"
+          ]
+        },
+        "eligible_for_scoring": {
+          "const": false
+        },
+        "eligible_for_native": {
+          "const": false
+        },
+        "declared_plugin": {
+          "type": ["string", "null"],
+          "pattern": "^artagon-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "declared_cli": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^[a-z0-9][a-z0-9_-]*$"
+        },
+        "declared_lanes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,79}$"
+          },
+          "uniqueItems": true
+        },
+        "undeclared_lane_tables": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_-]{0,79}$"
+            },
+            "uniqueItems": true
+          }
+        },
+        "unknown_provenance": {
+          "const": [
+            "run_id",
+            "source_digest",
+            "case_digest",
+            "rubric_version",
+            "adapter_version",
+            "requested_model",
+            "observed_model",
+            "evidence_refs"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    }
+  }
+}

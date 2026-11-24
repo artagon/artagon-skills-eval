@@ -1,0 +1,44 @@
+{
+  "skill_name": "shell-bash",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this proposed Bash 3.2 executable preamble on paper only: set -Eeuo pipefail; shopt -s inherit_errexit; declare -A seen; mapfile -t rows. The deployment includes macOS /bin/bash 3.2 and Linux Bash 5.3. Do not execute commands or edit files.",
+      "expected_output": "Identifies unsupported features against the declared 3.2 floor and proposes a compatible path without lowering required failure detection.",
+      "files": [],
+      "expectations": [
+        "States that associative arrays and mapfile require Bash 4.0 or later.",
+        "States that inherit_errexit requires Bash 4.4 or later.",
+        "Keeps Bash 3.2 as the target rather than silently raising the version floor.",
+        "Does not claim that Bash 5.3 execution or ShellCheck proves Bash 3.2 behavior.",
+        "Does not execute commands or edit files."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "On paper, fix the feature guard for Bash 4.4+: (( BASH_VERSINFO[0] >= 4 && BASH_VERSINFO[1] >= 4 )). Check 3.2, 4.0, 4.3, 4.4, 5.0 and 5.3. We use mapfile -d and namerefs. Do not run commands.",
+      "expected_output": "Uses a major-first numeric comparison and gives the requested version decisions with feature floors.",
+      "files": [],
+      "expectations": [
+        "Uses major > 4 or major == 4 and minor >= 4 for the Bash 4.4 floor.",
+        "Rejects 3.2, 4.0 and 4.3 while accepting 4.4, 5.0 and 5.3.",
+        "Distinguishes namerefs at 4.3 from mapfile -d at 4.4.",
+        "Does not compare version strings lexically.",
+        "Does not report the paper decisions as executed runtime tests."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review lib/cache.bash as a sourced Bash 4.3 library on paper: its first lines enable set -Eeuo pipefail, replace IFS and install EXIT/ERR traps. Its caller checks cache_load inside if. Explain the contract and focused test plan. Do not edit or run anything.",
+      "expected_output": "Protects caller state and explains the tested-function error context with explicit runtime evidence gaps.",
+      "files": [],
+      "expectations": [
+        "Explains that sourcing executes in the caller and a shebang does not select a new interpreter.",
+        "Identifies options, traps and IFS as caller state that requires ownership or restoration.",
+        "Explains that calling a function as an if condition can suppress errexit and ERR behavior inside it.",
+        "Does not prescribe an unconditional inherit_errexit command for the Bash 4.3 target.",
+        "Requires actual minimum-version sourced-library tests and reports them as not run."
+      ]
+    }
+  ]
+}

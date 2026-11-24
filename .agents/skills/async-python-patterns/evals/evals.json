@@ -1,0 +1,41 @@
+{
+  "skill_name": "async-python-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Refactor an `async def` fan-out fetcher that currently calls `requests.get(url)` and `time.sleep(1)` inside a loop over 50 URLs, so at most 10 requests run concurrently, each request times out after 5 seconds, and individual URL failures are captured without aborting the batch.",
+      "expected_output": "Replaces blocking `requests.get` and `time.sleep` with `httpx.AsyncClient` (or `aiohttp`) and `asyncio.sleep`, bounds concurrency to 10 via `asyncio.Semaphore(10)`, applies a 5-second per-call bound (`asyncio.wait_for` or `httpx.Timeout(5.0)`), and runs tasks concurrently with `asyncio.gather(..., return_exceptions=True)` while re-raising `asyncio.CancelledError`.",
+      "files": [],
+      "expectations": [
+        "Eliminates event-loop blocking (`requests.get` and `time.sleep`) in favor of `httpx.AsyncClient` / `aiohttp` and `asyncio.sleep`",
+        "Enforces the 10-request concurrency cap using `async with asyncio.Semaphore(10):`",
+        "Enforces a 5-second per-request timeout via `asyncio.wait_for(..., timeout=5.0)` or client timeout config",
+        "Collects partial successes and exceptions via `asyncio.gather(*tasks, return_exceptions=True)` while ensuring `asyncio.CancelledError` is never swallowed"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Implement an async producer-consumer worker pool in Python using `asyncio.Queue` with backpressure (`maxsize=100`), 4 consumer workers, and graceful shutdown even if a producer raises mid-stream.",
+      "expected_output": "An `asyncio.Queue(maxsize=100)` pipeline spawning 4 consumer tasks that call `queue.task_done()` in `finally` blocks, draining queued items via `await queue.join()`, and cancelling/awaiting worker tasks cleanly during `try/finally` shutdown.",
+      "files": [],
+      "expectations": [
+        "Creates `asyncio.Queue(maxsize=100)` so `await queue.put(item)` applies backpressure when consumers lag",
+        "Ensures each consumer calls `queue.task_done()` inside a `try/finally` block so `queue.join()` never deadlocks on item errors",
+        "Coordinates clean drainage with `await queue.join()` (or sentinel shutdown) and cancels/awaits consumer tasks in `finally`",
+        "Propagates `asyncio.CancelledError` cleanly during worker cancellation"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We have a CPU-heavy synchronous PDF text parser that blocks our `asyncio` event loop for 400ms per document, plus an async connection wrapper that needs deterministic `__aenter__`/`__aexit__` and `AsyncIterator` streaming.",
+      "expected_output": "Offloads the synchronous CPU/blocking parser via `await asyncio.to_thread(parse_pdf, data)` (or `loop.run_in_executor` with a `ProcessPoolExecutor` for GIL-bound CPU work), implements `__aenter__`/`__aexit__` on the async resource manager, and streams chunks via an `async def` generator typed as `AsyncIterator[bytes]`.",
+      "files": [],
+      "expectations": [
+        "Offloads blocking synchronous work from the event loop using `asyncio.to_thread(...)` or `loop.run_in_executor(...)` (noting `ProcessPoolExecutor` for GIL-heavy CPU work)",
+        "Implements `__aenter__` and `__aexit__(self, exc_type, exc_val, exc_tb)` with unconditional async resource cleanup",
+        "Defines an async generator (`yield chunk`) annotated with `collections.abc.AsyncIterator`",
+        "Demonstrates consuming the stream with `async for chunk in ...:` inside an `async with` block"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {"query": "review tests/test_orders.py and tests/conftest.py for mock patch path bugs, fixture leaks, and async pitfalls", "should_trigger": true},
+  {"query": "audit our pytest async test functions for missing @pytest.mark.asyncio, MagicMock vs AsyncMock, and event loop scope", "should_trigger": true},
+  {"query": "check our pytest PR diff in tests/ for shared mutable fixtures, broad pytest.raises(Exception), and copy-pasted cases", "should_trigger": true},
+  {"query": "verify whether unittest.mock.patch targets in tests/test_payments.py patch where imported vs where defined", "should_trigger": true},
+  {"query": "review conftest.py yield fixtures to make sure teardown still runs when a test assertion fails", "should_trigger": true},
+  {"query": "critique tests/test_auth.py for over-mocking, weak .called assertions, and missing @pytest.mark.parametrize", "should_trigger": true},
+  {"query": "perform an evidence-gated pytest code review on tests/api/test_webhooks.py with file:line citations", "should_trigger": true},
+  {"query": "check tests/test_export.py for temp-file leaks outside tmp_path and order-dependent test state", "should_trigger": true},
+  {"query": "run mutmut mutation testing and configure [tool.coverage.run] branch=true", "should_trigger": false},
+  {"query": "write new pytest tests from scratch using freezegun and custom slow markers", "should_trigger": false},
+  {"query": "review FastAPI route handlers in app/api/routes.py for missing response_model", "should_trigger": false},
+  {"query": "audit SQLAlchemy 2.0 session lifecycle and Alembic downgrade migrations", "should_trigger": false},
+  {"query": "review NestJS .spec.ts unit tests using @golevelup/ts-jest createMock<T>()", "should_trigger": false},
+  {"query": "review PostgreSQL composite index column order and GIN indexes", "should_trigger": false},
+  {"query": "configure ruff, mypy, and basedpyright in pyproject.toml", "should_trigger": false},
+  {"query": "write Bats tests for a POSIX sh script", "should_trigger": false}
+]

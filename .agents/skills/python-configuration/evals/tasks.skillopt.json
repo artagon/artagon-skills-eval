@@ -1,0 +1,80 @@
+{
+  "format": "skillopt_sleep.tasks.v1",
+  "generated_by": "scripts/generate-skill-evals.py from evals.json; do not edit",
+  "project": "artagon-python",
+  "transcript_source": "",
+  "n_sessions": 0,
+  "target_skill_path": "../SKILL.md",
+  "reviewed": true,
+  "tasks": [
+    {
+      "id": "python-configuration-01",
+      "project": "artagon-python",
+      "intent": "Build a fail-fast `pydantic-settings` `BaseSettings` configuration module in Python for a web service that needs `Environment` (`dev`, `staging`, `prod`), sensible local defaults for `db_host`/`db_port`, a required `SecretStr` signing secret with NO default, and comma-separated `CORS_ORIGINS` parsing.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Subclasses `pydantic_settings.BaseSettings` using `SettingsConfigDict` rather than scattered `os.getenv(...)` calls across modules\n- Provides sensible local defaults ONLY for non-secret settings (`localhost`, `5432`) while keeping secrets (`SecretStr`) required with no hardcoded fallback\n- Parses comma-separated `CORS_ORIGINS` env strings cleanly via `@field_validator(..., mode='before')`\n- Validates configuration eagerly at startup and exits non-zero (`sys.exit(1)`) with readable field errors rather than crashing mid-request",
+      "judge": {},
+      "tags": [
+        "python-configuration",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "train",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-configuration"
+    },
+    {
+      "id": "python-configuration-02",
+      "project": "artagon-python",
+      "intent": "Extend our `BaseSettings` hierarchy to support nested `DatabaseSettings` and `RedisSettings` loaded via `DB__POOL_SIZE=20` and Docker Swarm/Kubernetes mounted secret files in `/run/secrets`, plus enforce that in `prod` `read_replica_url` must differ from `primary_db_url`.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Uses nested Pydantic models with `env_nested_delimiter='__'` so `DB__POOL_SIZE` populates `settings.db.pool_size`\n- Configures `secrets_dir='/run/secrets'` to read mounted container secret files natively\n- Enforces cross-field production invariants inside `@model_validator(mode='after')`\n- Exposes a `@lru_cache` `get_settings()` factory that tests can override cleanly via DI or `monkeypatch.setenv` + `cache_clear()`",
+      "judge": {},
+      "tags": [
+        "python-configuration",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "val",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-configuration"
+    },
+    {
+      "id": "python-configuration-03",
+      "project": "artagon-python",
+      "intent": "Audit a Python service that calls `os.environ.get('TIMEOUT', '30')` in 14 different files, logs `print(settings.model_dump())` on boot (exposing database credentials), and checks `if os.getenv('ENV') == 'production':` vs `'prod'` inconsistently.",
+      "context_excerpt": "",
+      "system": "This is a plan evaluation. Do not execute the task or change files. Give the steps the assistant would take, the checks it would make, and any permissions it would need. Written plans do not prove execution or native skill discovery.",
+      "attempted_solution": "",
+      "outcome": "unknown",
+      "reference_kind": "rubric",
+      "reference": "Evaluation tier: plan; rubric: plan-v1; contract: artagon/skill-evals/v1\nEvaluate a written plan, not execution or native discovery. A claim that a command ran is not tool or state proof.\nAttribute each action to its actor. The assistant performs or proposes an action only when it says it did it or would do it itself. An optional command left for the user to decide on, or an action identified as forbidden, is not an assistant action.\nFor a positive assistant-action expectation, require a concrete assistant step with its required permission or precondition. An optional user action or a forbidden example alone does not satisfy that expectation.\nFor a negative assistant-action expectation, fail only if the assistant performs or proposes the prohibited action itself. An optional user command or an action identified as forbidden does not violate it. An expectation explicitly forbidding advice or disclosure still applies to the advice or disclosure itself.\nFor a reported-result expectation, accept the result or a concrete command plus what the assistant would inspect, as plan evidence only. Do not invent permission or treat a pending approval as granted.\nPASS when the response meets the expectation. FAIL when it omits, contradicts or does the opposite. Judge each response independently; do not reward length.\n\n- Consolidates scattered `os.environ` / `os.getenv` string lookups into one typed `BaseSettings` schema\n- Replaces raw `'prod'` / `'production'` string comparisons with a single `Environment` `StrEnum` (and helper properties like `is_prod`)\n- Uses `SecretStr` (or explicit redaction) so startup config logging never leaks secret values to stdout\n- Demonstrates isolated unit testing of `Settings` overrides without mutating global process state permanently",
+      "judge": {},
+      "tags": [
+        "python-configuration",
+        "behavior",
+        "tier:plan",
+        "rubric:plan-v1"
+      ],
+      "source_sessions": [],
+      "split": "test",
+      "origin": "real",
+      "derived_from": "",
+      "skill_hint": "python-configuration"
+    }
+  ]
+}
