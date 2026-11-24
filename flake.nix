@@ -26,7 +26,7 @@
         "private"
         "auth"
       ];
-      rootEntries = builtins.attrNames (builtins.readDir self);
+      rootEntries = builtins.attrNames (builtins.readDir ./.);
       forbiddenHits = builtins.filter (name: builtins.elem name forbiddenRootNames) rootEntries;
       _assertCleanSource =
         assert forbiddenHits == []
