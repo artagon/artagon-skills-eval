@@ -77,7 +77,7 @@ declarative YAML edits rather than Python subclassing.
    `HookTargetRouting` (Claude `$CLAUDE_CONFIG_DIR/settings.json` + `.claude/settings.json`,
    Codex `$CODEX_HOME/hooks.json` + `.codex/hooks.json`, Agy `$HOME/.gemini/config/hooks.json`
    + `.agents/hooks.json`, Copilot `$COPILOT_HOME/hooks/eval-trace.json` +
-   `.github/hooks/harness-eval.json`, Kimi `${KIMI_CODE_HOME:-~/.kimi-code}/config.toml`)
+   `.github/hooks/harness-eval.json`)
    and the four vendor wire codecs (`nested_matcher_groups`, `namespaced_lifecycle`,
    `versioned_flat_map`, `event_array`).
 

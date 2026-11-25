@@ -34,12 +34,13 @@ servers during trials adds latency and failure modes.
      `transcript_full.jsonl`, Copilot JSON).
    - Layer 4: Supervisor ground truth (`shim-exec.json`, `child-execs.jsonl`,
      `mcp_calls.jsonl`, and pre/post workspace SHA-256 tree diffs).
-2. Run a pre-write secret redactor in `harness_eval_trace.py` before writing any
+2. Run a pre-write secret and PII redactor before writing any
    normalized JSONL or Parquet file.
-3. Compact campaign traces into `{trials,spans,tool_calls,mcp_calls,file_diffs}.parquet`
+3. Compact campaign traces into `{trials,spans,tool_calls,mcp_calls,file_diffs,hook_events}.parquet`
    queried via read-only DuckDB (`access_mode='READ_ONLY'`,
    `enable_external_access=false`), and provide optional post-run exporters to
-   `otlp-json`, Arize Phoenix (`127.0.0.1:6006`), and MLflow 3.
+   `otlp-json`, Arize Phoenix (`127.0.0.1:6006`), MLflow 3, and Langfuse OTLP
+   with root-span `Span.Event` hook telemetry.
 
 ## Alternatives considered
 

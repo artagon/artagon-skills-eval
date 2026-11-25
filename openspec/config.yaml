@@ -3,7 +3,7 @@ schema: spec-driven-evidence
 context: |
   `artagon-skills-eval` is a standalone Python 3.12+/3.13 `uv` workspace and
   Nix flake (`nixos-26.05`) for subscription-first multi-CLI Agent Skill and
-  harness evaluation (`claude`, `codex`, `agy`, `copilot`, `kimi`).
+  harness evaluation (`claude`, `codex`, `agy`, `copilot`).
 
   Workspace layout:
     - Root umbrella package `artagon-skills-eval` (`pyproject.toml`, `uv.lock`)
@@ -14,7 +14,7 @@ context: |
       lazy `importlib.metadata` registry), `shell/`, `store/` (DuckDB/Parquet
       and OTLP), ADR-0012 `-P -s -m` hot-path `shims/` (stdlib + optional
       `msgspec` only), `packaging/`, `cli/`, and single canonical `data/`
-      (10 JSON schemas, 6 harness catalogs, default providers/keychain configs).
+      (10 JSON schemas, 5 harness catalogs, default providers/keychain configs).
     - `packages/artagon-eval-skills/`: official `agentskills.io` `skills-ref`
       isolated strictly in `spec_adapter.py`, frozen `eval-v2` contracts,
       Tier-0/1/2 linter, PyYAML generator, workflows, and `skill-eval`/`skill-lint`.

@@ -19,7 +19,7 @@
       "files": [],
       "expectations": [
         "The assistant explains that `trace-query` opens DuckDB in `READ_ONLY` mode with `enable_external_access=false` (and SQLite `?mode=ro` authorizer) and rejects `COPY` and `read_parquet(...)` with exit code `2` (`EXIT_SCHEMA_USAGE`)",
-        "The assistant advises querying only the five registered views (`trials`, `spans`, `tool_calls`, `mcp_calls`, `file_diffs`) with a single `SELECT` or `WITH` query"
+        "The assistant advises querying only the six registered views (`trials`, `spans`, `tool_calls`, `mcp_calls`, `file_diffs`, `hook_events`) with a single `SELECT` or `WITH` query"
       ]
     },
     {

@@ -7,7 +7,7 @@
 Already present on `main` from Phase 0 and initial Phase 1 bootstrap:
 - Root `pyproject.toml` (`[tool.uv.workspace]`, umbrella `artagon-skills-eval`, strict `ruff`, `mypy`, `basedpyright`, `radon`, 6 `import-linter` contracts, `pytest`), `uv.lock`, `sgconfig.yml`, and 5 `rules/python/*.yml` ast-grep rules + `rule-tests/`.
 - Root `flake.nix`, `flake.lock` (`nixos-26.05` rev `c56a87d8e41ce69bd2af57eb35dcc117a9dfca33`), and `nix/locked-versions.json`.
-- `packages/artagon-eval-core/` foundation: `domain/{types,fp,primitives,errors}.py`, `ports/effects.py`, `runtime/{redact,logging}.py`, `plugins/contracts.py`, `shims/{wire,scrub}.py`, `packaging/nix_check.py`, `cli/{app,skillopt_proxy}.py`, and single canonical `data/` (10 JSON schemas, 6 harness YAMLs, `providers.json`, `keychain-services.json`).
+- `packages/artagon-eval-core/` foundation: `domain/{types,fp,primitives,errors}.py`, `ports/effects.py`, `runtime/{redact,logging}.py`, `plugins/contracts.py`, `shims/{wire,scrub}.py`, `packaging/nix_check.py`, `cli/{app,skillopt_proxy}.py`, and single canonical `data/` (10 JSON schemas, 5 harness YAMLs, `providers.json`, `keychain-services.json`).
 - `packages/artagon-eval-skills/` foundation: `spec_adapter.py` (`skills-ref==0.1.1`), `cli/{app,lint}.py`, and empty subpackage skeletons (`contracts/`, `lint/`, `generator/`, `workflows/`, `data/`).
 - Six adapter package stubs (`packages/artagon-eval-{waza,dspy,skillopt,evoskill,skillspec,observability}/`) with `plugin.py` smoke entry points.
 - Hypothesis profile harness (`tests/conftest.py`, `packages/artagon-eval-core/tests/strategies.py`), core/skills property suites, and negative compile-time typing suite (`tests/typing/test_negative_typing.py`).
@@ -20,7 +20,7 @@ Phases 1–5 complete the full runtime, skills platform, six adapters, standalon
 
 ```text
 CLI (Typer ctx.obj, zero globals)
-  -> Shell (5-CLI decoders, multiplexers, custody, cassette, OTLP, DuckDB store)
+  -> Shell (4-CLI decoders, multiplexers, custody, cassette, OTLP, DuckDB store)
     -> Runtime (structlog, SecretVault, JCS, CampaignAbortLatch, ChildEnvBuilder, pins, patch, curation)
       -> Plugins (Pluggy hookspecs + lazy importlib.metadata PluginRegistry)
         -> Ports (typed Effect Protocols returning EvalResult[T])
@@ -40,7 +40,7 @@ All 6 boundary contracts in `pyproject.toml` (`[tool.importlinter]`) are enforce
    - Complete `plugins/`: `hookspecs.py`, `registry.py`, `hooks_compiler.py`.
    - Complete `packaging/`: `staging.py` (ADR-0006 `O_NOFOLLOW` `0700` stager), `selfcheck.py`, `boundary_check.py`, plus `tests/packaging/{test_version_bounds,test_license_guard,test_nix_staging}.py`.
 2. **Phase 2 (`packages/artagon-eval-core/` + `scripts/`):**
-   - `shell/transcript/{claude,codex,agy,copilot,kimi,otel_reducer,fusion}.py`
+   - `shell/transcript/{claude,codex,agy,copilot,otel_reducer,fusion}.py`
    - `shell/multiplexers/{ntm,herdr,cao,hcom}.py`
    - `shell/{catalog_loader,model_resolver,workspace,custody_fs,materializer,keyring,cassette,otlp_sink,judge_runner,trial_executor}.py`
    - `store/{parquet_writer,duckdb_query,sql_guard,otlp_export}.py`
@@ -60,7 +60,7 @@ All 6 boundary contracts in `pyproject.toml` (`[tool.importlinter]`) are enforce
    - `packages/artagon-eval-skillopt/`: `gateway.py`, `patch_merge.py`, `harvest.py`, `isolated_main.py` (`python3 -I`), `cli.py`, `skillopt_pin.json`, `plugin.py`.
    - `packages/artagon-eval-evoskill/`: `loader.py` (scoped dist loader, zero import-time `sys.meta_path` mutation), `solver.py`, `evolver.py` (Seatbelt/bwrap kernel sandbox with `O_NOFOLLOW` read-back), `plugin.py`.
    - `packages/artagon-eval-observability/`: `phoenix_sink.py` (Apache-2.0 `arize-phoenix-otel` + `arize-phoenix-client` + `openinference-semantic-conventions` only), `mlflow_sink.py` (`mlflow-tracing` + optional `mlflow-skinny`), `offline_scorer.py`, `plugin.py`.
-   - Standalone manifests (`plugin.json`, `.{claude,codex,copilot,kimi}-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`, `kimi.plugin.json`, `apm.yml`, `apm.lock.yaml`, `EXTENSION.md`) and `.github/workflows/release.yml` for `v0.2.0`.
+   - Standalone manifests (`plugin.json`, `.{claude,codex,copilot}-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`, `apm.yml`, `apm.lock.yaml`, `EXTENSION.md`) and `.github/workflows/release.yml` for `v0.2.0`.
 
 ## Decisions
 

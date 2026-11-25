@@ -5,8 +5,8 @@
     "The effective NTM config ([models.claude], [models.codex], [models.grok], [models.context_limits]) overlays the aliases and limits.",
     "catalog_mode: seed = this list is the catalog; codex_cache = $CODEX_HOME/models_cache.json; agy_models = `agy models` (live) or the state cache.",
     "Aliases and ids were refreshed from the operator's NTM config, the Codex 0.170.0 model cache, `agy models` (1.5.13), Claude Code 2.1.329, and GitHub Copilot CLI 1.0.113 on 2026-11-20.",
-    "Prompt and empty-input regexes were checked on live Claude Code 2.1.311, codex-cli 0.164.0, Antigravity CLI 1.4.7, and Grok Build 1.0.70 panes; the Kimi 2.3.2 patterns are generic and unverified.",
-    "Grok efforts are a seed guess (the CLI help lists no values); Kimi takes no effort (its [thinking] config decides).",
+    "Prompt and empty-input regexes were checked on live Claude Code 2.1.311, codex-cli 0.164.0, Antigravity CLI 1.4.7, and Grok Build 1.0.70 panes.",
+    "Grok efforts are a seed guess (the CLI help lists no values).",
     "required_env holds variable names only, never values.",
     "D4 native answer policy is disabled pending the orchestrator live acceptance; tool/key bypasses are never answer policies."
   ],
@@ -514,104 +514,6 @@
         "input_line_regex": "^[ \\t]*(?:│[ \\t]*)?❯[^\\r\\n]*$"
       }
     },
-    "kimi": {
-      "modes": ["default", "plan", "auto", "yolo"],
-      "keys": [
-        "kimi"
-      ],
-      "cli": "kimi",
-      "catalog_mode": "seed",
-      "ntm_models_table": null,
-      "ntm_default_key": null,
-      "models": [
-        "kimi-code/k3.1-pro",
-        "kimi-code/k3.1-pro-highspeed",
-        "kimi-code/k3",
-        "kimi-code/k3-256k",
-        "kimi-code/kimi-for-coding",
-        "kimi-code/kimi-for-coding-highspeed"
-      ],
-      "aliases": {
-        "k3.1-pro": "kimi-code/k3.1-pro",
-        "k3.1-pro-highspeed": "kimi-code/k3.1-pro-highspeed",
-        "k3": "kimi-code/k3",
-        "k3-256k": "kimi-code/k3-256k",
-        "kimi-for-coding": "kimi-code/kimi-for-coding",
-        "kimi-for-coding-highspeed": "kimi-code/kimi-for-coding-highspeed"
-      },
-      "efforts": [],
-      "default_effort": null,
-      "context_suffixes": [],
-      "context_limits": {
-        "kimi-code/k3.1-pro": 1048576,
-        "kimi-code/k3.1-pro-highspeed": 1048576,
-        "kimi-code/k3": 1048576,
-        "kimi-code/k3-256k": 262144,
-        "kimi-code/kimi-for-coding": 1048576,
-        "kimi-code/kimi-for-coding-highspeed": 262144
-      },
-      "key_rules": {
-        "kimi": {
-          "takes_model": true,
-          "takes_effort": false,
-          "model_hint": "kimi models: kimi-code/k3.1-pro (NTM default), kimi-code/k3.1-pro-highspeed, kimi-code/k3, kimi-code/k3-256k, kimi-code/kimi-for-coding, kimi-code/kimi-for-coding-highspeed",
-          "effort_hint": "kimi takes no @EFFORT; its effort comes from [thinking] in ~/.kimi-code/config.toml"
-        }
-      },
-      "profile": {
-        "idle_detection": "unreliable",
-        "boot_check": "prompt_regex",
-        "prompt_regex": "^\\s*[❯>›]",
-        "empty_input_regex": "^\\s*[❯>›]\\s*$",
-        "dialog_patterns": [
-          {
-            "classification": "kimi_workspace_trust",
-            "kind": "trust_folder",
-            "regex": "(?i)Trust this (?:folder|workspace)\\?|Workspace trust",
-            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
-            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$",
-            "start_regex": "(?i)Trust this (?:folder|workspace)\\?|Workspace trust"
-          },
-          {
-            "classification": "kimi_command_approval",
-            "regex": "Run this command\\?",
-            "kind": "tool_approval",
-            "options_regex": "^[ \\t]*(?:(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>(?:Yes|No|Allow|Deny|Continue|Review|Cancel|Exit|Trust|Accept|Decline|Always|Never)\\b[^\\r\\n]*?)[ \\t]*$",
-            "start_regex": "Run this command\\?"
-          },
-          {
-            "classification": "approval_unclassified",
-            "kind": "unclassified",
-            "regex": "(?im)Enter to confirm|esc(?: to)? (?:skip|cancel)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$|\\([●○]\\)",
-            "options_regex": "^(?=[ \\t]*(?:[❯›>][ \\t]+|\\([●○]\\)[ \\t]*|[0-9]+[.)][ \\t]+|(?:Yes|No|Cancel|Exit|Continue|Allow|Deny|Accept|Decline|Never|Always)\\b)|[ \\t]{2,}\\S)[ \\t]*(?P<marker>(?P<selected>[❯›>]|\\(●\\))|\\(○\\))?[ \\t]*(?:(?P<number>[0-9]+)[.)][ \\t]+)?(?P<label>[^\\r\\n]+?)[ \\t]*$",
-            "start_regex": "(?im)^[ \\t]*(?:Accessing workspace:|[❯›>]|\\([●○]\\)|[0-9]+[.)][ \\t]+)|^(?![ \\t]*[❯›>])[^\\r\\n]*\\?[ \\t]*$",
-            "scope_regex": "^[ \\t]*Accessing workspace:[ \\t]*(?:\\n[ \\t]*)?(?P<scope>/[^\\r\\n]+?)[ \\t]*$"
-          }
-        ],
-        "transcript_root": "~/.kimi-code/sessions",
-        "transcript_glob": "wd_*/session_*/agents/main/wire.jsonl",
-        "transcript_scope": "path",
-        "report_json_strict": true,
-        "required_env": [
-          "KIMI_API_KEY",
-          "MOONSHOT_API_KEY",
-          "NODE_USE_SYSTEM_CA"
-        ],
-        "approval_mode": "manual",
-        "takes_model": true,
-        "takes_effort": false,
-        "send_quirks": [],
-        "answers": [
-          {
-            "backend": "ntm",
-            "classification": "trust_prompt",
-            "kind": "trust_folder",
-            "enabled": false
-          }
-        ],
-        "input_line_regex": "^[ \\t]*[❯›>][ \\t]*[^\\r\\n]*$"
-      }
-    },
     "copilot": {
       "modes": ["default", "plan", "edits", "auto", "yolo"],
       "keys": [
@@ -644,8 +546,7 @@
         "claude-opus-4.8",
         "gpt-6.1-terra",
         "gemini-4-carbon",
-        "gemini-4-argon",
-        "kimi-k3"
+        "gemini-4-argon"
       ],
       "aliases": {
         "opus": "claude-opus-5.5",

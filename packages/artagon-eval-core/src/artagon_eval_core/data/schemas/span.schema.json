@@ -26,7 +26,7 @@
     "campaign_id": {"type": "string", "minLength": 1},
     "arm_id": {"type": "string", "minLength": 1},
     "task_id": {"type": "string", "minLength": 1},
-    "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+    "harness": {"enum": ["claude", "codex", "agy", "copilot"]},
     "trace_id": {"type": "string", "minLength": 1},
     "span_id": {"type": "string", "minLength": 1},
     "parent_span_id": {"type": ["string", "null"]},

@@ -48,6 +48,11 @@
       "service": "CLAUDE_EVAL_OAUTH_TOKEN",
       "aliases": ["CLAUDE_EVAL_OAUTH_TOKEN"],
       "exclude_from_load_api_keys": true
+    },
+    "COPILOT_EVAL_GITHUB_TOKEN": {
+      "service": "COPILOT_EVAL_GITHUB_TOKEN",
+      "aliases": ["COPILOT_EVAL_GITHUB_TOKEN"],
+      "exclude_from_load_api_keys": true
     }
   }
 }

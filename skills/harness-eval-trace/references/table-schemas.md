@@ -11,7 +11,7 @@ Each campaign compacts redacted per-trial traces into `<campaign>/tables/*.parqu
 | `arm_id` | `TEXT` | Arm identifier from protocol. |
 | `task_id` | `TEXT` | Task identifier from protocol. |
 | `block_id` | `TEXT` | Paired `ABBA` block identifier. |
-| `harness` | `TEXT` | `claude`, `codex`, `agy`, `copilot`, or `kimi`. |
+| `harness` | `TEXT` | `claude`, `codex`, `agy`, or `copilot`. |
 | `model` | `TEXT` | Requested model identifier. |
 | `observed_model` | `TEXT` | Model reported in transcript or OTel span. |
 | `auth_mode` | `TEXT` | `subscription` or `api_key`. |
@@ -97,3 +97,29 @@ Each campaign compacts redacted per-trial traces into `<campaign>/tables/*.parqu
 | `after_sha256` | `TEXT` | Post-trial SHA-256 digest (`NULL` if deleted). |
 | `before_size` | `BIGINT` | File byte length before trial (`NULL` if added). |
 | `after_size` | `BIGINT` | File byte length after trial (`NULL` if deleted). |
+
+## 6. `hook_events`
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `trial_id` | `TEXT` | Parent trial ID. |
+| `campaign_id` | `TEXT` | Parent campaign ID (denormalized from `trials`). |
+| `arm_id` | `TEXT` | Parent arm ID (denormalized from `trials`). |
+| `task_id` | `TEXT` | Parent task ID (denormalized from `trials`). |
+| `harness` | `TEXT` | `claude`, `codex`, `agy`, or `copilot`. |
+| `event_index` | `BIGINT` | 0-based deterministic ordinal after `(recv_mono_ns, recv_wall_ns)` sorting. |
+| `event_name` | `TEXT` | Hook event name (`PreToolUse`, `SessionStart`, `PreCompact`, `SubagentStart`, `PermissionRequest`, `Stop`, etc.). |
+| `lifecycle_kind` | `TEXT` | Classified family: `tool`, `session`, `compact`, `subagent`, `permission`, `model_request`, or `event`. |
+| `recv_wall_ns` | `BIGINT` | Wall-clock receive timestamp in nanoseconds. |
+| `recv_mono_ns` | `BIGINT` | Monotonic receive timestamp in nanoseconds. |
+| `pid` | `BIGINT` | Emitter process ID (`NULL` if omitted). |
+| `ppid` | `BIGINT` | Emitter parent process ID (`NULL` if omitted). |
+| `transport` | `TEXT` | Delivery transport (`unix_socket`, `hmac_append`, or `unknown`). |
+| `truncated` | `BOOLEAN` | `true` if hook payload was truncated on ingress or capped at 65,536 chars on normalization. |
+| `tool_name` | `TEXT` | Associated tool name (tool and permission hooks). |
+| `tool_use_id` | `TEXT` | Correlated tool call ID when present. |
+| `turn_id` | `TEXT` | Harness turn identifier when present. |
+| `agent_id` | `TEXT` | Subagent identifier (`agent_id`, `subagent_id`, `task_id`, or `child_session_id`) when present. |
+| `session_id` | `TEXT` | Session, conversation, or invocation identifier when present. |
+| `status` | `TEXT` | Normalized status (`ok`, `error`, or `unset`). |
+| `payload_json` | `TEXT` | Pre-scrubbed, sorted JSON payload (capped as valid JSON `{"_truncated": true, "preview": ...}` when > 65,536 chars; `hmac_sha256` stripped). |

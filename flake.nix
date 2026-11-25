@@ -56,8 +56,6 @@
         "GITHUB_COPILOT_API_TOKEN"
         "COPILOT_API_KEY"
         "COPILOT_TOKEN"
-        "KIMI_API_KEY"
-        "MOONSHOT_API_KEY"
         "OPENROUTER_API_KEY"
         "DAYTONA_API_KEY"
         "EVOSKILL_CC_TOKEN_FILE"

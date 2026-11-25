@@ -66,7 +66,7 @@
           "trial_id": {"type": "string", "minLength": 1},
           "task_id": {"type": "string", "minLength": 1},
           "arm_id": {"type": "string", "minLength": 1},
-          "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+          "harness": {"enum": ["claude", "codex", "agy", "copilot"]},
           "auth_mode": {"enum": ["subscription", "api_key"]}
         }
       }

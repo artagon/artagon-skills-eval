@@ -2,7 +2,7 @@
 
 ## Project Shape & Workspace Topology
 
-`artagon-skills-eval` is a standalone Python `3.12+` / `3.13` `uv` workspace and Nix flake (`nixos-26.05`) for subscription-first multi-CLI skill and harness evaluation across Claude, Codex, Antigravity, Copilot, and Kimi. See [README.md](README.md) for operator quickstarts and CLI usage, [ABOUT.md](ABOUT.md) for executive guarantees and architecture, and [docs/PROVENANCE.md](docs/PROVENANCE.md) for origin lineage.
+`artagon-skills-eval` is a standalone Python `3.12+` / `3.13` `uv` workspace and Nix flake (`nixos-26.05`) for subscription-first multi-CLI skill and harness evaluation across Claude, Codex, Antigravity, and Copilot. See [README.md](README.md) for operator quickstarts and CLI usage, [ABOUT.md](ABOUT.md) for executive guarantees and architecture, and [docs/PROVENANCE.md](docs/PROVENANCE.md) for origin lineage.
 
 | Path | Ownership & Role |
 | --- | --- |

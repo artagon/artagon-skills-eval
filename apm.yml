@@ -1,6 +1,6 @@
 name: artagon-skills-eval
 version: 0.2.0
-description: Subscription-first multi-CLI skill and harness evaluation suite, protocol authoring, static linter, and 4-layer DuckDB trace analytics for Claude, Codex, Antigravity, Copilot, and Kimi.
+description: Subscription-first multi-CLI skill and harness evaluation suite, protocol authoring, static linter, and 4-layer DuckDB trace analytics for Claude, Codex, Antigravity, and Copilot.
 author: Artagon
 license: MIT
 targets:

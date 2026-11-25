@@ -1,6 +1,6 @@
 ---
 name: harness-eval
-description: 'Use when running, previewing, freezing, importing Waza suites, optimizing candidates with GEPA, checking auth or Nix closures, or analyzing multi-CLI harness evaluation campaigns with harness-eval.py across Claude, Codex, Antigravity, Copilot, or Kimi. Do not use for authoring protocol manifests or MCP cassettes (harness-eval-author), querying DuckDB traces or exporting OTel spans (harness-eval-trace), or general swarm operations (art-swarm).'
+description: 'Use when running, previewing, freezing, importing Waza suites, optimizing candidates with GEPA, checking auth or Nix closures, or analyzing multi-CLI harness evaluation campaigns with harness-eval.py across Claude, Codex, Antigravity, or Copilot. Do not use for authoring protocol manifests or MCP cassettes (harness-eval-author), querying DuckDB traces or exporting OTel spans (harness-eval-trace), or general swarm operations (art-swarm).'
 ---
 
 # harness-eval

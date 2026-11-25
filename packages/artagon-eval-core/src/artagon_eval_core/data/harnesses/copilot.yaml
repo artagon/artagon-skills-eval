@@ -11,7 +11,8 @@ auth:
   subscription_files:
     - config.json
     - hosts.json
-  subscription_env_vars: []
+  subscription_env_vars:
+    - COPILOT_GITHUB_TOKEN
   api_key_env_var: COPILOT_PROVIDER_API_KEY
   provider_base_url_env: COPILOT_PROVIDER_BASE_URL
   scrubbed_env_vars:
@@ -47,9 +48,13 @@ hooks:
     - PreToolUse
     - PostToolUse
     - PostToolUseFailure
+    - PreMcpToolCall
+    - PermissionRequest
+    - PreCompact
     - Notification
     - SubagentStart
     - SubagentStop
+    - ErrorOccurred
     - Stop
     - SessionEnd
   special_matchers:

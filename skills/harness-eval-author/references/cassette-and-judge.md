@@ -46,7 +46,7 @@
 
 ## Vendor-Blind and Billing-Blind Judge Rules
 
-- **Clean Diff Extraction**: `src/artagon_harness_eval/judge.py` builds a temporary `GIT_INDEX_FILE` excluding harness artifacts (`.claude`, `.codex`, `.gemini`, `.copilot`, `.kimi`, `.ntm`, `.herdr`, `trace/`) so only workspace deliverables reach the judge.
+- **Clean Diff Extraction**: `src/artagon_harness_eval/judge.py` builds a temporary `GIT_INDEX_FILE` excluding harness artifacts (`.claude`, `.codex`, `.gemini`, `.copilot`, `.ntm`, `.herdr`, `trace/`) so only workspace deliverables reach the judge.
 - **Token Scrubbing**: Harness signatures, model names, billing strings, API-key prefixes, and trial IDs are scrubbed unless already present in the baseline fixture (`baseline_text` awareness).
 - **Canary Enforcement**: Every trial plants a unique canary token inside trial metadata; if the canary appears anywhere in the sanitized judge prompt, scoring aborts with exit `5` (`EXIT_ISOLATION_CANARY`).
-- **Family Separation**: `judge.harness` and `judge.model` vendor family cannot overlap any evaluated arm (`claude` -> Anthropic, `codex` -> OpenAI, `agy` -> Google, `copilot` -> GitHub plus routed model family, `kimi` -> Moonshot). Multi-family candidate arms must select a judge whose vendor family is disjoint from every candidate arm (or a `>= 3`-family `judge.panel` with per-trial vendor recusal).
+- **Family Separation**: `judge.harness` and `judge.model` vendor family cannot overlap any evaluated arm (`claude` -> Anthropic, `codex` -> OpenAI, `agy` -> Google, `copilot` -> GitHub plus routed model family). Multi-family candidate arms must select a judge whose vendor family is disjoint from every candidate arm (or a `>= 3`-family `judge.panel` with per-trial vendor recusal).

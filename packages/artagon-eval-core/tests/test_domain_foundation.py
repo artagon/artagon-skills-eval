@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 from expression import NOTHING, Error, Ok, Some
-from pydantic import Field, ValidationError
+from pydantic import Field, TypeAdapter, ValidationError
 from rpds import HashTrieMap, HashTrieSet
 from typer.testing import CliRunner
 
@@ -37,7 +37,9 @@ from artagon_eval_core.domain.errors import (
 from artagon_eval_core.domain.fp import Either, Left, NullableOption, Right
 from artagon_eval_core.domain.primitives import (
     CampaignId,
+    CatalogHarnessName,
     ConfinedScratchPath,
+    HarnessName,
     NonEmptyStr,
     RedactedStr,
     parse_safe_newtype,
@@ -259,9 +261,27 @@ def test_canonical_packaged_data_assets_present() -> None:
     )
     assert len(schemas) == 10
     assert "skill-eval-result.schema.json" in schemas
-    assert len(harnesses) == 6
+    assert len(harnesses) == 5
+    assert harnesses == ["agy.yaml", "claude.yaml", "codex.yaml", "copilot.yaml", "grok.yaml"]
     assert data_root.joinpath("providers.json").is_file()
     assert data_root.joinpath("keychain-services.json").is_file()
+
+
+def test_active_and_catalog_harness_names_reject_removed_cli() -> None:
+    harness_adapter: TypeAdapter[HarnessName] = TypeAdapter(HarnessName)
+    catalog_adapter: TypeAdapter[CatalogHarnessName] = TypeAdapter(CatalogHarnessName)
+
+    for active in ("claude", "codex", "agy", "copilot"):
+        assert harness_adapter.validate_python(active) == active
+        assert catalog_adapter.validate_python(active) == active
+
+    assert catalog_adapter.validate_python("grok") == "grok"
+    with pytest.raises(ValidationError):
+        _ = harness_adapter.validate_python("grok")
+    with pytest.raises(ValidationError):
+        _ = harness_adapter.validate_python("kimi")
+    with pytest.raises(ValidationError):
+        _ = catalog_adapter.validate_python("kimi")
 
 
 def test_harness_eval_cli_commands() -> None:

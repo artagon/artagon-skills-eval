@@ -91,3 +91,37 @@ python3 scripts/harness-eval.py --output json trace-export \
   --format mlflow \
   --out /tmp/campaign-01/exports/mlflow-traces.json
 ```
+
+## 6. Inspect Lifecycle, Compaction, Permission, and Subagent Hook Events
+
+```sql
+-- Summarize lifecycle, compaction, permission, and subagent hook activity per arm
+SELECT
+  arm_id,
+  harness,
+  lifecycle_kind,
+  event_name,
+  COUNT(*) AS events,
+  SUM(CASE WHEN status = 'error' THEN 1 ELSE 0 END) AS error_events,
+  COUNT(DISTINCT agent_id) AS distinct_subagents
+FROM hook_events
+WHERE lifecycle_kind IN ('session', 'compact', 'subagent', 'permission', 'model_request', 'event')
+GROUP BY arm_id, harness, lifecycle_kind, event_name
+ORDER BY arm_id, lifecycle_kind, events DESC
+```
+
+```sql
+-- Compare paired compaction and subagent durations from derived spans
+SELECT
+  arm_id,
+  harness,
+  span_kind,
+  name,
+  COUNT(*) AS span_count,
+  AVG(duration_ms) AS mean_ms,
+  MAX(duration_ms) AS max_ms
+FROM spans
+WHERE span_kind IN ('hook_lifecycle', 'subagent')
+GROUP BY arm_id, harness, span_kind, name
+ORDER BY arm_id, span_kind, mean_ms DESC
+```

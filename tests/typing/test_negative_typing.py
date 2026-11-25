@@ -66,6 +66,16 @@ payload: dict[str, Any] = {}
         ("Any", "reportExplicitAny"),
         (),
     ),
+    "removed_kimi_harness_rejected": (
+        """
+from artagon_eval_core.domain.primitives import CatalogHarnessName, HarnessName
+
+active: HarnessName = "kimi"
+catalog: CatalogHarnessName = "kimi"
+""",
+        ("Literal", "kimi"),
+        ("Literal", "kimi"),
+    ),
 }
 
 

@@ -32,7 +32,7 @@
 - THEN zero distributions SHALL carry `Elastic-2.0` and zero `arize-phoenix` core server distributions SHALL be present.
 
 ### Requirement: Standalone Multi-CLI Plugin, APM Manifests, and `v0.2.0` Release Artifacts
-The repository SHALL ship synchronized standalone manifests (`plugin.json`, `.claude-plugin/{plugin,marketplace}.json`, `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, `.copilot-plugin/plugin.json`, `.kimi-plugin/plugin.json`, `kimi.plugin.json`, `apm.yml`, `apm.lock.yaml`, `EXTENSION.md`) pointing to `skills/` with zero legacy monorepo paths. `.github/workflows/release.yml` SHALL build deterministic `v0.2.0` wheels, sdist, `SHA256SUMS`, and exported `schemas-v0.2.0.tar.gz`.
+The repository SHALL ship synchronized standalone manifests (`plugin.json`, `.claude-plugin/{plugin,marketplace}.json`, `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, `.copilot-plugin/plugin.json`, `apm.yml`, `apm.lock.yaml`, `EXTENSION.md`) pointing to `skills/` with zero legacy monorepo paths. `.github/workflows/release.yml` SHALL build deterministic `v0.2.0` wheels, sdist, `SHA256SUMS`, and exported `schemas-v0.2.0.tar.gz`.
 
 #### Scenario: Validating standalone skills and plugin manifests in CI
 - GIVEN the repository checkout with updated standalone `skills/harness-eval*` and plugin manifests

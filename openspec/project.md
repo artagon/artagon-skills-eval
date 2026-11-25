@@ -4,7 +4,7 @@
 
 ## Purpose
 
-`artagon-skills-eval` is a standalone, subscription-first Python and Nix evaluation platform for Agent Skills and multi-CLI coding harnesses (`claude`, `codex`, `agy`, `copilot`, `kimi`). It provides a functional core evaluation engine, official `agentskills.io` `skills-ref` linting, 4-layer trace storage (DuckDB/Parquet + OTLP), ADR-0012 hot-path shims, and six lazily-loaded Pluggy integration adapters (`waza`, `dspy`, `skillopt`, `evoskill`, `skillspec`, `observability`).
+`artagon-skills-eval` is a standalone, subscription-first Python and Nix evaluation platform for Agent Skills and multi-CLI coding harnesses (`claude`, `codex`, `agy`, `copilot`). It provides a functional core evaluation engine, official `agentskills.io` `skills-ref` linting, 4-layer trace storage (DuckDB/Parquet + OTLP), ADR-0012 hot-path shims, and six lazily-loaded Pluggy integration adapters (`waza`, `dspy`, `skillopt`, `evoskill`, `skillspec`, `observability`).
 
 See [`README.md`](../README.md) for quickstarts, [`ABOUT.md`](../ABOUT.md) for design guarantees, [`docs/PROVENANCE.md`](../docs/PROVENANCE.md) for extraction lineage, and [`docs/adr/`](../docs/adr/) for Architecture Decision Records (`0005`–`0007`, `0009`–`0012`, `0015`–`0016`).
 

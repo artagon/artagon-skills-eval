@@ -117,7 +117,7 @@
       "required": ["arm_id", "harness", "model"],
       "properties": {
         "arm_id": {"$ref": "#/$defs/id"},
-        "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+        "harness": {"enum": ["claude", "codex", "agy", "copilot"]},
         "model": {"type": "string", "minLength": 1},
         "effort": {"enum": ["low", "medium", "high"]},
         "auth_mode": {"enum": ["subscription", "api_key"], "default": "subscription"},
@@ -281,7 +281,7 @@
       "required": ["harness", "model"],
       "properties": {
         "member_id": {"$ref": "#/$defs/id"},
-        "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+        "harness": {"enum": ["claude", "codex", "agy", "copilot"]},
         "model": {"type": "string", "minLength": 1},
         "auth_mode": {"enum": ["subscription", "api_key"], "default": "subscription"},
         "api_key_ref": {"type": "string", "minLength": 1}
@@ -293,7 +293,7 @@
       "required": ["enabled"],
       "properties": {
         "enabled": {"type": "boolean"},
-        "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+        "harness": {"enum": ["claude", "codex", "agy", "copilot"]},
         "model": {"type": "string", "minLength": 1},
         "auth_mode": {"enum": ["subscription", "api_key"], "default": "subscription"},
         "api_key_ref": {"type": "string", "minLength": 1},

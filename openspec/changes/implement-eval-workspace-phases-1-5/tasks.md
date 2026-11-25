@@ -20,15 +20,15 @@ All tasks operate inside `artagon-skills-eval` with zero edits to consumer repos
   - Proof: `uv run --frozen pytest tests/packaging/ --fail-on-skip -q && uv run --frozen harness-eval-nix-check --offline`
   - Status: not run
 
-## Phase 2: Core Shell, 5-CLI Decoders, DuckDB Store, Shims & `harness-eval` CLI
+## Phase 2: Core Shell, 4-CLI Decoders, DuckDB Store, Shims & `harness-eval` CLI
 
-- [ ] 2.1 Implement `artagon_eval_core.shell.transcript` (`claude`, `codex`, `agy`, `copilot`, `kimi`, `otel_reducer`, `fusion`) and `shell/multiplexers` (`ntm`, `herdr`, `cao`, `hcom`) keeping every module `<= 300` LOC and `CC <= 8`.
+- [ ] 2.1 Implement `artagon_eval_core.shell.transcript` (`claude`, `codex`, `agy`, `copilot`, `otel_reducer`, `fusion`) with derived `hook_lifecycle`/`subagent` spans, normalized `hook_events`, pre-serialization secret/PII redaction, and `shell/multiplexers` (`ntm`, `herdr`, `cao`, `hcom`) keeping every module `<= 300` LOC and `CC <= 8`.
   - Proof: `uv run --frozen pytest packages/artagon-eval-core/tests --fail-on-skip -q && uv run --frozen radon cc -n C packages/artagon-eval-core/src`
   - Status: not run
-- [ ] 2.2 Implement `artagon_eval_core.shell` execution & custody modules (`catalog_loader`, `model_resolver`, `workspace`, `custody_fs` with `flock` `<= 3` holdout cap, `materializer`, read-only `keyring`, RFC 8785 `cassette`, loopback `otlp_sink`, `judge_runner`, `trial_executor`).
+- [ ] 2.2 Implement `artagon_eval_core.shell` execution & custody modules (`catalog_loader`, `model_resolver`, `workspace`, `custody_fs` with `flock` `<= 3` holdout cap, `materializer` with macOS fail-closed subscription auth including `COPILOT_EVAL_GITHUB_TOKEN`, read-only `keyring`, RFC 8785 `cassette`, loopback `otlp_sink`, `judge_runner`, `trial_executor`).
   - Proof: `HYPOTHESIS_PROFILE=ci uv run --frozen pytest packages/artagon-eval-core/tests --fail-on-skip -q`
   - Status: not run
-- [ ] 2.3 Implement `artagon_eval_core.store` (`parquet_writer`, `duckdb_query`, `sql_guard`, `otlp_export`) with pre-redacted 5-table Parquet compaction, holdout split guards, and loopback endpoint checks.
+- [ ] 2.3 Implement `artagon_eval_core.store` (`parquet_writer`, `duckdb_query`, `sql_guard`, `otlp_export`) with pre-redacted 6-table Parquet compaction (`trials`, `spans`, `tool_calls`, `mcp_calls`, `file_diffs`, `hook_events`), root-span OTLP `Span.Event` hook telemetry export (JSON & Protobuf), holdout split/HMAC guards, and loopback endpoint checks.
   - Proof: `uv run --frozen pytest packages/artagon-eval-core/tests --fail-on-skip -q`
   - Status: not run
 - [ ] 2.4 Complete ADR-0012 hot-path `artagon_eval_core.shims` (`trampoline`, `hook_sink` alongside `wire`, `scrub`) verified under `python -P -s -m` with `<= 5ms` latency and zero heavy imports.
@@ -64,7 +64,7 @@ All tasks operate inside `artagon-skills-eval` with zero edits to consumer repos
 - [ ] 4.2 Implement `packages/artagon-eval-skillspec` (`pin_runner.py`, `phase1_search.py`, `skillspec_pin.json`, `plugin.py`) with isolated `--fail-on-skip` tests.
   - Proof: `uv run --frozen pytest packages/artagon-eval-skillspec/tests --fail-on-skip -q && uv run --frozen lint-imports`
   - Status: not run
-- [ ] 4.3 Finalize standalone multi-CLI native plugin and APM manifests (`plugin.json`, `.claude-plugin/{plugin,marketplace}.json`, `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, `.copilot-plugin/plugin.json`, `.kimi-plugin/plugin.json`, `kimi.plugin.json`, `apm.yml`, `apm.lock.yaml`, `EXTENSION.md`) and update `skills/harness-eval*` references for standalone CLI entrypoints.
+- [ ] 4.3 Finalize standalone multi-CLI native plugin and APM manifests (`plugin.json`, `.claude-plugin/{plugin,marketplace}.json`, `.agents/plugins/marketplace.json`, `.codex-plugin/plugin.json`, `.copilot-plugin/plugin.json`, `apm.yml`, `apm.lock.yaml`, `EXTENSION.md`) and update `skills/harness-eval*` references for standalone CLI entrypoints.
   - Proof: `uv run --frozen skill-lint --skills-dir skills`
   - Status: not run
 

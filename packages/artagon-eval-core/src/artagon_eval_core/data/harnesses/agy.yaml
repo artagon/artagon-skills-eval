@@ -46,6 +46,7 @@ hooks:
   dialect: namespaced_lifecycle
   namespace_key: harness-eval-trace
   events:
+    - SessionStart
     - PreInvocation
     - PostInvocation
     - PreToolUse

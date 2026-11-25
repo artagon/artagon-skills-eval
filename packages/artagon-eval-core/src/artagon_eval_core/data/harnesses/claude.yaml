@@ -53,10 +53,22 @@ hooks:
     - PostToolUseFailure
     - PermissionRequest
     - PermissionDenied
+    - Notification
     - SubagentStart
     - SubagentStop
+    - TaskCreated
+    - TaskCompleted
+    - TeammateIdle
     - PreCompact
     - PostCompact
+    - PreModelSwitch
+    - PostModelSwitch
+    - ConfigChange
+    - CwdChanged
+    - WorktreeCreate
+    - WorktreeRemove
+    - Elicitation
+    - ElicitationResult
     - Stop
     - StopFailure
     - FileChanged

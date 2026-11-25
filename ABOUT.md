@@ -1,6 +1,6 @@
 # About `artagon-skills-eval`
 
-`artagon-skills-eval` is a standalone, subscription-first Python and Nix evaluation platform for Agent Skills and multi-CLI coding harnesses (`claude`, `codex`, `agy`, `copilot`, `kimi`).
+`artagon-skills-eval` is a standalone, subscription-first Python and Nix evaluation platform for Agent Skills and multi-CLI coding harnesses (`claude`, `codex`, `agy`, `copilot`).
 
 ## Design Guarantees
 

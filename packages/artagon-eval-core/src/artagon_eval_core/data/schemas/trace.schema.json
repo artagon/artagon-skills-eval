@@ -33,9 +33,10 @@
     "task_id": {"type": "string", "minLength": 1},
     "block_id": {"type": ["string", "null"]},
     "split": {"type": ["string", "null"], "enum": ["train", "val", "test", null]},
-    "harness": {"enum": ["claude", "codex", "agy", "copilot", "kimi"]},
+    "harness": {"enum": ["claude", "codex", "agy", "copilot"]},
     "model": {"type": ["string", "null"]},
     "observed_model": {"type": ["string", "null"]},
+    "effort": {"type": ["string", "null"]},
     "auth_mode": {"enum": ["subscription", "api_key"]},
     "execution_mode": {"enum": ["headless", "ntm", "herdr", "cao"]},
     "status": {
@@ -151,6 +152,42 @@
           "after_sha256": {"type": ["string", "null"]},
           "before_size": {"type": ["integer", "null"]},
           "after_size": {"type": ["integer", "null"]}
+        }
+      }
+    },
+    "hook_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "trial_id",
+          "event_index",
+          "event_name",
+          "recv_wall_ns",
+          "recv_mono_ns",
+          "transport",
+          "truncated"
+        ],
+        "properties": {
+          "trial_id": {"type": "string", "minLength": 1},
+          "event_index": {"type": "integer", "minimum": 0},
+          "harness": {"type": ["string", "null"], "enum": ["claude", "codex", "agy", "copilot", null]},
+          "event_name": {"type": "string", "minLength": 1},
+          "lifecycle_kind": {"type": ["string", "null"]},
+          "recv_wall_ns": {"type": "integer", "minimum": 0},
+          "recv_mono_ns": {"type": "integer", "minimum": 0},
+          "pid": {"type": ["integer", "null"]},
+          "ppid": {"type": ["integer", "null"]},
+          "transport": {"enum": ["unix_socket", "hmac_append", "unknown"]},
+          "truncated": {"type": "boolean"},
+          "tool_name": {"type": ["string", "null"]},
+          "tool_use_id": {"type": ["string", "null"]},
+          "turn_id": {"type": ["string", "null"]},
+          "agent_id": {"type": ["string", "null"]},
+          "session_id": {"type": ["string", "null"]},
+          "status": {"type": ["string", "null"], "enum": ["ok", "error", "unset", null]},
+          "payload_json": {"type": ["string", "null"]}
         }
       }
     }
